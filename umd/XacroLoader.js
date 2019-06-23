@@ -4,11 +4,6 @@
     (global.XacroLoader = factory());
 }(this, (function () { 'use strict';
 
-    // TODO: Verify against ros-ran xacro files
-    // TODO: Report errors / warnings back to the client
-
-    const PARENT_SCOPE = Symbol('parent');
-
     function getUrlBase(url) {
 
         const tokens = url.split(/[\\/]/g);
@@ -18,53 +13,25 @@
 
     }
 
-    class XacroLoader {
+    // TODO: Verify against ros-ran xacro files
+    // TODO: Report errors / warnings back to the client
 
-        constructor(manager = null) {
+    const PARENT_SCOPE = Symbol('parent');
+    class XacroParser {
 
-            this.manager = manager;
-
+        constructor() {
+            this.inOrder = true;
+            this.requirePrefix = true;
+            this.localProperties = true;
+            this.rospackCommands = {};
+            this.workingPath = '';
         }
 
-        /* Public API */
-        load(url, onComplete, options) {
-
-            // Check if a full URI is specified before
-            // prepending the package info
-            const manager = this.manager;
-            const xacroPath = this.manager.resolveURL(url);
-            const workingPath = getUrlBase(url);
-
-            options = Object.assign({ workingPath }, options);
-
-            if (manager) {
-                manager.itemStart(xacroPath);
-            }
-
-            fetch(xacroPath, options.fetchOptions)
-                .then(res => res.text())
-                .then(data => {
-
-                    this.parse(data, onComplete, options);
-                    if (manager) {
-                        manager.itemEnd(xacroPath);
-                    }
-
-                })
-                .catch(e => {
-
-                    // TODO: Add onProgress and onError functions here
-                    console.error('XacroLoader: Error parsing file.', e);
-                    if (manager) {
-                        manager.itemError(xacroPath);
-                        manager.itemEnd(xacroPath);
-                    }
-
-                });
-
+        async getFileContents(path) {
+            throw new Error('XacroParser: getFileContents() not implemented.');
         }
 
-        parse(data, onLoad, options = {}) {
+        async parse(data) {
 
             /* Utilities */
             function mergeObjects(...args) {
@@ -537,7 +504,7 @@
             async function loadInclude(path) {
 
                 try {
-                    const res = await fetch(path, options.fetchOptions);
+                    const res = await scope.getFileContents(path);
                     const text = await res.text();
                     return new DOMParser().parseFromString(text, 'text/xml');
                 } catch (e) {
@@ -579,20 +546,13 @@
 
             // TODO: Provide a default "arg" command function that defaults to
             // xacro:arg fields.
-            options = Object.assign({
-                inOrder: true,
-                requirePrefix: true,
-                localProperties: true,
-                rospackCommands: {},
-                workingPath: '',
-            }, options);
-
-            let localProperties = options.localProperties;
-            const inOrder = options.inOrder;
-            const workingPath = options.workingPath;
+            const scope = this;
+            let localProperties = this.localProperties;
+            const inOrder = this.inOrder;
+            const workingPath = this.workingPath;
             let currWorkingPath = workingPath;
-            const requirePrefix = options.requirePrefix;
-            const rospackCommands = options.rospackCommands;
+            const requirePrefix = this.requirePrefix;
+            const rospackCommands = this.rospackCommands;
             const globalProperties = { True: 1, False: 0 };
             globalProperties[PARENT_SCOPE] = globalProperties;
             const globalMacros = {};
@@ -624,11 +584,43 @@
                 inOrderPromise = Promise.resolve();
             }
 
-            (async function() {
-                await inOrderPromise;
-                const xml = await processXacro(content, globalProperties, globalMacros);
-                onLoad(xml);
-            })();
+            await inOrderPromise;
+            return processXacro(content, globalProperties, globalMacros);
+        }
+
+    }
+
+    class XacroLoader {
+
+        /* Public API */
+        load(url, onComplete, options) {
+
+            const workingPath = getUrlBase(url);
+            const parser = new XacroParser();
+            Object.assign(parser, { workingPath }, options);
+            parser.getFileContents = async function(path) {
+                return (await fetch(path, options.fetchOptions)).text();
+            };
+
+            parser
+                .getFileContents(url)
+                .then(text => parser.parse(text))
+                .then(xml => onComplete(xml));
+
+        }
+
+        parse(data, onLoad, options = {}) {
+
+            const parser = new XacroParser();
+            Object.assign(parser, options);
+            parser.getFileContents = async function(path) {
+                return (await fetch(path, options.fetchOptions)).text();
+            };
+
+            parser
+                .parse(data)
+                .then(xml => onLoad(xml));
+
         }
 
     }
