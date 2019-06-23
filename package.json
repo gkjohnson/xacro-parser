@@ -1,0 +1,47 @@
+{
+  "name": "xacro-loader",
+  "version": "0.0.1",
+  "description": "",
+  "main": "umd/XacroLoader.js",
+  "module": "src/URDFLoader.js",
+  "scripts": {
+    "start": "concurrently --kill-others \"rollup -c -w\" \"cd .. && static-server\"",
+    "build": "rollup -c",
+    "test": "jest",
+    "lint": "eslint ./src/*.js ./test/*.js"
+  },
+  "files": [
+    "src/*",
+    "umd/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gkjohnson/xacro-loader.git"
+  },
+  "author": "Garrett Johnson <garrett.kjohnson@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gkjohnson/xacro-loader/issues"
+  },
+  "homepage": "https://github.com/gkjohnson/xacro-loader#readme",
+  "keywords": [
+    "javascript",
+    "xacro",
+    "xml",
+    "macro",
+    "robotics",
+    "ros",
+    "urdf",
+    "urdf-models"
+  ],
+  "dependencies": {
+    "concurrently": "^4.0.1",
+    "eslint": "^5.14.1",
+    "jest": "^24.1.0",
+    "jest-cli": "^24.1.0",
+    "jsdom": "^15.1.1",
+    "nyc": "^13.3.0",
+    "rollup": "^0.66.6",
+    "w3c-xmlserializer": "^1.1.2"
+  }
+}
