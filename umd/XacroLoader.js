@@ -105,13 +105,13 @@
                             if (stem in rospackCommands) {
                                 return rospackCommands[stem](...tokens);
                             } else {
-                                throw new Error(`XacroLoader: Cannot run rospack command "${ contents }"`);
+                                throw new Error(`XacroParser: Cannot run rospack command "${ contents }"`);
                             }
 
                         } else {
                             if (stack.includes(contents)) {
                                 throw new Error(
-                                    `XacroLoader: Cannot evaluate infinitely recursive expression: ${
+                                    `XacroParser: Cannot evaluate infinitely recursive expression: ${
                                     stack.join(' > ')
                                 } > ${
                                     contents
@@ -142,7 +142,7 @@
                                         }
                                     } else {
                                         throw new Error(
-                                            `XacroLoader: Missing parameter "${ t }".`
+                                            `XacroParser: Missing parameter "${ t }".`
                                         );
                                     }
                                 })
@@ -167,7 +167,7 @@
                 try {
                     return unpackParams(str, allProps);
                 } catch (e) {
-                    console.warn(`XacroLoader: Failed to process expression "${ str }".`);
+                    console.warn(`XacroParser: Failed to process expression "${ str }".`);
                     console.warn(e.message);
                     return str;
                 }
@@ -182,7 +182,7 @@
                 const macro = macros[macroName];
 
                 if (!macro) {
-                    console.warn(`XacroLoader: Cannot find macro "${ macroName }"`);
+                    console.warn(`XacroParser: Cannot find macro "${ macroName }"`);
                 }
 
                 // Copy the properties and macros so we can modify them with
@@ -256,7 +256,7 @@
                     // TODO: Support caret and default syntax
                     // TODO: is there any difference between the := and = syntax?
                     if (/^\^/.test(def) || /\|/.test(def)) {
-                        console.warn(`XacroLoader: ROS Jade pass-through notation not supported in macro defaults: ${ def }`);
+                        console.warn(`XacroParser: ROS Jade pass-through notation not supported in macro defaults: ${ def }`);
                     }
 
                     obj.name = name;
@@ -408,13 +408,15 @@
                     }
                     case 'xacro:include': {
                         if (node.hasAttribute('ns')) {
-                            console.warn('XacroLoader: xacro:include name spaces not supported.');
+                            console.warn('XacroParser: xacro:include name spaces not supported.');
                         }
                         const filename = evaluateAttribute(node.getAttribute('filename'), properties);
                         const filePath = /^[/\\]/.test(filename[0]) ? filename : currWorkingPath + filename;
 
                         const prevWorkingPath = currWorkingPath;
                         currWorkingPath = getUrlBase(filePath);
+
+                        console.log('HERE', filePath);
 
                         const includeContent = await loadInclude(filePath);
                         const childNodes = [...includeContent.children[0].childNodes];
@@ -428,7 +430,7 @@
                     }
                     case 'xacro:attribute':
                     case 'xacro:element':
-                        console.warn(`XacroLoader: ${ tagName } tags not supported.`);
+                        console.warn(`XacroParser: ${ tagName } tags not supported.`);
                         return null;
                     default: {
                         // TODO: check if there's a 'call' attribute here which indicates that
@@ -504,11 +506,10 @@
             async function loadInclude(path) {
 
                 try {
-                    const res = await scope.getFileContents(path);
-                    const text = await res.text();
+                    const text = await scope.getFileContents(path);
                     return new DOMParser().parseFromString(text, 'text/xml');
                 } catch (e) {
-                    console.error('XacroLoader: Could not loader included file: ', path);
+                    console.error('XacroParser: Could not load included file: ', path);
                     console.error(e);
                 }
 
@@ -524,7 +525,7 @@
                 const promises = includeEl.map(el => {
                     // TODO: Handle namespaces on the include.
                     if (el.hasAttribute('ns')) {
-                        console.warn('XacroLoader: xacro:include name spaces not supported.');
+                        console.warn('XacroParser: xacro:include name spaces not supported.');
                     }
 
                     const filename = el.getAttribute('filename');
@@ -560,7 +561,7 @@
             let content = new DOMParser().parseFromString(data, 'text/xml');
 
             if (localProperties && !inOrder) {
-                console.warn('XacroLoader: Implicitly setting "localProperties" option to false because "inOrder" is false.');
+                console.warn('XacroParser: Implicitly setting "localProperties" option to false because "inOrder" is false.');
                 localProperties = false;
             }
 
@@ -599,6 +600,7 @@
             const parser = new XacroParser();
             Object.assign(parser, { workingPath }, options);
             parser.getFileContents = async function(path) {
+                console.log('HERE', path);
                 return (await fetch(path, options.fetchOptions)).text();
             };
 
