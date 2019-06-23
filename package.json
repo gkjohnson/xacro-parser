@@ -7,7 +7,7 @@
   "scripts": {
     "start": "concurrently --kill-others \"rollup -c -w\" \"cd .. && static-server\"",
     "build": "rollup -c",
-    "test": "jest",
+    "test": "rollup -c && jest",
     "lint": "eslint ./src/*.js ./test/*.js"
   },
   "files": [

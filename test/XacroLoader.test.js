@@ -66,7 +66,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <link name="val_link">
                                 <child attr="_val_val"/>
                             </link>
@@ -94,7 +94,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <a/>
                             <b/>
                         </robot>`
@@ -124,7 +124,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <macro-child attr="test"/>
                             <macro-child2 attr="test">
                                 <child/>
@@ -152,7 +152,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <child a="1" b="2" c="10"/>
                             <child a="1" b="2" c="3"/>
                         </robot>`
@@ -180,7 +180,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <child a="1" b="10" c="10"/>
                             <child a="1" b="10" c="3"/>
                             <other c="\${c}"/>
@@ -218,7 +218,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <first/>
                             <second/>
                             <third/>
@@ -254,7 +254,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <a/>
                             <c/>
                         </robot>`
@@ -283,7 +283,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <result c="100"/>
                             <after/>
                         </robot>`
@@ -320,7 +320,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <child/>
                             <after/>
                         </robot>`
@@ -352,7 +352,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <included/>
                             <included/>
                         </robot>`
@@ -382,7 +382,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <result a="2" b="10" c="10" d="10002"/>
                         </robot>`
                     ));
@@ -408,7 +408,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <result a="\${1 + 1}" b="$\${1 + 1}" c="$$\${1 + 1}"/>
                         </robot>`
                     ));
@@ -446,7 +446,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <result a="package" b="cwd" c="cwd"/>
                         </robot>`
                     ));
@@ -476,7 +476,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <inlined/>
                             <test a="a-val"/>
                             <child b="b-val"/>
@@ -502,7 +502,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <inlined-c/>
                             <inlined-b/>
                         </robot>`
@@ -512,16 +512,16 @@ describe('XacroLoader', () => {
             );
         });
 
-        it('should load relative paths.', done => {
+        it.only('should load relative paths.', done => {
             const files = {
-                'http://website.com/path/./folder/a.xacro': `
-                    <?xml version="1.0"?>
+                'http://website.com/path/./folder/a.xacro':
+                    `<?xml version="1.0"?>
                     <robot xmlns:xacro="http://ros.org/wiki/xacro">
                         <xacro:include filename="./b.xacro"/>
                     </robot>
                 `,
-                'http://website.com/path/./folder/./b.xacro': `
-                    <?xml version="1.0"?>
+                'http://website.com/path/./folder/./b.xacro':
+                    `<?xml version="1.0"?>
                     <robot xmlns:xacro="http://ros.org/wiki/xacro">
                     </robot>
                 `,
@@ -529,6 +529,7 @@ describe('XacroLoader', () => {
 
             const res = [];
             global.fetch = function(url) {
+                console.log('IN THING', url in files);
                 res.push(url);
                 return Promise.resolve({
                     text() { return files[url]; },
@@ -570,7 +571,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <inlined-c/>
                             <inlined-b/>
                         </robot>`
@@ -610,7 +611,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <result x="\${x}" y="\${y}" z="\${z}"/>
                             <result x="100" y="200" z="\${z}"/>
                             <a/>
@@ -649,7 +650,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <result x="100" y="200" z="300"/>
                             <result x="100" y="200" z="300"/>
                             <b/>
@@ -685,7 +686,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <test a="aa"/>
                             <child/>
 
@@ -724,7 +725,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <result value="100"/>
                             <after value="\${input}"/>
                             <after value="200"/>
@@ -754,7 +755,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
-                        `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        `<robot>
                             <result value="100"/>
                             <after value="100"/>
                         </robot>`
@@ -791,7 +792,24 @@ describe('XacroLoader', () => {
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
-                    expect(unformat(str)).toEqual(unformat(content));
+                    expect(unformat(str)).toEqual(unformat(`
+                        <robot  >
+                            <include filename="./a.xacro"/>
+                            <property name="input" value="100"/>
+                            <property name="block"><a/></property>
+
+                            <if value="1">100</if>
+                            <unless value="1">200</unless>
+
+                            <macro name="test">
+                                <result value="\${input}"/>
+                            </macro>
+
+                            <test/>
+                            <insert_block name="block"/>
+                            <after value="\${input}"/>
+                        </robot>
+                    `));
                     done();
                 },
                 { requirePrefix: true },
@@ -823,7 +841,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(`
-                        <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                        <robot>
                             <inlined/>
                             <a>100</a>
                             <result value="100"/>

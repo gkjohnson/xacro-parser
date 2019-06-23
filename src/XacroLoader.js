@@ -1,16 +1,23 @@
-import * as THREE from 'three';
-
 // TODO: Verify against ros-ran xacro files
 // TODO: Report errors / warnings back to the client
 
 const PARENT_SCOPE = Symbol('parent');
 
+function getUrlBase(url) {
+
+    const tokens = url.split(/[\\/]/g);
+    tokens.pop();
+    if (tokens.length === 0) return './';
+    return tokens.join('/') + '/';
+
+}
+
 export default
 class XacroLoader {
 
-    constructor(manager) {
+    constructor(manager = null) {
 
-        this.manager = manager || THREE.DefaultLoadingManager;
+        this.manager = manager;
 
     }
 
@@ -21,25 +28,32 @@ class XacroLoader {
         // prepending the package info
         const manager = this.manager;
         const xacroPath = this.manager.resolveURL(url);
-        const workingPath = THREE.LoaderUtils.extractUrlBase(url);
+        const workingPath = getUrlBase(url);
 
         options = Object.assign({ workingPath }, options);
 
-        manager.itemStart(xacroPath);
+        if (manager) {
+            manager.itemStart(xacroPath);
+        }
+
         fetch(xacroPath, options.fetchOptions)
             .then(res => res.text())
             .then(data => {
 
                 this.parse(data, onComplete, options);
-                manager.itemEnd(xacroPath);
+                if (manager) {
+                    manager.itemEnd(xacroPath);
+                }
 
             })
             .catch(e => {
 
                 // TODO: Add onProgress and onError functions here
                 console.error('XacroLoader: Error parsing file.', e);
-                manager.itemError(xacroPath);
-                manager.itemEnd(xacroPath);
+                if (manager) {
+                    manager.itemError(xacroPath);
+                    manager.itemEnd(xacroPath);
+                }
 
             });
 
@@ -428,7 +442,7 @@ class XacroLoader {
                     const filePath = /^[/\\]/.test(filename[0]) ? filename : currWorkingPath + filename;
 
                     const prevWorkingPath = currWorkingPath;
-                    currWorkingPath = THREE.LoaderUtils.extractUrlBase(filePath);
+                    currWorkingPath = getUrlBase(filePath);
 
                     const includeContent = await loadInclude(filePath);
                     const childNodes = [...includeContent.children[0].childNodes];
@@ -523,6 +537,7 @@ class XacroLoader {
                 return new DOMParser().parseFromString(text, 'text/xml');
             } catch (e) {
                 console.error('XacroLoader: Could not loader included file: ', path);
+                console.error(e);
             }
 
         }
@@ -547,7 +562,7 @@ class XacroLoader {
                     .then(content => {
                         results.push({ filename, namespace, content });
 
-                        const relPath = THREE.LoaderUtils.extractUrlBase(filePath);
+                        const relPath = getUrlBase(filePath);
                         return loadIncludes(content, relPath, results);
                     });
                 return pr;

@@ -1,10 +1,7 @@
 const path = require('path');
 
 const files = {
-    URDFLoader: 'URDFLoader.js',
-    URDFViewer: 'urdf-viewer-element.js',
-    URDFManipulator: 'urdf-manipulator-element.js',
-    XacroLoader: 'XacroLoader.js'
+    XacroLoader: 'XacroLoader.js',
 };
 
 const isExternal = p => {
