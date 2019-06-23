@@ -472,11 +472,6 @@ export class XacroParser {
 
         // Process a document node with a new property and macro scope
         async function processXacro(xacro, properties, macros) {
-            if (localProperties) {
-                properties = mergeObjects(properties);
-                macros = mergeObjects(macros);
-            }
-
             const res = xacro.cloneNode();
             for (let i = 0, l = xacro.children.length; i < l; i++) {
                 const child = await processNode(xacro.children[i], properties, macros);

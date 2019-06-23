@@ -416,8 +416,6 @@
                         const prevWorkingPath = currWorkingPath;
                         currWorkingPath = getUrlBase(filePath);
 
-                        console.log('HERE', filePath);
-
                         const includeContent = await loadInclude(filePath);
                         const childNodes = [...includeContent.children[0].childNodes];
                         const res = [];
@@ -487,11 +485,6 @@
 
             // Process a document node with a new property and macro scope
             async function processXacro(xacro, properties, macros) {
-                if (localProperties) {
-                    properties = mergeObjects(properties);
-                    macros = mergeObjects(macros);
-                }
-
                 const res = xacro.cloneNode();
                 for (let i = 0, l = xacro.children.length; i < l; i++) {
                     const child = await processNode(xacro.children[i], properties, macros);
@@ -600,7 +593,6 @@
             const parser = new XacroParser();
             Object.assign(parser, { workingPath }, options);
             parser.getFileContents = async function(path) {
-                console.log('HERE', path);
                 return (await fetch(path, options.fetchOptions)).text();
             };
 

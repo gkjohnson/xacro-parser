@@ -529,7 +529,6 @@ describe('XacroLoader', () => {
 
             const res = [];
             global.fetch = function(url) {
-                console.log('IN THING', url in files);
                 res.push(url);
                 return Promise.resolve({
                     text() { return files[url]; },
