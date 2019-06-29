@@ -10,7 +10,8 @@ interface XacroLoaderOptions {
     workingPath?: string,
     requirePrefix?: boolean,
 
-};
+}
+
 export default class URDFLoader {
 
     manager: LoadingManager;
