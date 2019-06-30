@@ -137,7 +137,8 @@ export class XacroParser {
 
                         stack.pop();
                         if (isNaN(parseFloat(expr)) || /[^0-9.eE]/.test(expr)) {
-                            return (new Function(`return ${ expr };`))();
+                            // TODO: Remove the potentially unsafe use of Function
+                            return (new Function(`return ${ expr };`))(); // eslint-disable-line no-new-func
                         } else {
                             return expr;
                         }
