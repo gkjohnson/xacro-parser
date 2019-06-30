@@ -1,6 +1,7 @@
 const path = require('path');
 
 const files = {
+    XacroParser: 'XacroParser.js',
     XacroLoader: 'XacroLoader.js',
 };
 
