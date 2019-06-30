@@ -1,9 +1,9 @@
 {
-  "name": "xacro-loader",
+  "name": "xacro-parser",
   "version": "0.0.1",
   "description": "",
-  "main": "umd/XacroLoader.js",
-  "module": "src/URDFLoader.js",
+  "main": "umd/index.js",
+  "module": "src/index.js",
   "scripts": {
     "start": "concurrently --kill-others \"rollup -c -w\" \"cd .. && static-server\"",
     "build": "rollup -c",
@@ -16,14 +16,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gkjohnson/xacro-loader.git"
+    "url": "git+https://github.com/gkjohnson/xacro-parser.git"
   },
   "author": "Garrett Johnson <garrett.kjohnson@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gkjohnson/xacro-loader/issues"
+    "url": "https://github.com/gkjohnson/xacro-parser/issues"
   },
-  "homepage": "https://github.com/gkjohnson/xacro-loader#readme",
+  "homepage": "https://github.com/gkjohnson/xacro-parser#readme",
   "keywords": [
     "javascript",
     "xacro",
