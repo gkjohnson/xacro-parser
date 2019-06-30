@@ -123,7 +123,7 @@ export class XacroParser {
                                 if (t in properties) {
                                     const arg = unpackParams(properties[t], properties);
                                     if (isNaN(parseFloat(arg)) || /[^0-9.eE]/.test(arg)) {
-                                        return `"${ arg.toString().replace(/"/g, '\\"') }"`;
+                                        return `"${ arg.toString().replace(/\\/g, '\\\\').replace(/"/g, '\\"') }"`;
                                     } else {
                                         return arg;
                                     }
