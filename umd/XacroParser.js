@@ -157,6 +157,7 @@
 
                                 // TODO: Remove the potentially unsafe use of Function
                                 return (new Function(`return ${ cleanExpr };`))(); // eslint-disable-line no-new-func
+
                             } else {
                                 return expr;
                             }
