@@ -122,7 +122,7 @@ export class XacroParser {
 
                                 if (t in properties) {
                                     const arg = unpackParams(properties[t], properties);
-                                    if (isNaN(parseFloat(arg)) || /[^0-9.eE]/.test(arg)) {
+                                    if (isNaN(parseFloat(arg)) || /[^0-9.eE-]/.test(arg)) {
                                         return `"${ arg.toString().replace(/\\/g, '\\\\').replace(/"/g, '\\"') }"`;
                                     } else {
                                         return arg;
@@ -399,7 +399,7 @@ export class XacroParser {
                         console.warn('XacroParser: xacro:include name spaces not supported.');
                     }
                     const filename = evaluateAttribute(node.getAttribute('filename'), properties);
-                    const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\/\//.test(filename);
+                    const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\//.test(filename);
                     const filePath = isAbsolute ? filename : currWorkingPath + filename;
 
                     const prevWorkingPath = currWorkingPath;
@@ -512,7 +512,7 @@ export class XacroParser {
 
                 const filename = el.getAttribute('filename');
                 const namespace = el.getAttribute('ns') || null;
-                const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\/\//.test(filename);
+                const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\//.test(filename);
                 const filePath = isAbsolute ? filename : workingPath + filename;
                 const pr = loadInclude(filePath)
                     .then(content => {
