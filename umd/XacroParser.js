@@ -135,7 +135,7 @@
 
                                     if (t in properties) {
                                         const arg = unpackParams(properties[t], properties);
-                                        if (isNaN(parseFloat(arg)) || /[^0-9.eE]/.test(arg)) {
+                                        if (isNaN(parseFloat(arg)) || /[^0-9.eE-]/.test(arg)) {
                                             return `"${ arg.toString().replace(/\\/g, '\\\\').replace(/"/g, '\\"') }"`;
                                         } else {
                                             return arg;
@@ -149,9 +149,14 @@
                                 .join('');
 
                             stack.pop();
-                            if (isNaN(parseFloat(expr)) || /[^0-9.eE]/.test(expr)) {
+                            if (isNaN(parseFloat(expr)) || /[^0-9.eE-]/.test(expr)) {
+
+                                // Remove any instances of "--" or "++" that might occur from negating a negative number
+                                // that are not in a string.
+                                const cleanExpr = expr.replace(/[+-]{2}(?=([^"]*"[^"]*")*[^"]*$)/g, (m, rest) => ` ${ m[0] } ${ m[1] } ${ rest || '' }`);
+
                                 // TODO: Remove the potentially unsafe use of Function
-                                return (new Function(`return ${ expr };`))(); // eslint-disable-line no-new-func
+                                return (new Function(`return ${ cleanExpr };`))(); // eslint-disable-line no-new-func
                             } else {
                                 return expr;
                             }
@@ -331,15 +336,10 @@
                     case 'xacro:property': {
                         const name = node.getAttribute('name');
 
-                        // TODO: The xacro tests work if the attribute is evaluated immediately but
-                        // some of examples seem to expect that every property retains its scope
-                        // and evaluate at the last possible moment.
                         let value;
                         if (node.hasAttribute('value')) {
-                            // value = evaluateAttribute(node.getAttribute('value'), properties);
                             value = node.getAttribute('value');
                         } else if (node.hasAttribute('default')) {
-                            // value = evaluateAttribute(node.getAttribute('default'), properties);
                             value = node.getAttribute('default');
                         } else {
                             const childNodes = [...node.childNodes];
@@ -349,18 +349,23 @@
                             }
                         }
 
+                        let scope = 'global';
                         if (localProperties) {
-                            const scope = node.getAttribute('scope') || 'local';
-                            if (scope === 'global') {
-                                globalProperties[name] = value;
-                            } else if (scope === 'parent') {
-                                properties[PARENT_SCOPE][name] = value;
-                                properties[name] = value;
-                            } else {
-                                properties[name] = value;
-                            }
-                        } else {
+                            scope = node.getAttribute('scope') || 'local';
+                        }
+
+                        // Emulated behavior here
+                        // https://github.com/ros/xacro/blob/melodic-devel/src/xacro/__init__.py#L565
+                        if (scope !== 'local') {
+                            value = evaluateAttribute(value, properties);
+                        }
+
+                        if (scope === 'global') {
                             globalProperties[name] = value;
+                        } else if (scope === 'parent') {
+                            properties[PARENT_SCOPE][name] = value;
+                        } else {
+                            properties[name] = value;
                         }
 
                         break;
@@ -412,7 +417,7 @@
                             console.warn('XacroParser: xacro:include name spaces not supported.');
                         }
                         const filename = evaluateAttribute(node.getAttribute('filename'), properties);
-                        const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\/\//.test(filename);
+                        const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\//.test(filename);
                         const filePath = isAbsolute ? filename : currWorkingPath + filename;
 
                         const prevWorkingPath = currWorkingPath;
@@ -525,7 +530,7 @@
 
                     const filename = el.getAttribute('filename');
                     const namespace = el.getAttribute('ns') || null;
-                    const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\/\//.test(filename);
+                    const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\//.test(filename);
                     const filePath = isAbsolute ? filename : workingPath + filename;
                     const pr = loadInclude(filePath)
                         .then(content => {
