@@ -5,8 +5,8 @@ const { JSDOM } = require('jsdom');
 const W3CXMLSerializer = require('w3c-xmlserializer');
 const request = require('request');
 const { unformat } = require('./utils.js');
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
 jest.setTimeout(120000);
 
@@ -28,9 +28,9 @@ function getFileContents(p) {
 
 };
 
-function getLocalContents(p) {
-    return fs.readFileSync(p, {encoding: 'utf8'});
-}
+// function getLocalContents(p) {
+//     return fs.readFileSync(p, {encoding: 'utf8'});
+// }
 
 beforeEach(() => {
     global.DOMParser = new JSDOM().window.DOMParser;
