@@ -3,14 +3,7 @@
 const XacroLoader = require('../umd/XacroLoader.js');
 const { JSDOM } = require('jsdom');
 const W3CXMLSerializer = require('w3c-xmlserializer');
-
-function unformat(xml) {
-    return xml
-        .replace(/>\s+</g, '><')
-        .replace(/<!--[\w\W]*?-->/g, '') // TODO: remove this
-        .replace(/\s*xmlns:xacro=".*?"/g, '')
-        .trim();
-}
+const { unformat } = require('./utils.js');
 
 const files = {
     './a.xacro':

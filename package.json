@@ -34,7 +34,7 @@
     "urdf",
     "urdf-models"
   ],
-  "dependencies": {
+  "devDependencies": {
     "concurrently": "^4.0.1",
     "eslint": "^5.14.1",
     "jest": "^24.1.0",
@@ -42,6 +42,7 @@
     "jsdom": "^15.1.1",
     "nyc": "^13.3.0",
     "rollup": "^0.66.6",
-    "w3c-xmlserializer": "^1.1.2"
+    "w3c-xmlserializer": "^1.1.2",
+    "request": "^2.88.0"
   }
 }
