@@ -143,7 +143,7 @@ export class XacroParser {
                             const cleanExpr = expr.replace(/[+-]{2}(?=([^"]*"[^"]*")*[^"]*$)/g, (m, rest) => ` ${ m[0] } ${ m[1] } ${ rest || '' }`);
 
                             // TODO: Remove the potentially unsafe use of Function
-                            return (new Function(`const e = E = null; return ${ cleanExpr };`))(); // eslint-disable-line no-new-func
+                            return (new Function(`return ${ cleanExpr };`))(); // eslint-disable-line no-new-func
 
                         } else {
                             return expr;

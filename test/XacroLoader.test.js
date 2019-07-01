@@ -475,6 +475,45 @@ describe('XacroLoader', () => {
                 }
             );
         });
+
+        it('should not allow evaluation of unsafe expressions.', done => {
+
+            let called = 0;
+            global.testFunc = () => called++;
+            global.e = () => called++;
+            global.E = () => called++;
+            global.e123 = () => called++;
+
+            const content =
+            `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <xacro:property name="tf" value="testFunc" />
+                    <result
+                        a="\${testFunc()}"
+                        b="\${global.testFunc()}"
+                        c="\${\${testFunc}()}"
+                        d="\${global.e()}"
+                        e="\${global.E()}"
+                        f="\${global['e']()}"
+                        g="\${e()}"
+                        h="\${E()}"
+                        i="\${e123()}"
+                    />
+                </robot>
+            `;
+
+            const loader = new XacroLoader();
+            loader.parse(content, () => {
+                expect(called).toEqual(0);
+
+                delete global.e;
+                delete global.e123;
+                delete global.E;
+                delete global.testFunc;
+                done();
+            });
+
+        });
     });
 
     describe('rospack commands', () => {
