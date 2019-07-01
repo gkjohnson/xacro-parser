@@ -399,7 +399,8 @@ export class XacroParser {
                         console.warn('XacroParser: xacro:include name spaces not supported.');
                     }
                     const filename = evaluateAttribute(node.getAttribute('filename'), properties);
-                    const filePath = /^[/\\]/.test(filename[0]) ? filename : currWorkingPath + filename;
+                    const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\/\//.test(filename);
+                    const filePath = isAbsolute ? filename : currWorkingPath + filename;
 
                     const prevWorkingPath = currWorkingPath;
                     currWorkingPath = getUrlBase(filePath);
@@ -511,7 +512,8 @@ export class XacroParser {
 
                 const filename = el.getAttribute('filename');
                 const namespace = el.getAttribute('ns') || null;
-                const filePath = /[/\\]/.test(filename[0]) ? filename : workingPath + filename;
+                const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\/\//.test(filename);
+                const filePath = isAbsolute ? filename : workingPath + filename;
                 const pr = loadInclude(filePath)
                     .then(content => {
                         results.push({ filename, namespace, content });
