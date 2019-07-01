@@ -512,7 +512,7 @@ describe('XacroLoader', () => {
             );
         });
 
-        it.only('should load relative paths.', done => {
+        it('should load relative paths.', done => {
             const files = {
                 'http://website.com/path/./folder/a.xacro':
                     `<?xml version="1.0"?>
@@ -792,7 +792,7 @@ describe('XacroLoader', () => {
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(`
-                        <robot  >
+                        <robot>
                             <include filename="./a.xacro"/>
                             <property name="input" value="100"/>
                             <property name="block"><a/></property>
