@@ -264,6 +264,37 @@ describe('XacroLoader', () => {
             );
         });
 
+        it('should handle element references after the first parameters.', done => {
+            const content =
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <xacro:macro name="test" params="x y z *a *b">
+                        <xacro:insert_block name="a"/>
+                        <xacro:insert_block name="b"/>
+                        <child x="\${x}" y="\${y}" z="\${z}"/>
+                    </xacro:macro>
+                    <xacro:test x="1" y="2" z="3">
+                        <a/>
+                        <b/>
+                    </xacro:test>
+                </robot>
+            `;
+            const loader = new XacroLoader();
+            loader.parse(
+                content, res => {
+                    const str = new XMLSerializer().serializeToString(res);
+                    expect(unformat(str)).toEqual(unformat(
+                        `<robot>
+                            <a/>
+                            <b/>
+                            <child x="1" y="2" z="3"/>
+                        </robot>`
+                    ));
+                    done();
+                }
+            );
+        });
+
         it('should expand macros recursively.', done => {
             const content =
                 `<?xml version="1.0"?>
@@ -389,6 +420,34 @@ describe('XacroLoader', () => {
                     done();
                 }
             );
+        });
+
+        it('should correctly interpret negative numbers as numbers', done => {
+            const content =
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <xacro:property name="val" value="-1"/>
+                    <xacro:property name="reflect" value="\${val}"/>
+                    <result
+                        a="\${(reflect + 1)}"
+                        b="\${(reflect + 1) / 2}"
+                        c="\${reflect}"
+                    />
+                </robot>
+            `;
+            const loader = new XacroLoader();
+            loader.parse(
+                content, res => {
+                    const str = new XMLSerializer().serializeToString(res);
+                    expect(unformat(str)).toEqual(unformat(
+                        `<robot>
+                            <result a="0" b="0" c="-1"/>
+                        </robot>`
+                    ));
+                    done();
+                }
+            );
+
         });
 
         it('should escape dollar signs correctly', done => {
