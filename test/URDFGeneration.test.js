@@ -5,6 +5,8 @@ const { JSDOM } = require('jsdom');
 const W3CXMLSerializer = require('w3c-xmlserializer');
 const request = require('request');
 const { unformat } = require('./utils.js');
+const fs = require('fs');
+const path = require('path');
 
 jest.setTimeout(120000);
 
@@ -25,6 +27,10 @@ function getFileContents(p) {
     });
 
 };
+
+function getLocalContents(p) {
+    return fs.readFileSync(p, {encoding: 'utf8'});
+}
 
 beforeEach(() => {
     global.DOMParser = new JSDOM().window.DOMParser;
@@ -62,6 +68,8 @@ describe('XacroParser', () => {
 
         const valDescription = 'https://gitlab.com/nasa-jsc-robotics/val_description/raw/77f19dc07700c30ea8f34a572600c2db0355dacc/';
         const stem = 'https://gitlab.com/nasa-jsc-robotics/val_description/raw/77f19dc07700c30ea8f34a572600c2db0355dacc/model/robots/';
+        // const valDescription = (path.resolve('./fixtures/val/val_description-77f19dc07700c30ea8f34a572600c2db0355dacc/') + '/').replace(/\\/g, '/');
+        // const stem = (path.resolve('./fixtures/val/val_description-77f19dc07700c30ea8f34a572600c2db0355dacc/model/robots/') + '/').replace(/\\/g, '/');
         const r2b = stem + 'valkyrie_A.xacro';
 
         const parser = new XacroParser();
@@ -76,6 +84,7 @@ describe('XacroParser', () => {
         };
         parser.workingPath = stem;
         parser.getFileContents = getFileContents;
+        // parser.getFileContents = getLocalContents;
 
         const text = await parser.getFileContents(r2b);
         const result = await parser.parse(text);
@@ -85,7 +94,7 @@ describe('XacroParser', () => {
         serialized = serialized.replace(/-?(([0-9]+?\.[0-9]+)|([0-9]+))([eE]-?[0-9]+)?/g, num => parseFloat(num).toFixed(6));
         serialized = serialized.replace(/(Kp=".+?") (Kd=".+?") (Ki=".+?")/g, (match, kp, kd, ki) => `${ kd } ${ ki } ${ kp }`);
 
-        let answer = await parser.getFileContents('https://raw.githubusercontent.com/gkjohnson/nasa-urdf-robots/master/val_description/model/robots/valkyrie_A.urdf');
+        let answer = await getFileContents('https://raw.githubusercontent.com/gkjohnson/nasa-urdf-robots/master/val_description/model/robots/valkyrie_A.urdf');
         answer = answer.replace(/(rpy=".+?") (xyz=".+?")/g, (match, m1, m2) => `${ m2 } ${ m1 }`);
         answer = answer.replace('<?xml version="1.0" ?>', '').trim();
         answer = answer.replace(/-?(([0-9]+?\.[0-9]+)|([0-9]+))([eE]-?[0-9]+)?/g, num => parseFloat(num).toFixed(6));
