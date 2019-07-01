@@ -136,9 +136,14 @@ export class XacroParser {
                             .join('');
 
                         stack.pop();
-                        if (isNaN(parseFloat(expr)) || /[^0-9.eE]/.test(expr)) {
+                        if (isNaN(parseFloat(expr)) || /[^0-9.eE-]/.test(expr)) {
+
+                            // Remove any instances of "--" or "++" that might occur from negating a negative number
+                            // that are not in a string.
+                            const cleanExpr = expr.replace(/[+-]{2}(?=([^"]*"[^"]*")*[^"]*$)/g, (m, rest) => ` ${ m[0] } ${ m[1] } ${ rest || '' }`);
+
                             // TODO: Remove the potentially unsafe use of Function
-                            return (new Function(`return ${ expr };`))(); // eslint-disable-line no-new-func
+                            return (new Function(`return ${ cleanExpr };`))(); // eslint-disable-line no-new-func
                         } else {
                             return expr;
                         }
