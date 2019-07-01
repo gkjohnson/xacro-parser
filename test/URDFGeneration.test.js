@@ -80,6 +80,7 @@ describe('XacroParser', () => {
         const text = await parser.getFileContents(r2b);
         const result = await parser.parse(text);
         let serialized = new XMLSerializer().serializeToString(result);
+        serialized = serialized.replace(/&#x9;/g, ' '); // unicode tab html entity
         serialized = serialized.replace(/(rpy=".+?") (xyz=".+?")/g, (match, m1, m2) => `${ m2 } ${ m1 }`);
         serialized = serialized.replace(/-?(([0-9]+?\.[0-9]+)|([0-9]+))([eE]-?[0-9]+)?/g, num => parseFloat(num).toFixed(6));
         serialized = serialized.replace(/(Kp=".+?") (Kd=".+?") (Ki=".+?")/g, (match, kp, kd, ki) => `${ kd } ${ ki } ${ kp }`);
