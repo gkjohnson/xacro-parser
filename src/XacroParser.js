@@ -318,15 +318,10 @@ export class XacroParser {
                 case 'xacro:property': {
                     const name = node.getAttribute('name');
 
-                    // TODO: The xacro tests work if the attribute is evaluated immediately but
-                    // some of examples seem to expect that every property retains its scope
-                    // and evaluate at the last possible moment.
                     let value;
                     if (node.hasAttribute('value')) {
-                        // value = evaluateAttribute(node.getAttribute('value'), properties);
                         value = node.getAttribute('value');
                     } else if (node.hasAttribute('default')) {
-                        // value = evaluateAttribute(node.getAttribute('default'), properties);
                         value = node.getAttribute('default');
                     } else {
                         const childNodes = [...node.childNodes];
@@ -336,18 +331,23 @@ export class XacroParser {
                         }
                     }
 
+                    let scope = 'global';
                     if (localProperties) {
-                        const scope = node.getAttribute('scope') || 'local';
-                        if (scope === 'global') {
-                            globalProperties[name] = value;
-                        } else if (scope === 'parent') {
-                            properties[PARENT_SCOPE][name] = value;
-                            properties[name] = value;
-                        } else {
-                            properties[name] = value;
-                        }
-                    } else {
+                        scope = node.getAttribute('scope') || 'local';
+                    }
+
+                    // Emulated behavior here
+                    // https://github.com/ros/xacro/blob/melodic-devel/src/xacro/__init__.py#L565
+                    if (scope !== 'local') {
+                        value = evaluateAttribute(value, properties);
+                    }
+
+                    if (scope === 'global') {
                         globalProperties[name] = value;
+                    } else if (scope === 'parent') {
+                        properties[PARENT_SCOPE][name] = value;
+                    } else {
+                        properties[name] = value;
                     }
 
                     break;
