@@ -913,4 +913,6 @@ describe('XacroLoader', () => {
             );
         });
     });
+
+    it.todo('test absolute path resolution for cases with "/", "C:/", "C:\\", "https://", etc');
 });
