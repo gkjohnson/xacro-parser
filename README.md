@@ -10,7 +10,7 @@ Javascript parser and loader for processing the [ROS Xacro file format](http://w
 **NOTE**
 _This package uses [new Function](https://github.com/gkjohnson/xacro-parser/blob/master/src/XacroParser.js#L146), which can be unsafe to evaluate. While an effort has been made to sanitize the expressions in the xacro file it is not complete._
 
-_Docs in progress and do not reflect current API_
+**_Docs in progress and do not reflect current API!_**
 
 # Use
 
@@ -25,12 +25,6 @@ xacroParser.getFileContents = path => {
   return fs.readFile(path, { encoding: 'utf8' });
 
 };
-
-xacroParser.load('./path/to/file.xacro').then(xml => {
-
-  // ... xml file ...
-
-});
 ```
 
 ## Loading Files from Server
@@ -45,12 +39,6 @@ xacroParser.getFileContents = path => {
   return fetch(path).then(res => res.text());
 
 };
-
-xacroParser.load('./path/to/file.xacro').then(xml => {
-
-  // ... xml file ...
-
-});
 ```
 
 # API
@@ -91,10 +79,4 @@ rospackCommands = {} : Object | Function
 
 ```js
 parse( contents : string ) : Promise<XMLDocument>
-```
-
-### .load
-
-```js
-load( url : string ) : Promise<XMLDocument>
 ```
