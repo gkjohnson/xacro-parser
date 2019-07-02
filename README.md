@@ -96,5 +96,5 @@ parse( contents : string ) : Promise<XMLDocument>
 ### .load
 
 ```js
-parse( url : string ) : Promise<XMLDocument>
+load( url : string ) : Promise<XMLDocument>
 ```
