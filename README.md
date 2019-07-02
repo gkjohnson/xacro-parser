@@ -9,3 +9,65 @@ Javascript parser and loader for processing the [ROS Xacro file format](http://w
 
 **NOTE**
 _This package uses [new Function](https://github.com/gkjohnson/xacro-parser/blob/master/src/XacroParser.js#L146), which can be unsafe to evaluate. While an effort has been made to sanitize the expressions in the xacro file it is not complete._
+
+_Docs in progress and do not reflect current API_
+
+# Use
+
+## Loading Files From Disk
+
+```js
+import fs from 'fs';
+import { XacroParser } from 'xacro-parser';
+
+xacroParser.getFileContents = path => {
+
+  return fs.readFile(path, { encoding: 'utf8' });
+
+};
+
+xacroParser.load('./path/to/file.xacro').then(xml => {
+
+  // ... xml file ...
+
+});
+```
+
+## Loading Files from Server
+
+```js
+
+import fs from 'fs';
+import { XacroParser } from 'xacro-parser';
+
+xacroParser.getFileContents = path => {
+
+  return fetch(path).then(res => res.text());
+
+};
+
+xacroParser.load('./path/to/file.xacro').then(xml => {
+
+  // ... xml file ...
+
+});
+```
+
+# API
+
+## XacroParser
+
+### .localProperties
+
+### .requirePrefix
+
+### .inOrder
+
+### .workingPath
+
+### .rospackCommands
+
+### .parse
+
+### .load
+
