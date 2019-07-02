@@ -59,15 +59,42 @@ xacroParser.load('./path/to/file.xacro').then(xml => {
 
 ### .localProperties
 
+```js
+localProperties = true : boolean
+```
+
 ### .requirePrefix
+
+```js
+requirePrefix = true : boolean
+```
 
 ### .inOrder
 
+```js
+inOrder = true : boolean
+```
+
 ### .workingPath
+
+```js
+workingPath = '' : string
+```
 
 ### .rospackCommands
 
+```js
+rospackCommands = {} : Object | Function
+```
+
 ### .parse
+
+```js
+parse( contents : string ) : Promise<XMLDocument>
+```
 
 ### .load
 
+```js
+parse( url : string ) : Promise<XMLDocument>
+```
