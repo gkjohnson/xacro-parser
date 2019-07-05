@@ -20,11 +20,17 @@ _This package uses [new Function](https://github.com/gkjohnson/xacro-parser/blob
 import fs from 'fs';
 import { XacroParser } from 'xacro-parser';
 
-xacroParser.getFileContents = path => {
+const parser = new XacroParser();
+parser.workingPath = './path/to/directory/';
+parser.getFileContents = path => fs.readFile(path, { encoding: 'utf8' });
 
-  return fs.readFile(path, { encoding: 'utf8' });
+const xacroContents = fs.readFileSync('./path/to/directory/file.xacro', { encoding: 'utf8' });
+parser.parse(xacroContents).then(result => {
 
-};
+  // xacro XML
+
+});
+
 ```
 
 ## Loading Files from Server
@@ -34,11 +40,32 @@ xacroParser.getFileContents = path => {
 import fs from 'fs';
 import { XacroParser } from 'xacro-parser';
 
-xacroParser.getFileContents = path => {
+const parser = new XacroParser();
+parser.workingPath = './path/to/directory/';
+parser.getFileContents = path => fetch(path).then(res => res.text());
 
-  return fetch(path).then(res => res.text());
+const xacroContents = fetch('./path/to/directory/file.xacro', { encoding: 'utf8' });
+parser.parse(xacroContents).then(result => {
 
-};
+  // xacro XML
+
+});
+
+```
+
+## Using the Loader
+
+```js
+import { XacroLoader } from 'xacro-parser';
+
+// The working path is extracted automatically.
+// Only works in the browser.
+const loader = new XacroLoader();
+loader.load('../path/to/file.xacro').then(result => {
+
+  // xacro XML
+
+});
 ```
 
 # API
@@ -51,11 +78,15 @@ xacroParser.getFileContents = path => {
 localProperties = true : boolean
 ```
 
+Since `ROS Jade` xacro [scopes property definitions to the containing macro](http://wiki.ros.org/xacro#Local_properties). Setting `localProperties` to false disables this behavior.
+
 ### .requirePrefix
 
 ```js
 requirePrefix = true : boolean
 ```
+
+Since `ROS Jade` xacro [requires all tags be prefixed with "xacro:"](http://wiki.ros.org/xacro#Deprecated_Syntax). Setting `requirePrefix` to false disables this requirement.
 
 ### .inOrder
 
@@ -63,16 +94,35 @@ requirePrefix = true : boolean
 inOrder = true : boolean
 ```
 
+Since `ROS Jade` xacro allows for [in order](http://wiki.ros.org/xacro#Processing_Order) processing, which allows variables to be used to define include paths and order-dependent property definitions. The equivalent of the `--inorder` xacro command line flag.
+
 ### .workingPath
 
 ```js
 workingPath = '' : string
 ```
 
+The working directory to search for dependent files in when parsing `include` tags. The path is required to end with '/'.
+
 ### .rospackCommands
 
 ```js
-rospackCommands = {} : Object | Function
+rospackCommands = {} : Object
+```
+
+A map of rospack command stem to handling function that take all arguments as function parameters. An example implementation of the `rospack find` command:
+
+```js
+{
+  find: function(pkg) {
+    switch(pkg) {
+      case 'valkyrie_description:
+        return '/absolute/path/to/valkyrie_description/';
+      case 'r2_description:
+        return '/absolute/path/to/r2_description/'
+    }
+  }
+}
 ```
 
 ### .parse
@@ -80,3 +130,13 @@ rospackCommands = {} : Object | Function
 ```js
 parse( contents : string ) : Promise<XMLDocument>
 ```
+
+Parses the passed xacro contents using the options specified on the object and returns an xml document of the processed xacro file.
+
+### .getFileContents
+
+```js
+getFileContents( path : string ) : Promise<string>
+```
+
+And overrideable function that takes a file path and returns the contents of that file as a string. Used for loading a documents referenced in `include` tags.
