@@ -19,6 +19,10 @@ _This package uses [new Function](https://github.com/gkjohnson/xacro-parser/blob
 ```js
 import fs from 'fs';
 import { XacroParser } from 'xacro-parser';
+import { JSDOM } from 'jsdom';
+
+// XacroParser depends on the browser xml parser.
+global.DOMParser = new JSDOM().window.DOMParser;
 
 const parser = new XacroParser();
 parser.workingPath = './path/to/directory/';
