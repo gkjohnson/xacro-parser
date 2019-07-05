@@ -156,3 +156,37 @@ And overrideable function that takes a file path and returns the contents of tha
 
 - The official xacro parser supports using basically any Python syntax in the `${}` syntax which can't be easily supported in Javascript. Instead basic argument substitution and expression evaluation is supported but this does not include yaml, arrays, dictionaries, or math functions like sin or cos [#15](https://github.com/gkjohnson/xacro-parser/issues/15), [#17](https://github.com/gkjohnson/xacro-parser/issues/17).
 - Evaluation uses `new Function` to evaluate expressions, which can be unsafe. An effort has been made to sanitize the expressions but it is not guaranteed to be complete [#4](https://github.com/gkjohnson/xacro-parser/issues/4).
+
+# Undocumented Xacro Behavior
+
+While the documentation for the xacro format is relatively complete there are some features that cannot necessarily be well understood without looking at code or tests.
+
+## Macro Property Scope
+
+The `xacro:property` tags can have a `scope` attribute on them that can take "global" and "parent" values, which adds the property to the global or parent scope respetively. Neither of these is the default, though. If the scope is not specified then the variable is only relevant to the macro scope.
+
+## Include Block Macro Parameters Look at Incremental Children
+
+The docs for the `<xacro:macro params="*a *b" ... >` syntax makes it look like it's important that the name of the `*` parameters be the same as the tag they are including or that they always reference the first element but this is not the case. Instead the first `*` parameter refers the first one and the second one refers to the second element and so on.
+
+## Macro Call Contents are Evaluated _Before_ Running a Macro
+
+Consider the following:
+
+```xml
+<xacro:macro name="test" params="*a *b">
+  <xacro:insert_block name="a"/>
+  <xacro:insert_block name="b"/>
+</xacro:macro>
+<test>
+  <xacro:if value="true">
+    <child1/>
+  </xacro:if>
+  <xacro:if value="true">
+    <child2/>
+  </xacro:if>
+  <child3/>
+</test>
+```
+
+The macro "test" includes the first and second elements of the caller when generating the contents. The contents of the caller element are to be evaluated first _before_ evaluating the macro, though, which means the if statements will be removed and test will be left with `child1` and `child3` before the elements are included in the test macro body.
