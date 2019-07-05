@@ -7,5 +7,6 @@ export default class XacroParser {
     requirePrefix?: boolean;
 
     parse(content: string): Promise<XMLDocument>;
+    getFileContents(path: string): Promise<string>;
 
 }
