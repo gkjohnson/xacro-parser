@@ -1,6 +1,3 @@
-import { LoadingManager, Object3D } from 'three';
-import { URDFRobot } from './URDFClasses';
-
 interface XacroLoaderOptions {
 
     rospackCommands?: { [key: string]: (...args:string[]) => string },
