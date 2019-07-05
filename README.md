@@ -190,3 +190,7 @@ Consider the following:
 ```
 
 The macro "test" includes the first and second elements of the caller when generating the contents. The contents of the caller element are to be evaluated first _before_ evaluating the macro, though, which means the if statements will be removed and test will be left with `child1` and `child3` before the elements are included in the test macro body.
+
+## Properties are Evaluated Immediately if "Local"
+
+When tracking properties the expression itself is added to the property scope and evaluated when used in an attribute. _However_ when a property is scoped locally (as in does not have a global or parent scope property) then it is evaluated immediately.
