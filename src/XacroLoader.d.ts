@@ -12,11 +12,8 @@ interface XacroLoaderOptions {
 
 }
 
-export default class URDFLoader {
+export default class XacroLoader {
 
-    manager: LoadingManager;
-
-    constructor(manager?: LoadingManager);
     load(url: string, onLoad: (result: XMLDocument) => void, options?: XacroLoaderOptions): void;
     parse(content: string, onLoad: (result: XMLDocument) => void, options?: XacroLoaderOptions): void;
 
