@@ -8,9 +8,7 @@
 Javascript parser and loader for processing the [ROS Xacro file format](http://wiki.ros.org/xacro). 
 
 **NOTE**
-_This package uses [new Function](https://github.com/gkjohnson/xacro-parser/blob/master/src/XacroParser.js#L146), which can be unsafe to evaluate. While an effort has been made to sanitize the expressions in the xacro file it is not complete._
-
-**_Docs in progress and do not reflect current API!_**
+_This package uses [new Function](https://github.com/gkjohnson/xacro-parser/blob/master/src/XacroParser.js#L146), which can be unsafe to evaluate. While an effort has been made to sanitize the expressions in the xacro file it is not guaranteed to be complete._
 
 # Use
 
@@ -144,3 +142,17 @@ getFileContents( path : string ) : Promise<string>
 ```
 
 And overrideable function that takes a file path and returns the contents of that file as a string. Used for loading a documents referenced in `include` tags.
+
+# Limitations and Missing Features
+
+## Unimplemented Features
+
+- Substituation args using the default arg tags and the `$(arg val)` command are not supported [#3](https://github.com/gkjohnson/xacro-parser/issues/3).
+- Macro argument pass-through using `param:=^|default` is not supported [#5](https://github.com/gkjohnson/xacro-parser/issues/5).
+- Calling macros with a dynamic name using the `<xacro:call macro="${var}"/>` syntax is not supported [#9](https://github.com/gkjohnson/xacro-parser/issues/9). 
+- Include tag namespaces are not supported [#12](https://github.com/gkjohnson/xacro-parser/issues/12).
+
+## Limitations
+
+- The official xacro parser supports using basically any Python syntax in the `${}` syntax which can't be easily supported in Javascript. Instead basic argument substitution and expression evaluation is supported but this does not include yaml, arrays, dictionaries, or math functions like sin or cos [#15](https://github.com/gkjohnson/xacro-parser/issues/15), [#17](https://github.com/gkjohnson/xacro-parser/issues/17).
+- Evaluation uses `new Function` to evaluate expressions, which can be unsafe. An effort has been made to sanitize the expressions but it is not guaranteed to be complete [#4](https://github.com/gkjohnson/xacro-parser/issues/4).
