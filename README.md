@@ -193,4 +193,4 @@ The macro "test" includes the first and second elements of the caller when gener
 
 ## Properties are Evaluated Immediately if "Local"
 
-When tracking properties the expression itself is added to the property scope and evaluated when used in an attribute. _However_ when a property is scoped locally (as in does not have a global or parent scope property) then it is evaluated immediately.
+When tracking properties the unevaluated expression itself is added to the property scope and evaluated when used in an attribute. _However_ when a property is scoped locally (as in does not have a global or parent scope property) then it is evaluated immediately, as seen [here](https://github.com/ros/xacro/blob/melodic-devel/src/xacro/__init__.py#L565).
