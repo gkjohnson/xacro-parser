@@ -11,7 +11,7 @@ interface XacroLoaderOptions {
 
 export default class XacroLoader {
 
-    load(url: string, options?: XacroLoaderOptions): Promise<XMLDocument>;
-    parse(content: string, options?: XacroLoaderOptions): Promise<XMLDocument>;
+    load(url: string, onLoad: (xml: XMLDocument) => void, options?: XacroLoaderOptions): Promise<XMLDocument>;
+    parse(content: string, onLoad: (xml: XMLDocument) => void, options?: XacroLoaderOptions): Promise<XMLDocument>;
 
 }
