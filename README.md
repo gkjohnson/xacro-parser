@@ -118,9 +118,9 @@ A map of rospack command stem to handling function that take all arguments as fu
 {
   find: function(pkg) {
     switch(pkg) {
-      case 'valkyrie_description:
+      case 'valkyrie_description':
         return '/absolute/path/to/valkyrie_description/';
-      case 'r2_description:
+      case 'r2_description':
         return '/absolute/path/to/r2_description/'
     }
   }
