@@ -5,7 +5,7 @@
 [![travis build](https://img.shields.io/travis/gkjohnson/xacro-parser.svg?style=flat-square)](https://travis-ci.com/gkjohnson/xacro-parser)
 [![lgtm code quality](https://img.shields.io/lgtm/grade/javascript/g/gkjohnson/xacro-parser.svg?style=flat-square&label=code-quality)](https://lgtm.com/projects/g/gkjohnson/xacro-parser/)
 
-Javascript parser and loader for processing the [ROS Xacro file format](http://wiki.ros.org/xacro). 
+Javascript parser and loader for processing the [ROS Xacro file format](http://wiki.ros.org/xacro).
 
 **NOTE**
 _This package uses [new Function](https://github.com/gkjohnson/xacro-parser/blob/master/src/XacroParser.js#L146), which can be unsafe to evaluate. While an effort has been made to sanitize the expressions in the xacro file it is not guaranteed to be complete._
@@ -63,11 +63,18 @@ import { XacroLoader } from 'xacro-parser';
 // The working path is extracted automatically.
 // Only works in the browser.
 const loader = new XacroLoader();
-loader.load('../path/to/file.xacro').then(result => {
+loader.load(
+    '../path/to/file.xacro',
+    result => {
 
-  // xacro XML
+        // xacro XML
 
-});
+    },
+    err => {
+
+        // parse error
+
+    });
 ```
 
 # API
@@ -143,13 +150,47 @@ getFileContents( path : string ) : Promise<string>
 
 And overrideable function that takes a file path and returns the contents of that file as a string. Used for loading a documents referenced in `include` tags.
 
+## XacroLoader
+
+_extends [XacroParser](#XacroParser)_
+
+Extends XacroParse and implements `getFileContents` to load from a server using fetch.
+
+### .fetchOptions
+
+```js
+fetchOptions = {} : Object
+```
+
+### .load
+
+```js
+load(
+    url : string,
+    onComplete : ( result : XMLDocument ) => void,
+    onError? : ( error : Error ) => void
+) : void
+```
+
+### .parse
+
+```js
+parse(
+    url : string,
+    onComplete : ( result : XMLDocument ) => void,
+    onError? : ( error : Error ) => void
+) : void
+```
+
+### .parse
+
 # Limitations and Missing Features
 
 ## Unimplemented Features
 
 - Substituation args using the default arg tags and the `$(arg val)` command are not supported [#3](https://github.com/gkjohnson/xacro-parser/issues/3).
 - Macro argument pass-through using `param:=^|default` is not supported [#5](https://github.com/gkjohnson/xacro-parser/issues/5).
-- Calling macros with a dynamic name using the `<xacro:call macro="${var}"/>` syntax is not supported [#9](https://github.com/gkjohnson/xacro-parser/issues/9). 
+- Calling macros with a dynamic name using the `<xacro:call macro="${var}"/>` syntax is not supported [#9](https://github.com/gkjohnson/xacro-parser/issues/9).
 - Include tag namespaces are not supported [#12](https://github.com/gkjohnson/xacro-parser/issues/12).
 
 ## Limitations

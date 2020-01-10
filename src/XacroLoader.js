@@ -4,6 +4,13 @@ import { XacroParser } from './XacroParser.js';
 export default
 class XacroLoader extends XacroParser {
 
+    constructor() {
+
+        super();
+        this.fetchOptions = {};
+
+    }
+
     load(url, onComplete, onError) {
 
         const workingPath = getUrlBase(url);
