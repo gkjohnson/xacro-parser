@@ -77,6 +77,30 @@ loader.load(
     });
 ```
 
+# Different Versions of ROS
+
+Xacro files from different versions of ROS require different options to be to be set. The differences are documented in the [spec](http://wiki.ros.org/xacro).
+
+## <= ROS Indigo
+
+Options required for xacros created with a ROS version <= release 8.
+
+```js
+parser.inOrder = false;
+paser.requirePrefix = false;
+paser.localProperties = false;
+```
+
+## >= ROS Jade
+
+Options required for xacros created with a ROS version <= release 9.
+
+```js
+parser.inOrder = true;
+paser.requirePrefix = true;
+paser.localProperties = true;
+```
+
 # API
 
 ## XacroParser
