@@ -43,13 +43,38 @@ beforeEach(() => {
         url = url.replace(/^(\.\/)+/, './');
         return Promise.resolve({
             text() {
-                return Promise.resolve(files[url]);
+                if (url in files) {
+                    return Promise.resolve(files[url]);
+                } else {
+                    return Promise.reject(new Error());
+                }
             },
         });
     };
 });
 
 describe('XacroLoader', () => {
+    describe('error callback', () => {
+        it('should get called if the file couldn\'t be loaded', done => {
+            const loader = new XacroLoader();
+            loader.load('nonexistent.xacro', () => {}, e => done());
+        });
+
+        it('should get called if a child file couldn\'t be loaded', done => {
+            const loader = new XacroLoader();
+            loader.parse(
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <xacro:include filename="./nonexistent.xacro"/>
+                    <inlined-b/>
+                </robot>
+                `,
+                () => {},
+                e => done()
+            );
+        });
+    });
+
     describe('properties', () => {
         it('should replace property values in attributes.', done => {
             const content =
