@@ -87,8 +87,8 @@ Options required for xacros created with a ROS version <= release 8.
 
 ```js
 parser.inOrder = false;
-paser.requirePrefix = false;
-paser.localProperties = false;
+parser.requirePrefix = false;
+parser.localProperties = false;
 ```
 
 ## >= ROS Jade
@@ -97,8 +97,8 @@ Options required for xacros created with a ROS version <= release 9.
 
 ```js
 parser.inOrder = true;
-paser.requirePrefix = true;
-paser.localProperties = true;
+parser.requirePrefix = true;
+parser.localProperties = true;
 ```
 
 # API
