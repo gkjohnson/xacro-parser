@@ -50,13 +50,13 @@ beforeEach(() => {
 function runXacro(content, done, options) {
     return new Promise(resolve => {
         const loader = new XacroLoader();
+        Object.assign(loader, options);
         loader.parse(
             content, res => {
                 const str = new XMLSerializer().serializeToString(res);
                 done(unformat(str));
                 resolve();
-            },
-            options
+            }
         );
     });
 

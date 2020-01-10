@@ -526,20 +526,19 @@ describe('XacroLoader', () => {
             `;
 
             let called = 0;
-            const options = {
-                rospackCommands: {
-                    'find-package': (...args) => {
-                        expect(args).toEqual(['test', 'args']);
-                        return 'package';
-                    },
-                    'cwd': () => {
-                        called++;
-                        return 'cwd';
-                    },
+            const loader = new XacroLoader();
+
+            loader.rospackCommands = {
+                'find-package': (...args) => {
+                    expect(args).toEqual(['test', 'args']);
+                    return 'package';
+                },
+                'cwd': () => {
+                    called++;
+                    return 'cwd';
                 },
             };
 
-            const loader = new XacroLoader();
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
@@ -550,8 +549,7 @@ describe('XacroLoader', () => {
                     ));
                     expect(called).toEqual(2);
                     done();
-                },
-                options,
+                }
             );
         });
 
@@ -641,6 +639,7 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
+            loader.workingPath = 'http://website.com/path/';
             loader.parse(
                 content, () => {
                     expect(res).toEqual([
@@ -648,8 +647,7 @@ describe('XacroLoader', () => {
                         'http://website.com/path/./folder/./b.xacro',
                     ]);
                     done();
-                },
-                { workingPath: 'http://website.com/path/'}
+                }
             );
 
         });
@@ -704,6 +702,8 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
+            loader.localProperties = false;
+            loader.inOrder = true;
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
@@ -716,8 +716,7 @@ describe('XacroLoader', () => {
                         </robot>`
                     ));
                     done();
-                },
-                { localProperties: false, inOrder: true },
+                }
             );
         });
 
@@ -743,6 +742,8 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
+            loader.localProperties = false;
+            loader.inOrder = false;
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
@@ -755,8 +756,7 @@ describe('XacroLoader', () => {
                         </robot>`
                     ));
                     done();
-                },
-                { localProperties: false, inOrder: false },
+                }
             );
         });
 
@@ -779,6 +779,7 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
+            loader.inOrder = true;
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
@@ -794,8 +795,7 @@ describe('XacroLoader', () => {
                         </robot>`
                     ));
                     done();
-                },
-                { inOrder: true }
+                }
             );
         });
 
@@ -818,6 +818,8 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
+            loader.localProperties = true;
+            loader.inOrder = true;
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
@@ -829,8 +831,7 @@ describe('XacroLoader', () => {
                         </robot>`
                     ));
                     done();
-                },
-                { localProperties: true, inOrder: true },
+                }
             );
         });
 
@@ -848,6 +849,8 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
+            loader.localProperties = false;
+            loader.inOrder = true;
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
@@ -858,8 +861,7 @@ describe('XacroLoader', () => {
                         </robot>`
                     ));
                     done();
-                },
-                { localProperties: false, inOrder: true },
+                }
             );
         });
     });
@@ -886,6 +888,7 @@ describe('XacroLoader', () => {
                 `;
 
             const loader = new XacroLoader();
+            loader.requirePrefix = true;
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
@@ -908,8 +911,7 @@ describe('XacroLoader', () => {
                         </robot>
                     `));
                     done();
-                },
-                { requirePrefix: true },
+                }
             );
         });
 
@@ -934,6 +936,7 @@ describe('XacroLoader', () => {
                 `;
 
             const loader = new XacroLoader();
+            loader.requirePrefix = false;
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
@@ -947,8 +950,7 @@ describe('XacroLoader', () => {
                         </robot>
                     `));
                     done();
-                },
-                { requirePrefix: false },
+                }
             );
         });
     });

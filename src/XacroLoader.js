@@ -2,36 +2,56 @@ import { getUrlBase } from './utils.js';
 import { XacroParser } from './XacroParser.js';
 
 export default
-class XacroLoader {
+class XacroLoader extends XacroParser {
 
-    /* Public API */
-    load(url, onComplete, options) {
+    load(url, onComplete, onError) {
 
         const workingPath = getUrlBase(url);
-        const parser = new XacroParser();
-        Object.assign(parser, { workingPath }, options);
-        parser.getFileContents = async function(path) {
-            return (await fetch(path, options.fetchOptions)).text();
-        };
+        if (this.workingPath === '') {
 
-        parser
+            this.workingPath = workingPath;
+
+        }
+
+        this
             .getFileContents(url)
-            .then(text => parser.parse(text))
-            .then(xml => onComplete(xml));
+            .then(text => {
+
+                this.parse(text, onComplete, onError);
+
+            })
+            .catch(e => {
+
+                if (onError) {
+
+                    onError(e);
+
+                }
+
+            });
 
     }
 
-    parse(data, onLoad, options = {}) {
+    parse(data, onComplete, onError) {
 
-        const parser = new XacroParser();
-        Object.assign(parser, options);
-        parser.getFileContents = async function(path) {
-            return (await fetch(path, options.fetchOptions)).text();
-        };
-
-        parser
+        super
             .parse(data)
-            .then(xml => onLoad(xml));
+            .then(onComplete)
+            .catch(e => {
+
+                if (onError) {
+
+                    onError(e);
+
+                }
+
+            });
+
+    }
+
+    getFileContents(path) {
+
+        return fetch(path, this.fetchOptions).then(res => res.text());
 
     }
 
