@@ -497,8 +497,7 @@ export class XacroParser {
                 const text = await scope.getFileContents(path);
                 return new DOMParser().parseFromString(text, 'text/xml');
             } catch (e) {
-                console.error('XacroParser: Could not load included file: ', path);
-                console.error(e);
+                throw new Error(`XacroParser: Could not load included file: ${ path }`);
             }
 
         }

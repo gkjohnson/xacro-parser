@@ -39,7 +39,8 @@ beforeEach(() => {
 
 describe('XacroParser', () => {
 
-    it('should parse the Robonaut 2 Xacro correctly.', async() => {
+    // TODO: The URL is now authentication blocked -- should download the data and host it in a github repo.
+    it.skip('should parse the Robonaut 2 Xacro correctly.', async() => {
 
         const stem = 'https://gitlab.com/nasa-jsc-robotics/r2_description/raw/654f4f89ff8e802cb7f80c617f0d6dd04483f4b2/robots/';
         const r2b = stem + 'r2b.xacro';
