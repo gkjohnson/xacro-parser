@@ -167,7 +167,7 @@ export class XacroParser {
         }
 
         // Evaluate the given node as a macro
-        async function evaluateMacro(node, properties, macros) {
+        async function evaluateMacro(node, properties, macros, resultsList) {
 
             // Find the macro
             const macroName = node.tagName.replace(/^xacro:/, '');
@@ -187,9 +187,9 @@ export class XacroParser {
             // Modify the properties with macro param inputs
             let children = [];
             for (const c of node.children) {
-                children.push(await processNode(c, ogProperties, ogMacros));
+                await processNode(c, ogProperties, ogMacros, children);
             }
-            children = children.flat().filter(c => !!c).filter(c => c.nodeType === c.ELEMENT_NODE);
+            children = children.filter(c => c.nodeType === c.ELEMENT_NODE);
 
             let blockCount = 0;
             for (const p in macro.params) {
@@ -207,18 +207,12 @@ export class XacroParser {
             }
 
             // Expand the macro
-            const res = [];
             const macroChildren = [...macro.node.childNodes];
             for (const c of macroChildren) {
-                const nodes = await processNode(c, properties, macros);
-                if (Array.isArray(nodes)) {
-                    res.push(...nodes);
-                } else {
-                    res.push(nodes);
-                }
+                const nodes = [];
+                await processNode(c, properties, macros, nodes);
+                resultsList.push(...nodes);
             }
-
-            return res;
         }
 
         /* Parsing */
@@ -287,11 +281,12 @@ export class XacroParser {
         }
 
         // Recursively process and expand a node
-        async function processNode(node, properties, macros) {
+        async function processNode(node, properties, macros, resultsList = []) {
             if (node.nodeType !== node.ELEMENT_NODE) {
                 const res = node.cloneNode();
                 res.textContent = evaluateAttribute(res.textContent, properties);
-                return res;
+                resultsList.push(res);
+                return;
             }
 
             let tagName = node.tagName.toLowerCase();
@@ -364,12 +359,11 @@ export class XacroParser {
                 case 'xacro:insert_block': {
                     const name = node.getAttribute('name');
                     const nodes = properties[name];
-                    const res = [];
 
                     for (const c of nodes) {
-                        res.push(await processNode(c, properties, macros));
+                        await processNode(c, properties, macros, resultsList);
                     }
-                    return res;
+                    return;
                 }
                 case 'xacro:if':
                 case 'xacro:unless': {
@@ -389,14 +383,11 @@ export class XacroParser {
 
                     if (bool) {
                         const childNodes = [...node.childNodes];
-                        const res = [];
                         for (const c of childNodes) {
-                            res.push(await processNode(c, properties, macros));
+                            await processNode(c, properties, macros, resultsList);
                         }
-                        return res;
-                    } else {
-                        return null;
                     }
+                    return;
                 }
                 case 'xacro:include': {
                     if (node.hasAttribute('ns')) {
@@ -411,22 +402,24 @@ export class XacroParser {
 
                     const includeContent = await loadInclude(filePath);
                     const childNodes = [...includeContent.children[0].childNodes];
-                    const res = [];
                     for (const c of childNodes) {
-                        res.push(await processNode(c, properties, macros));
+                        await processNode(c, properties, macros, resultsList);
                     }
 
                     currWorkingPath = prevWorkingPath;
-                    return res.flat();
+                    return;
                 }
                 case 'xacro:attribute':
                 case 'xacro:element':
+                    removePreviousComments(node);
                     throw new Error(`XacroParser: ${ tagName } tags not supported.`);
                 default: {
                     // TODO: check if there's a 'call' attribute here which indicates that
                     // a macro should be invoked?
                     if (/^xacro:/.test(tagName) || tagName in macros) {
-                        return evaluateMacro(node, properties, macros);
+                        removePreviousComments(node);
+
+                        return evaluateMacro(node, properties, macros, resultsList);
                     } else {
 
                         const res = node.cloneNode();
@@ -438,22 +431,15 @@ export class XacroParser {
 
                         const childNodes = [...node.childNodes];
                         for (let i = 0, l = childNodes.length; i < l; i++) {
-                            const child = await processNode(childNodes[i], properties, macros);
-                            if (child) {
-                                if (Array.isArray(child)) {
-                                    child.filter(c => !!c).forEach(c => res.appendChild(c));
-                                } else {
-                                    res.appendChild(child);
-                                }
-                            }
+                            const child = [];
+                            await processNode(childNodes[i], properties, macros, child);
+                            child.forEach(c => res.appendChild(c));
                         }
-                        return res;
+                        resultsList.push(res);
                     }
                 }
 
             }
-
-            return null;
         }
 
         // Process all property and macro tags into the objects
@@ -479,11 +465,12 @@ export class XacroParser {
         async function processXacro(xacro, properties, macros) {
             const res = xacro.cloneNode();
             for (let i = 0, l = xacro.children.length; i < l; i++) {
-                const child = await processNode(xacro.children[i], properties, macros);
-                child.removeAttribute('xmlns:xacro');
-                if (child) {
-                    res.appendChild(child);
-                }
+                const child = [];
+                await processNode(xacro.children[i], properties, macros, child);
+
+                const root = child[0];
+                root.removeAttribute('xmlns:xacro');
+                res.appendChild(root);
             }
             return res;
         }
