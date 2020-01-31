@@ -69,7 +69,7 @@ describe('XacroParser', () => {
 
         const valDescription = path.resolve(__dirname, './data/val_description/');
         const stem = path.resolve(valDescription, './model/robots/');
-        const r2b = path.resolve(stem, './valkyrie_A.xacro');
+        const rootFile = path.resolve(stem, './valkyrie_A.xacro');
 
         const parser = new XacroParser();
         parser.rospackCommands = {
@@ -84,7 +84,7 @@ describe('XacroParser', () => {
         parser.workingPath = stem;
         parser.getFileContents = getLocalContents;
 
-        const text = await parser.getFileContents(r2b);
+        const text = await parser.getFileContents(rootFile);
         const result = await parser.parse(text);
         let serialized = new XMLSerializer().serializeToString(result);
         serialized = serialized.replace(/&#x9;/g, ' '); // unicode tab html entity
