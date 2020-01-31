@@ -21,6 +21,21 @@ export class XacroParser {
     async parse(data) {
 
         /* Utilities */
+        function removeEndCommentsFromArray(arr) {
+
+            while (arr.length > 0) {
+
+                const el = arr[arr.length - 1];
+                if (el.nodeType !== el.ELEMENT_NODE) {
+                    arr.pop();
+                } else {
+                    break;
+                }
+
+            }
+
+        }
+
         function mergeObjects(...args) {
             const res = {};
             for (let i = 0, l = args.length; i < l; i++) {
@@ -315,6 +330,8 @@ export class XacroParser {
             switch (tagName) {
 
                 case 'xacro:property': {
+                    removeEndCommentsFromArray(resultsList);
+
                     const name = node.getAttribute('name');
 
                     let value;
@@ -352,11 +369,15 @@ export class XacroParser {
                     break;
                 }
                 case 'xacro:macro': {
+                    removeEndCommentsFromArray(resultsList);
+
                     const macro = parseMacro(node);
                     macros[macro.name] = macro;
                     break;
                 }
                 case 'xacro:insert_block': {
+                    removeEndCommentsFromArray(resultsList);
+
                     const name = node.getAttribute('name');
                     const nodes = properties[name];
 
@@ -367,6 +388,8 @@ export class XacroParser {
                 }
                 case 'xacro:if':
                 case 'xacro:unless': {
+                    removeEndCommentsFromArray(resultsList);
+
                     const value = evaluateAttribute(node.getAttribute('value'), properties);
                     let bool = null;
                     if (!isNaN(parseFloat(value))) {
@@ -390,6 +413,8 @@ export class XacroParser {
                     return;
                 }
                 case 'xacro:include': {
+                    removeEndCommentsFromArray(resultsList);
+
                     if (node.hasAttribute('ns')) {
                         throw new Error('XacroParser: xacro:include name spaces not supported.');
                     }
@@ -411,13 +436,13 @@ export class XacroParser {
                 }
                 case 'xacro:attribute':
                 case 'xacro:element':
-                    removePreviousComments(node);
+                    removeEndCommentsFromArray(resultsList);
                     throw new Error(`XacroParser: ${ tagName } tags not supported.`);
                 default: {
                     // TODO: check if there's a 'call' attribute here which indicates that
                     // a macro should be invoked?
                     if (/^xacro:/.test(tagName) || tagName in macros) {
-                        removePreviousComments(node);
+                        removeEndCommentsFromArray(resultsList);
 
                         return evaluateMacro(node, properties, macros, resultsList);
                     } else {
@@ -430,11 +455,11 @@ export class XacroParser {
                         }
 
                         const childNodes = [...node.childNodes];
+                        const resultChildren = [];
                         for (let i = 0, l = childNodes.length; i < l; i++) {
-                            const child = [];
-                            await processNode(childNodes[i], properties, macros, child);
-                            child.forEach(c => res.appendChild(c));
+                            await processNode(childNodes[i], properties, macros, resultChildren);
                         }
+                        resultChildren.forEach(c => res.appendChild(c));
                         resultsList.push(res);
                     }
                 }
