@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<robot>
+
+  <joint name="${robot_name}fixed/head/vision_base" type="fixed">
+    <parent link="${robot_name}head"/>
+    <child link="${robot_name}head/vision_base"/>
+    <origin rpy=" 1.5708 0.0 0.0 " xyz=" 0.0 -0.058 0.0074676"/>
+  </joint>
+
+  <link name="${robot_name}head/vision_base">
+    <inertial>
+      <mass value=".1"/>
+      <inertia ixx=".0010" ixy="0.0" ixz="0.0" iyy=".0010" iyz="0.0" izz=".0010"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}fixed/head/vision_base/asus_frame" type="fixed">
+    <parent link="${robot_name}head/vision_base"/>
+    <child link="${robot_name}head/asus_frame"/>
+    <origin rpy="-3.142 -0.071 0" xyz="0.12 -0.015 -0.14" />
+  </joint>
+
+  <non_visual_link name="${robot_name}head/asus_frame"/>
+
+  <joint name="${robot_name}fixed/head/asus_frame/asus_depth_frame" type="fixed">
+    <parent link="${robot_name}head/asus_frame"/>
+    <child link="${robot_name}head/asus_depth_frame"/>
+    <origin rpy="0 0 0 " xyz="0 -0.02 0 "/>
+  </joint>
+
+  <non_visual_link name="${robot_name}head/asus_depth_frame"/>
+
+  <joint name="${robot_name}fixed/head/vision_base/vision_center_frame" type="fixed">
+    <parent link="${robot_name}head/vision_base"/>
+    <child link="${robot_name}head/vision_center_frame"/>
+    <dynamics damping="1.0" />
+    <origin rpy="1.5708 -1.5708 1.5708" xyz=" 0.066675 0.0 -0.116205 "/>
+  </joint>
+
+  <non_visual_link name="${robot_name}head/vision_center_frame"/>
+
+  <joint name="${robot_name}fixed/head/vision_center_frame/left_camera_frame" type="fixed">
+    <parent link="${robot_name}head/vision_center_frame"/>
+    <child link="${robot_name}head/left_camera_frame"/>
+    <dynamics damping="1.0" />
+    <origin rpy="0 0 0" xyz="0.0087 0.04887 0.01789"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}head/left_camera_frame"/>
+
+  <joint name="${robot_name}fixed/head/vision_center_frame/left_camera_frame/left_camera" type="fixed">
+    <parent link="${robot_name}head/left_camera_frame"/>
+    <child link="${robot_name}head/grasshopper/left_camera"/>
+    <dynamics damping="1.0" />
+    <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}head/grasshopper/left_camera"/>
+
+  <joint name="${robot_name}fixed/head/vision_center_frame/right_camera_frame" type="fixed">
+    <parent link="${robot_name}head/vision_center_frame"/>
+    <child link="${robot_name}head/right_camera_frame"/>
+    <dynamics damping="1.0" />
+    <origin rpy="0 0 0" xyz="0.0087 -0.04887 0.01789"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}head/right_camera_frame"/>
+
+  <joint name="${robot_name}fixed/head/vision_center_frame/right_camera_frame/right_camera" type="fixed">
+    <parent link="${robot_name}head/right_camera_frame"/>
+    <child link="${robot_name}head/grasshopper/right_camera"/>
+    <dynamics damping="1.0" />
+    <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}head/grasshopper/right_camera"/>
+
+</robot>

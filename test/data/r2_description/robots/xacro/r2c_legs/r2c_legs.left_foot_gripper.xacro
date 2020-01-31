@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<robot>
+
+  <property name="left_leg_gripper_j0_damping" value= "1.0" />
+  <property name="left_leg_gripper_j0_friction" value= "0.0" />
+  <property name="left_leg_gripper_j1_damping" value= "1.0" />
+  <property name="left_leg_gripper_j1_friction" value= "0.0" />
+  <property name="left_leg_gripper_j1_damping" value= "1.0" />
+  <property name="left_leg_gripper_j1_friction" value= "0.0" />
+
+<!--  placeholder for screw joint-->
+  <joint name="${robot_name}left_leg/gripper/joint0" type="revolute">
+    <parent link="${robot_name}left_leg_foot"/>
+    <child link="${robot_name}left_leg/gripper/link0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${left_leg_gripper_j0_damping}" friction="${left_leg_gripper_j0_friction}"/>
+    <limit effort="330.0" lower="-.1" upper=".75" velocity="1.0"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}left_leg/gripper/link0"/>
+
+  <joint name="${robot_name}left_leg/gripper/jawLeft" type="revolute">
+    <parent link="${robot_name}left_leg_foot"/>
+    <child link="${robot_name}left_leg/gripper/jaw_left"/>
+    <origin rpy="0.0 -0.087266 0.0" xyz="0.01905 0 0.17546"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="${left_leg_gripper_j0_damping}" friction="${left_leg_gripper_j0_friction}"/>
+    <limit effort="330.0" lower="-.1" upper=".75" velocity="1.0"/>
+    <traits spring_k="2.5"   />
+  </joint>
+
+  <link name="${robot_name}left_leg/gripper/jaw_left">
+    <inertial>
+      <mass value="0.01"/>
+      <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+      <origin rpy="0 0 -1.5708" xyz="0.00236 0 0.02395"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/foot_jaw.dae"/>
+      </geometry>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/foot_jaw.dae"/>
+      </geometry>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="${robot_name}left_leg/gripper/jawRight" type="revolute">
+    <parent link="${robot_name}left_leg_foot"/>
+    <child link="${robot_name}left_leg/gripper/jaw_right"/>
+    <origin rpy="0.0 0.087266 0.0" xyz="-0.01905 0 0.17546"/>
+    <axis xyz="0 -1 0"/>
+    <dynamics damping="${left_leg_gripper_j1_damping}" friction="${left_leg_gripper_j1_friction}"/>
+    <limit effort="330.0" lower="-.1" upper=".75" velocity="1.0"/>
+    <traits spring_k="2.5"   />
+  </joint>
+
+  <link name="${robot_name}left_leg/gripper/jaw_right">
+    <inertial>
+      <mass value="0.01"/>
+      <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+      <origin rpy="0 0 1.5708" xyz="0.00236 0 0.02395"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/foot_jaw.dae"/>
+      </geometry>
+      <origin rpy="0 0 1.5708" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/foot_jaw.dae"/>
+      </geometry>
+      <origin rpy="0 0 1.5708" xyz="0 0 0"/>
+    </collision>
+  </link>
+</robot>

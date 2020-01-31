@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<robot>
+
+  <non_visual_link name="${robot_name}robot_world"/>
+  
+  <joint name="${robot_name}fixed/robot_world/baseplate" type="fixed">
+    <parent link="${robot_name}robot_world"/>
+    <child link="${robot_name}baseplate"/>
+    <origin rpy="0.0 0 3.14159" xyz="0.0 0.0 0.0"/>
+  </joint>
+  
+  <link name="${robot_name}baseplate">
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/Stanchion_Baseplate.dae"/> 
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="1.57 0 1.57"/>
+    </visual> 
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/Stanchion_Baseplate.dae" scale=".01 .01 .01"/> 
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="1.57 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="5"/>
+      <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}fixed/baseplate/stanchion" type="fixed">
+    <parent link="${robot_name}baseplate"/>
+    <child link="${robot_name}stanchion"/>
+    <origin rpy="0 0 3.14159" xyz="0.0 0.0 .70"/>
+  </joint>
+  
+  <link name="${robot_name}stanchion">
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/Stanchion.dae"/> 
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/> 
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.5" radius=".075"/> 
+      </geometry>
+      <origin xyz="0.0 0.0 -0.3" rpy="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="50"/>
+      <inertia ixx="10" ixy="0.0" ixz="0.0" iyy="10" iyz="0.0" izz="10"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}fixed/stanchion/robot_base" type="fixed">
+    <parent link="${robot_name}stanchion"/>
+    <child link="${robot_name}robot_base"/>
+   <origin rpy="0 3.14 3.14" xyz="0.0 0.0 0.02"/> 
+  </joint>
+
+  <non_visual_link name="${robot_name}robot_base"/>
+
+</robot>

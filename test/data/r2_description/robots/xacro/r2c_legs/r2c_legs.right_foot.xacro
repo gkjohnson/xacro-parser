@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<robot>
+
+  <joint name="${robot_name}fixed/right_ankle_roll/right_leg_ati" type="fixed">
+    <parent link="${robot_name}right_ankle_roll"/>
+    <child link="${robot_name}right_leg/ati"/>
+    <origin rpy="3.1416 0.0 -1.5708" xyz="0.0 0.0 0.070182"/>
+  </joint>
+  
+  <non_visual_link name="${robot_name}right_leg/ati"/>
+
+  <joint name="${robot_name}fixed/right_leg_ati/right_leg_foot" type="fixed">
+    <parent link="${robot_name}right_leg/ati"/>
+    <child link="${robot_name}right_leg_foot"/>
+    <origin rpy="3.1416 0.0 -1.5708" xyz="0.0 0.0 0.0206502"/>
+  </joint>
+
+  <link name="${robot_name}right_leg_foot">
+    <inertial>
+      <mass value="4.63812"/>
+      <inertia ixx="0.01951" ixy="-0.00030332" ixz="-0.00011945" iyy="0.017896" iyz="-0.000689634" izz="0.010101"/>
+      <origin rpy="0 0 0" xyz="-0.0015 -0.00021835 0.08493"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/foot_body.dae"/>
+      </geometry>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/foot_body.dae"/>
+      </geometry>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+    </collision>
+  </link>
+  
+  <joint name="${robot_name}fixed/right_leg_foot/right_hr_tip" type="fixed">
+    <parent link="${robot_name}right_leg_foot"/>
+    <child link="${robot_name}right_leg/gripper/tip"/>
+    <origin rpy="0.0 0 0" xyz="0 0 0.19451"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}right_leg/gripper/tip"/>
+
+  <joint name="${robot_name}fixed/right_leg_foot/right_st_tip" type="fixed">
+    <parent link="${robot_name}right_leg_foot"/>
+    <child link="${robot_name}right_leg/gripper/st_tip"/>
+    <origin rpy="0.0 0 0" xyz="0 0 0.21991"/>
+  </joint>
+  <non_visual_link name="${robot_name}right_leg/gripper/st_tip"/>
+  <joint name="${robot_name}fixed/right_leg_foot/right_leg_nano_physical" type="fixed">
+    <parent link="${robot_name}right_leg_foot"/>
+    <child link="${robot_name}right_leg/nano_physical"/>
+    <origin rpy="0 0 0" xyz="-0.025 .07 0.13"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}right_leg/nano_physical"/>
+
+  <joint name="${robot_name}fixed/right_leg_foot/right_leg_flea_physical" type="fixed">
+    <parent link="${robot_name}right_leg_foot"/>
+    <child link="${robot_name}right_leg/flea_physical"/>
+    <origin rpy="0.0 0 0" xyz="0.025 .07 0.13"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}right_leg/flea_physical"/>
+
+</robot>

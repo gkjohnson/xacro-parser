@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="r2">
+
+  <xacro:property name="robot_name" value= "r2/" />
+  <xacro:property name="resource_package" value="r2_description" />
+
+  <xacro:robot_world_origin>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:robot_world_origin>
+
+  <xacro:include filename="xacro/r2_common/r2.world.xacro" />
+  <xacro:include filename="xacro/r2_common/r2.common.xacro" />
+
+  <xacro:include filename="xacro/r2_upperbody/r2c.body.xacro"/>
+  <xacro:include filename="xacro/r2_upperbody/r2c.head.xacro"/>
+  <xacro:include filename="xacro/r2_upperbody/r2b.head_sensors.xacro" />
+  <xacro:include filename="xacro/r2_upperbody/r2c.imu.xacro" />
+
+  <xacro:include filename="xacro/r2_upperbody/r2c.left_arm.xacro"/>
+  <xacro:include filename="xacro/r2_upperbody/r2c.left_forearm.xacro" />
+  <xacro:include filename="xacro/r2_upperbody/r2c.left_hand.xacro"/>
+
+  <xacro:include filename="xacro/r2_upperbody/r2b.right_arm.xacro"/>
+  <xacro:include filename="xacro/r2_upperbody/r2c.right_forearm.xacro" />
+  <xacro:include filename="xacro/r2_upperbody/r2c.right_hand.xacro"/>
+
+</robot>

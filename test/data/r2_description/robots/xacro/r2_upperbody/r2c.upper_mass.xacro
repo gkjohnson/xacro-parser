@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot>
+
+   <link name="${robot_name}upper_mass">
+    <inertial>
+      <mass value="146"/>
+      <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
+    </inertial>
+   </link>
+
+ <joint name="${robot_name}fixed/robot_base/upper_mass" type="fixed">
+    <parent link="${robot_name}robot_world"/>
+    <child link="${robot_name}upper_mass"/>
+    <origin rpy="0 0 0" xyz="0.075 0 0.451"/>
+  </joint>
+  
+</robot>

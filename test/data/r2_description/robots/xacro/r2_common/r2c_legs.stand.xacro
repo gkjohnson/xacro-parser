@@ -1,0 +1,305 @@
+<?xml version="1.0"?>
+<robot>
+
+  <macro name="vert_link" params="num len">
+    <link name="${robot_name}leg_stand_vert${num}">
+      <inertial>
+        <mass value="1.0" />
+        <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="1.0"  iyz="0.0"  izz="1.0" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0"/>
+        <geometry>
+          <box size="0.03 0.03 ${len}" />
+        </geometry>
+        <material name="steel" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0"/>
+        <geometry>
+          <box size="0.03 0.03 ${len}" />
+        </geometry>
+      </collision>
+    </link>
+  </macro>
+
+  <macro name="horz_link" params="num">
+    <link name="${robot_name}leg_stand_horz${num}">
+      <inertial>
+        <mass value="1.0" />
+        <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="1.0"  iyz="0.0"  izz="1.0" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0"/>
+        <geometry>
+          <box size="1.0 0.03 0.03" />
+        </geometry>
+        <material name="steel" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0"/>
+        <geometry>
+          <box size="1.0 0.03 0.03" />
+        </geometry>
+      </collision>
+    </link>
+  </macro>
+
+  <macro name="cross_link" params="num len">
+    <link name="${robot_name}leg_stand_cross${num}">
+      <inertial>
+        <mass value="0.02" />
+        <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="1.0"  iyz="0.0"  izz="1.0" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0"/>
+        <geometry>
+          <box size="0.03 ${len} 0.03" />
+        </geometry>
+        <material name="steel" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0"/>
+        <geometry>
+          <box size="0.03 ${len} 0.03" />
+        </geometry>
+      </collision>
+    </link>
+  </macro>
+
+  <link name="${robot_name}leg_stand_base">
+    <inertial>
+      <origin xyz="0 0 0"/>
+      <mass value="100.0" />
+      <inertia  ixx="10.0" ixy="0.0"  ixz="0.0"  iyy="10.0"  iyz="0.0"  izz="10.0" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1 0.84 0.1" />
+      </geometry>
+      <material name="steel" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="1 0.84 0.1" />
+      </geometry>
+    </collision>
+  </link>
+
+  <vert_link num="1" len="2"/>
+  <vert_link num="2" len="2"/>
+  <vert_link num="3" len="2"/>
+  <vert_link num="4" len="2"/>
+  <vert_link num="5" len="2"/>
+  <vert_link num="6" len="2"/>
+  <vert_link num="7" len="2"/>
+  <vert_link num="8" len="2"/>
+  <vert_link num="9" len=".22"/>
+  <vert_link num="10" len=".22"/>
+  <vert_link num="11" len=".22"/>
+  <vert_link num="12" len=".22"/>
+
+  <horz_link num="1"/>
+  <horz_link num="2"/>
+  <horz_link num="3"/>
+  <horz_link num="4"/>
+
+  <cross_link num="1" len=".29"/>
+  <cross_link num="2" len=".29"/>
+  <cross_link num="3" len=".29"/>
+  <cross_link num="4" len=".29"/>
+  <cross_link num="5" len=".84"/>
+  <cross_link num="6" len=".84"/>
+  <cross_link num="7" len=".84"/>
+  <cross_link num="8" len=".84"/>
+
+  <link name="${robot_name}leg_stand_connection">
+    <inertial>
+      <origin xyz="0 0 0" />
+      <mass value="0.02" />
+      <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="1.0"  iyz="0.0"  izz="1.0" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.29 0.29 0.003" />
+      </geometry>
+      <material name="steel" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.29 0.29 0.003" />
+      </geometry>
+    </collision>
+  </link>
+
+  <non_visual_link name="${robot_name}robot_world"/>
+
+  <non_visual_link name="${robot_name}robot_base"/>
+
+  <joint name="${robot_name}fixed/robot_world/leg_stand_base" type="fixed">
+    <parent link="${robot_name}robot_world"/>
+    <child link="${robot_name}leg_stand_base"/>
+    <origin rpy="0.0 0.0 3.14159" xyz="0.0 0.0 0.05"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_base/leg_stand_vert1" type="fixed">
+    <parent link="${robot_name}leg_stand_base"/>
+    <child link="${robot_name}leg_stand_vert1"/>
+    <origin rpy="0 0 0" xyz="0.485 0.13 1"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_base/leg_stand_vert2" type="fixed">
+    <parent link="${robot_name}leg_stand_base"/>
+    <child link="${robot_name}leg_stand_vert2"/>
+    <origin rpy="0 0 0" xyz="0.485 -0.13 1"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_base/leg_stand_vert3" type="fixed">
+    <parent link="${robot_name}leg_stand_base"/>
+    <child link="${robot_name}leg_stand_vert3"/>
+    <origin rpy="0 0 0" xyz="0.225 0.13 1"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_base/leg_stand_vert4" type="fixed">
+    <parent link="${robot_name}leg_stand_base"/>
+    <child link="${robot_name}leg_stand_vert4"/>
+    <origin rpy="0 0 0" xyz="0.225 -0.13 1"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_base/leg_stand_vert5" type="fixed">
+    <parent link="${robot_name}leg_stand_base"/>
+    <child link="${robot_name}leg_stand_vert5"/>
+    <origin rpy="0 0 0" xyz="0.485 0.405 1"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_base/leg_stand_vert6" type="fixed">
+    <parent link="${robot_name}leg_stand_base"/>
+    <child link="${robot_name}leg_stand_vert6"/>
+    <origin rpy="0 0 0" xyz="0.485 -0.405 1"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_base/leg_stand_vert7" type="fixed">
+    <parent link="${robot_name}leg_stand_base"/>
+    <child link="${robot_name}leg_stand_vert7"/>
+    <origin rpy="0 0 0" xyz="0.225 0.405 1"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_base/leg_stand_vert8" type="fixed">
+    <parent link="${robot_name}leg_stand_base"/>
+    <child link="${robot_name}leg_stand_vert8"/>
+    <origin rpy="0 0 0" xyz="0.225 -0.405 1"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz3/leg_stand_vert9" type="fixed">
+    <parent link="${robot_name}leg_stand_horz3"/>
+    <child link="${robot_name}leg_stand_vert9"/>
+    <origin rpy="0 0 0" xyz="-0.225 0.0 0.11"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz4/leg_stand_vert11" type="fixed">
+    <parent link="${robot_name}leg_stand_horz4"/>
+    <child link="${robot_name}leg_stand_vert11"/>
+    <origin rpy="0 0 0" xyz="-0.225 0.0 0.11"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz3/leg_stand_vert0" type="fixed">
+    <parent link="${robot_name}leg_stand_horz3"/>
+    <child link="${robot_name}leg_stand_vert10"/>
+    <origin rpy="0 0 0" xyz="-0.485 0.0 0.11"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz4/leg_stand_vert12" type="fixed">
+    <parent link="${robot_name}leg_stand_horz4"/>
+    <child link="${robot_name}leg_stand_vert12"/>
+    <origin rpy="0 0 0" xyz="-0.485 0.0 0.11"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_vert1/leg_stand_horz1" type="fixed">
+    <parent link="${robot_name}leg_stand_vert1"/>
+    <child link="${robot_name}leg_stand_horz1"/>
+    <origin rpy="0 0 0" xyz="-0.485 0.0 1.0"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_vert2/leg_stand_horz2" type="fixed">
+    <parent link="${robot_name}leg_stand_vert2"/>
+    <child link="${robot_name}leg_stand_horz2"/>
+    <origin rpy="0 0 0" xyz="-0.485 -0.0 1.0"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_vert1/leg_stand_horz3" type="fixed">
+    <parent link="${robot_name}leg_stand_vert1"/>
+    <child link="${robot_name}leg_stand_horz3"/>
+    <origin rpy="0 0 0" xyz="-0.485 0.0 0.78"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_vert2/leg_stand_horz4" type="fixed">
+    <parent link="${robot_name}leg_stand_vert2"/>
+    <child link="${robot_name}leg_stand_horz4"/>
+    <origin rpy="0 0 0" xyz="-0.485 -0.0 0.78"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz1/leg_stand_cross1" type="fixed">
+    <parent link="${robot_name}leg_stand_horz1"/>
+    <child link="${robot_name}leg_stand_cross1"/>
+    <origin rpy="0 0 0" xyz="-0.485 -0.13 0.0"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz1/leg_stand_cross2" type="fixed">
+    <parent link="${robot_name}leg_stand_horz1"/>
+    <child link="${robot_name}leg_stand_cross2"/>
+    <origin rpy="0 0 0" xyz="-0.225 -0.13 0.0"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz3/leg_stand_cross3" type="fixed">
+    <parent link="${robot_name}leg_stand_horz3"/>
+    <child link="${robot_name}leg_stand_cross3"/>
+    <origin rpy="0 0 0" xyz="-0.485 -0.13 0.0"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz3/leg_stand_cross4" type="fixed">
+    <parent link="${robot_name}leg_stand_horz3"/>
+    <child link="${robot_name}leg_stand_cross4"/>
+    <origin rpy="0 0 0" xyz="-0.225 -0.13 0.0"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz1/leg_stand_cross5" type="fixed">
+    <parent link="${robot_name}leg_stand_horz1"/>
+    <child link="${robot_name}leg_stand_cross5"/>
+    <origin rpy="0 0 0" xyz="0.485 -0.13 0.0"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz1/leg_stand_cross6" type="fixed">
+    <parent link="${robot_name}leg_stand_horz1"/>
+    <child link="${robot_name}leg_stand_cross6"/>
+    <origin rpy="0 0 0" xyz="0.225 -0.13 0.0"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz3/leg_stand_cross7" type="fixed">
+    <parent link="${robot_name}leg_stand_horz3"/>
+    <child link="${robot_name}leg_stand_cross7"/>
+    <origin rpy="0 0 0" xyz="0.485 -0.13 0.0"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz3/leg_stand_cross8" type="fixed">
+    <parent link="${robot_name}leg_stand_horz3"/>
+    <child link="${robot_name}leg_stand_cross8"/>
+    <origin rpy="0 0 0" xyz="0.225 -0.13 0.0"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/leg_stand_horz4/leg_stand_connection" type="fixed">
+    <parent link="${robot_name}leg_stand_cross4"/>
+    <child link="${robot_name}leg_stand_connection"/>
+    <origin rpy="0 0 0" xyz="-0.13 -0.0 -0.0152"/>
+  </joint>
+  
+  <joint name="${robot_name}fixed/leg_stand_connection/robot_base" type="fixed">
+    <parent link="${robot_name}leg_stand_connection"/>
+    <child link="${robot_name}robot_base"/>
+    <origin rpy="0 3.14159 0" xyz="0.0 0.0 0.0"/>
+  </joint>
+
+</robot>

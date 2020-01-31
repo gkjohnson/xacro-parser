@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<robot>
+
+  <non_visual_link name="${robot_name}imu"/>
+
+  <joint name="${robot_name}fixed/robot_base/imu" type="fixed">
+    <parent link="${robot_name}waist_center"/>
+    <child link="${robot_name}imu"/>
+    <origin rpy="1.5708 0 0" xyz="0.017351 -0.116179 -0.112236"/>
+  </joint>
+  
+</robot>

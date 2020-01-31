@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+
+<robot>
+  <!-- Radius of Wheel  -->
+  <property name="valve_radius" value="0.15" />
+
+  <!-- Offset from Palm Base -->
+  <property name="valve_offset" value="0.2" />
+
+  <link name="${robot_name}objects/valve/spindle">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.58 0" />
+      <geometry>
+        <cylinder radius="0.1" length="0.01" />
+      </geometry>
+      <material name="Red">
+        <color rgba="1.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 1" rpy="0 0 0"/>
+      <mass value="1"/>
+      <inertia
+          ixx="1.0" ixy="0.0" ixz="0.0"
+          iyy="1.0" iyz="0.0"
+          izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}objects/valve/barrel" type="fixed">
+    <parent link="${robot_name}objects/valve/handle"/>
+    <child link="${robot_name}objects/valve/spindle"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="0.0 0 0.0" xyz="0.0 0.0 0.0"/>
+  </joint>
+
+  <link name="${robot_name}objects/valve/handle">
+    <visual>
+      <origin xyz="0 ${valve_radius} 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.02 0.02 0.02" />
+      </geometry>
+      <material name="Red">
+        <color rgba="1.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 1" rpy="0 0 0"/>
+      <mass value="1"/>
+      <inertia
+          ixx="1.0" ixy="0.0" ixz="0.0"
+          iyy="1.0" iyz="0.0"
+          izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}objects/valve/grip" type="fixed">
+    <parent link="${robot_name}right_palm"/>
+    <child link="${robot_name}objects/valve/handle"/>
+    <axis xyz="1 0 0"/>
+    <origin rpy="0 0.3 0.1" xyz="${valve_offset} 0 ${valve_radius}"/>
+  </joint>
+
+</robot>

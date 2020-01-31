@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+
+<robot>
+  <!-- Radius of Wheel  -->
+  <property name="valve_radius" value="0.15" />
+
+  <!-- Offset from Palm Base -->
+  <property name="valve_offset" value="0.2" />
+
+  <link name="${robot_name}objects/argos_support/argos_support_link">
+    <visual>
+      <origin xyz=".6 0.0 0.5" rpy="0 1.58 0" />
+      <geometry>
+        <box size="1.0 0.1 0.4" />
+      </geometry>
+      <material name="Black">
+        <color rgba="1.0 1.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 1" rpy="0 0 0"/>
+      <mass value="1"/>
+      <inertia
+          ixx="1.0" ixy="0.0" ixz="0.0"
+          iyy="1.0" iyz="0.0"
+          izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}objects/argos_support/argos_support_joint" type="fixed">
+    <parent link="${robot_name}pelvis"/>
+    <child link="${robot_name}objects/argos_support/argos_support_link"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="0.0 0 0.0" xyz="0.0 0.0 0.0"/>
+  </joint>
+
+</robot>

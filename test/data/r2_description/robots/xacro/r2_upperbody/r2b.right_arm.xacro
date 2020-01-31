@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<robot>
+
+  <property name="right_arm_j0_damping" value= "10.0" />
+  <property name="right_arm_j0_friction" value= "0.0" />
+  <property name="right_arm_j1_damping" value= "10.0" />
+  <property name="right_arm_j1_friction" value= "0.0" />
+  <property name="right_arm_j2_damping" value= "10.0" />
+  <property name="right_arm_j2_friction" value= "0.0" />
+  <property name="right_arm_j3_damping" value= "1.0" />
+  <property name="right_arm_j3_friction" value= "0.0" />
+  <property name="right_arm_j4_damping" value= "1.0" />
+  <property name="right_arm_j4_friction" value= "0.0" />
+
+  <joint name="${robot_name}right_arm/joint0" type="revolute">
+    <parent link="${robot_name}right_arm/shoulder/jr3"/>
+    <child link="${robot_name}right_shoulder_roll"/>
+    <origin rpy="0.0 -1.5708 0.0" xyz="0.0054611 0.0 -0.13041"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${right_arm_j0_damping}" friction="${right_arm_j0_friction}"/>
+    <limit effort="100.0" lower="-2.8270" upper="2.8270" velocity="1000"/>
+  </joint>
+
+  <link name="${robot_name}right_shoulder_roll">
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2_upperbody/Right_Shoulder_Upper.dae"/>
+      </geometry>
+      <material name="dirty_white"/>
+      <origin rpy="0.0 0.0 -2.4624" xyz="0.0 0.0 -0.07734"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2_upperbody/Right_Shoulder_Upper.dae"/>
+      </geometry>
+      <origin rpy="0.0 0.0 -2.4624" xyz="0.0 0.0 -0.07234"/>
+    </collision>
+    <inertial>
+        <origin xyz="0.00017093234 -0.0087284787   -0.10884506"/>
+        <mass value="8.820314"/>		
+        <inertia ixx="0.076584602"  ixy="0.000086319951"  ixz="0.00054609047"  iyy="0.08016999"  iyz="0.0066841031"  izz="0.02390013"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}right_arm/joint1" type="revolute">
+    <parent link="${robot_name}right_shoulder_roll"/>
+    <child link="${robot_name}right_shoulder_pitch"/>
+    <origin rpy=" 0.0 -1.5708 1.5708" xyz=" 0.0 -0.0466596 0.215143 "/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${right_arm_j1_damping}" friction="${right_arm_j1_friction}"/>
+    <limit effort="100.0" lower="-1.6758" upper="0.4292" velocity="1000"/>
+  </joint>
+
+  <link name="${robot_name}right_shoulder_pitch">
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2_upperbody/Right_Shoulder_Lower.dae"/>
+      </geometry>
+      <material name="dirty_white"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.0466596"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2_upperbody/Right_Shoulder_Lower.dae"/>
+      </geometry>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.0466596"/>
+    </collision>
+     <inertial>
+        <origin xyz="0.034871718 0.00026989995  -0.056391797"/>
+        <mass value="4.9775387"/>		
+        <inertia ixx="0.01281093"  ixy="-0.000025211205"  ixz="-0.0019887882"  iyy="0.026994354"  iyz="-0.000056988895"  izz="0.028670313"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}right_arm/joint2" type="revolute">
+    <parent link="${robot_name}right_shoulder_pitch"/>
+    <child link="${robot_name}right_upper_arm"/>
+    <origin rpy="-1.5708 0.0 -1.5708" xyz="0.169324 0 -0.0458976"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${right_arm_j2_damping}" friction="${right_arm_j2_friction}"/>
+    <limit effort="100.0" lower="0.3318" upper="4.5028" velocity="1000"/>
+  </joint>
+  <link name="${robot_name}right_upper_arm">
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2_upperbody/Right_Upper_Arm.dae"/>
+      </geometry>
+      <material name="dirty_white"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.067724"/>
+    </visual>
+    <collision>
+       <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2_upperbody/Right_Upper_Arm.dae"/>
+      </geometry>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.067724"/>
+    </collision>
+    <inertial>
+        <origin xyz="0.011979384 -0.0073390714 0.079871897"/>
+        <mass value="6.1525709"/>		
+        <inertia ixx="0.044036190"  ixy="0.0013812407"  ixz="-0.0068318982"  iyy="0.048358309"  iyz="0.0035598559"  izz="0.016564943"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}right_arm/joint3" type="revolute">
+    <parent link="${robot_name}right_upper_arm"/>
+    <child link="${robot_name}right_elbow"/>
+    <origin rpy="0.0 -1.5708 1.5708" xyz="0.05334 -0.0313243 0.185006"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${right_arm_j3_damping}" friction="${right_arm_j3_friction}"/>
+    <limit effort="100.0" lower="-2.7930" upper="0.0" velocity="1000"/>
+  </joint>
+
+  <link name="${robot_name}right_elbow">
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2_upperbody/Right_Elbow.dae"/>
+      </geometry>
+      <material name="dirty_white"/>
+      <origin rpy="0 0.0 0" xyz="0 0 -0.0313243"/>
+    </visual>  
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2_upperbody/Right_Elbow.dae"/>
+      </geometry>
+      <origin rpy="0 0.0 0" xyz="0 0 -0.0313243"/>
+    </collision>
+    <inertial>
+        <origin xyz="0.035398630 0.025517855  -0.036241795"/>
+        <mass value="2.3377006"/>
+        <inertia ixx="0.0067529558"  ixy="-0.0026092481"  ixz="-0.00060380235"  iyy="0.0080987220"  iyz="-0.00047453566"  izz="0.009863562"/>
+    </inertial>
+  </link>
+  
+
+  <joint name="${robot_name}right_arm/joint4" type="revolute">
+    <parent link="${robot_name}right_elbow"/>
+    <child link="${robot_name}right_joint4_output"/>
+    <origin rpy="-0.9550 1.5708 -0.9550" xyz="0.0541223 0.0533300 -0.0305397"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${right_arm_j4_damping}" friction="${right_arm_j4_friction}"/>
+    <limit effort="100.0" lower="-4.6770" upper="1.5360" velocity="1000"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}right_joint4_output"/>
+
+  <joint name="${robot_name}fixed/right_lower_arm/right_forearm_jr3" type="fixed">
+    <parent link="${robot_name}right_joint4_output"/>
+    <child link="${robot_name}right_arm/forearm/jr3"/>
+    <origin rpy="3.1416 0.0 0.78539" xyz="0.0 0.0 0.1435038 "/>
+  </joint> 
+
+  <non_visual_link name="${robot_name}right_arm/forearm/jr3"/>
+
+  <joint name="${robot_name}fixed/right_lower_arm/right_forearm" type="fixed">
+    <parent link="${robot_name}right_arm/forearm/jr3"/>
+    <child link="${robot_name}right_lower_arm"/>
+    <origin rpy="3.1416 0.0 0.7854" xyz="0.0 0.0 0.1435"/>
+  </joint>
+
+</robot>

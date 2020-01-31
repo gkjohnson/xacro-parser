@@ -514,7 +514,7 @@ export class XacroParser {
 
                 const filename = el.getAttribute('filename');
                 const namespace = el.getAttribute('ns') || null;
-                const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\//.test(filename);
+                const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:[/\\]/.test(filename);
                 const filePath = isAbsolute ? filename : workingPath + filename;
                 const pr = loadInclude(filePath)
                     .then(content => {
@@ -533,16 +533,17 @@ export class XacroParser {
         // TODO: Provide a default "arg" command function that defaults to
         // xacro:arg fields.
         const scope = this;
-        let localProperties = this.localProperties;
         const inOrder = this.inOrder;
-        const workingPath = this.workingPath;
-        let currWorkingPath = workingPath;
+        const workingPath = this.workingPath + (!/[\\/]$/.test(this.workingPath) ? '/' : '');
         const requirePrefix = this.requirePrefix;
         const rospackCommands = this.rospackCommands;
-        const globalProperties = { True: 1, False: 0 };
-        globalProperties[PARENT_SCOPE] = globalProperties;
         const globalMacros = {};
         const includeMap = {};
+        const globalProperties = { True: 1, False: 0 };
+        globalProperties[PARENT_SCOPE] = globalProperties;
+
+        let localProperties = this.localProperties;
+        let currWorkingPath = workingPath;
         let content = new DOMParser().parseFromString(data, 'text/xml');
 
         if (localProperties && !inOrder) {

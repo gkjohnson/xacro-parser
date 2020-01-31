@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot>
+
+  <non_visual_link name="${robot_name}robot_world"/>
+  
+  <joint name="${robot_name}fixed/robot_world/robot_base" type="fixed">
+    <parent link="${robot_name}robot_world"/>
+    <child link="${robot_name}robot_base"/>
+    <origin rpy="0.0 3.14159 3.14159" xyz="0.0 0.0 0.0"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}robot_base"/>   
+
+</robot>

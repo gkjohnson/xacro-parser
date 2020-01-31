@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<robot>
+
+  <property name="neck_j0_damping" value= "10.0" />
+  <property name="neck_j0_friction" value= "0.0" />
+  <property name="neck_j1_damping" value= "10.0" />
+  <property name="neck_j1_friction" value= "0.0" />
+  <property name="neck_j2_damping" value= "10.0" />
+  <property name="neck_j2_friction" value= "0.0" />
+
+  <property name="effort_limit" value= "10000.0" />
+  <property name="velocity_limit" value= "1000.0" />
+
+  <joint name="${robot_name}neck/joint0" type="revolute">
+    <parent link="${robot_name}waist_center"/>
+    <child link="${robot_name}neck_lower"/>
+    <origin rpy=" -1.5708 0.0 0.0 " xyz=" 0.08636 -0.0285749 -0.614172 "/>
+    <dynamics damping="${neck_j0_damping}" friction="${neck_j0_friction}"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="${effort_limit}" lower="-0.7" upper="0.175" velocity="${velocity_limit}"/>
+  </joint>
+  
+  <link name="${robot_name}neck_lower">
+    <visual>
+      <geometry>
+         <mesh filename="package://${resource_package}/meshes/r2_upperbody/Neck_Lower.dae"/>
+      </geometry>
+      <origin rpy="-1.5708 1.5708 0" xyz="0.0 0.0 0.0285749"/>
+    </visual>
+    <inertial>
+      <mass value="1.531125"/>
+      <origin rpy="0 0 0" xyz="-0.044614256 0.031785824 0.021419445"/>
+      <inertia ixx="0.0032988044" ixy="0.0014889073" ixz="0.0004970659" iyy="0.0050478224" iyz="-0.00036827305" izz="0.0052160286"/>
+    </inertial>
+    <collision>
+      <geometry>
+         <mesh filename="package://${resource_package}/meshes/r2_upperbody/Neck_Lower.dae"/>
+      </geometry>
+      <origin rpy="-1.5708 1.5708 0" xyz="0.0 0.0 0.0285749"/>
+    </collision>
+  </link>
+  
+  <joint name="${robot_name}neck/joint1" type="revolute">
+    <parent link="${robot_name}neck_lower"/>
+    <child link="${robot_name}neck_upper"/>
+    <origin rpy=" -1.5708 0.0 0.0 " xyz=" -0.0762002 0.0762004 0.028575"/>
+    <dynamics damping="${neck_j1_damping}" friction="${neck_j1_friction}"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="${effort_limit}" lower="-1.22" upper="1.22" velocity="${velocity_limit}"/>
+  </joint>
+
+  <link name="${robot_name}neck_upper">
+   <visual>
+      <geometry>
+         <mesh filename="package://${resource_package}/meshes/r2_upperbody/Neck_Upper.dae"/>
+      </geometry>
+      <origin rpy="0 0 1.5708" xyz="0.0762002 0 -0.0762004"/>
+    </visual>
+    <inertial>
+      <mass value="2.234558"/>
+      <origin rpy="0 0 0" xyz="0.0127259 0.0072291452 0.048896507"/>
+      <inertia ixx="0.0074125667" ixy="-0.00042898316" ixz="-0.0014528455" iyy="0.0080268117" iyz="-0.00076230267" izz="0.00051467581"/>
+    </inertial>
+    <collision>
+      <geometry>
+         <mesh filename="package://${resource_package}/meshes/r2_upperbody/Neck_Upper.dae"/>
+      </geometry>
+      <origin rpy="0 0 1.5708" xyz="0.0762002 0 -0.0762004"/>
+    </collision>
+  </link>
+  
+  <joint name="${robot_name}neck/joint2" type="revolute">
+    <parent link="${robot_name}neck_upper"/>
+    <child link="${robot_name}head"/>
+    <origin rpy=" 1.5708 0.0 0.0 " xyz="0.0508 0.0074676 0.101587"/> 
+    <dynamics damping="${neck_j2_damping}" friction="${neck_j2_friction}"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="${effort_limit}" lower="-0.7" upper="0.175" velocity="${velocity_limit}"/>
+  </joint>
+
+  <link name="${robot_name}head">
+    <visual>
+      <geometry>
+         <mesh filename="package://${resource_package}/meshes/r2_upperbody/Head.dae"/>
+      </geometry>
+      <origin rpy="0 1.5708 0" xyz="0.0 0.07 0.0074676"/>
+    </visual>
+    <collision>
+      <geometry>
+         <mesh filename="package://${resource_package}/meshes/r2_upperbody/Head.dae"/>
+      </geometry>
+      <origin rpy="0 1.5708 0" xyz="0.0 0.07 0.0074676"/>
+    </collision>
+    <inertial>
+      <mass value="5.8503785"/>
+      <origin rpy="0 0 0" xyz="0.0048289919 0.074486518 0.013796703"/>
+      <inertia ixx="0.045520172" ixy="0.0076844267" ixz="0.0005272352" iyy="0.035519354" iyz="0.001323319" izz="0.044699541"/>
+    </inertial>
+  </link>
+</robot> 

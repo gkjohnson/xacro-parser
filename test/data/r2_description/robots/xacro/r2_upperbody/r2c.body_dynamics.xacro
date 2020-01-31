@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<robot>
+
+  <property name="waist_j0_damping" value= "10.0" />
+  <property name="waist_j0_friction" value= "0.0" />
+
+  <joint name="${robot_name}fixed/robot_base/waist_mass" type="fixed">
+    <parent link="${robot_name}robot_base"/>
+    <child link="${robot_name}waist_mass"/>
+    <origin rpy="0.0 0 0.0" xyz="0.0 0.0 -0.086855"/>
+  </joint>
+
+  <link name="${robot_name}waist_mass">
+    <inertial>
+      <mass value="4.6259465"/>
+      <origin rpy="0.0 0 0.0" xyz="-0.00012809088 0.000041480778 0.039080994"/>
+      <inertia ixx="0.01684448" ixy="0.00021529806" ixz="-0.0000036013959" iyy="0.017313387" iyz="0.0" izz="0.028769348"/>
+    </inertial>
+   </link>
+
+  <joint name="${robot_name}waist/joint0" type="revolute">
+    <parent link="${robot_name}robot_base"/>
+    <child link="${robot_name}waist_center"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="0.0 0 0.0" xyz="0.0 0.0 0.0"/>
+    <dynamics damping="${waist_j0_damping}" friction="${waist_j0_friction}"/>
+    <limit effort="10000000.0" lower="-3.14" upper="3.14" velocity="1000"/>
+  </joint>
+
+  <!--includes mass properties of all torso componenents-->
+  <link name="${robot_name}waist_center">
+    <visual>
+      <geometry>
+         <mesh filename="package://${resource_package}/meshes/r2_upperbody/Body.dae"/>  
+      </geometry>
+      <origin rpy="-1.5708 0 -1.5708" xyz="0.02 0.05 -0.5625"/>
+    </visual>
+    <collision>
+      <geometry>
+         <mesh filename="package://${resource_package}/meshes/r2_upperbody/Body.dae"/>  
+      </geometry>
+      <origin rpy="-1.5708 0 -1.5708" xyz="0.02 0.05 -0.5625"/>
+    </collision>
+    <inertial>
+      <mass value="47.770842"/>
+      <origin rpy="0.0 0 0.0" xyz="-0.020473299 0.0039268948 -0.36456539"/>
+      <inertia ixx="1.9926945" ixy="-0.0069480619" ixz="-0.059104048" iyy="1.8449528" iyz="0.01958974" izz="0.69736445"/>
+    </inertial>
+   </link>
+
+  <joint name="${robot_name}fixed/waist_center/backpack" type="fixed">
+    <parent link="${robot_name}waist_center"/>
+    <child link="${robot_name}backpack"/>
+    <origin rpy="0.0 0.0 0.0" xyz="-0.145521 0.0 -0.421894"/>
+  </joint>
+
+   <link name="${robot_name}backpack">
+    <visual>
+      <geometry>
+         <mesh filename="package://${resource_package}/meshes/r2_upperbody/Backpack.dae"/>  
+      </geometry>
+      <origin rpy="0 0 0.25" xyz="0.145521 0.0 -0.118106"/>
+    </visual>
+    <collision>
+      <geometry>
+         <mesh filename="package://${resource_package}/meshes/r2_upperbody/Backpack.dae"/>  
+      </geometry>
+      <origin rpy="0 0 0.25" xyz="0.145521 0.0 -0.118106"/>
+    </collision>
+    <inertial>
+      <mass value="23.505356"/>
+      <origin rpy="0.0 0 0.0" xyz="-0.068110236 0.00026288234 -0.015523324"/>
+      <inertia ixx="0.87608758" ixy="0.0031949152" ixz="-0.0042079052" iyy="0.57168416" iyz="0.0067562903" izz="0.41612859"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}fixed/waist_center/left_shoulder_jr3" type="fixed">
+    <parent link="${robot_name}waist_center"/>
+    <child link="${robot_name}left_arm/shoulder/jr3"/>
+    <origin rpy="0.0 0.0 1.8326" xyz="-0.0240898 -0.0996837 -0.413899"/>
+  </joint>
+
+  <joint name="${robot_name}fixed/waist_center/right_shoulder_jr3" type="fixed">
+    <parent link="${robot_name}waist_center"/>
+    <child link="${robot_name}right_arm/shoulder/jr3"/>
+    <origin rpy="0.0 0.0 -1.83259" xyz="-0.0240898 0.0996837 -0.413899"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}left_arm/shoulder/jr3"/>
+
+  <non_visual_link name="${robot_name}right_arm/shoulder/jr3"/>
+
+</robot>

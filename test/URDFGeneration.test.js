@@ -8,26 +8,6 @@ const { unformat } = require('./utils.js');
 const fs = require('fs');
 const path = require('path');
 
-jest.setTimeout(120000);
-
-function getFileContents(p) {
-
-    return new Promise((resolve, reject) => {
-
-        request(p, (err, response, body) => {
-
-            if (err) {
-                reject(err);
-            } else {
-                resolve(body);
-            }
-
-        });
-
-    });
-
-};
-
 function getLocalContents(p) {
     return fs.readFileSync(p, {encoding: 'utf8'});
 }
@@ -39,25 +19,25 @@ beforeEach(() => {
 
 describe('XacroParser', () => {
 
-    // TODO: The URL is now authentication blocked -- should download the data and host it in a github repo.
-    it.skip('should parse the Robonaut 2 Xacro correctly.', async() => {
+    it.only('should parse the Robonaut 2 Xacro correctly.', async() => {
 
-        const stem = 'https://gitlab.com/nasa-jsc-robotics/r2_description/raw/654f4f89ff8e802cb7f80c617f0d6dd04483f4b2/robots/';
-        const r2b = stem + 'r2b.xacro';
+        const r2Description = path.resolve(__dirname, './data/r2_description/');
+        const stem = path.resolve(r2Description, './robots/');
+        const r2b = path.resolve(stem, 'r2b.xacro');
 
         const parser = new XacroParser();
         parser.inOrder = false;
         parser.requirePrefix = false;
         parser.localProperties = false;
         parser.workingPath = stem;
-        parser.getFileContents = getFileContents;
+        parser.getFileContents = getLocalContents;
 
         const text = await parser.getFileContents(r2b);
         const result = await parser.parse(text);
         let serialized = new XMLSerializer().serializeToString(result);
         serialized = serialized.replace(/(rpy=".+?") (xyz=".+?")/g, (match, m1, m2) => `${ m2 } ${ m1 }`);
 
-        let answer = await parser.getFileContents('https://raw.githubusercontent.com/gkjohnson/nasa-urdf-robots/master/r2_description/robots/r2b.urdf');
+        let answer = await getLocalContents(path.resolve(r2Description, './baseline/r2b.urdf'));
         answer = answer.replace(/(rpy=".+?") (xyz=".+?")/g, (match, m1, m2) => `${ m2 } ${ m1 }`);
         answer = answer.replace('<?xml version="1.0" ?>', '').trim();
 

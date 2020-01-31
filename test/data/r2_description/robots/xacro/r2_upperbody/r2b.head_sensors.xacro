@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<robot>
+
+  <joint name="${robot_name}fixed/neck_roll/vision_base" type="fixed">
+    <parent link="${robot_name}head"/>
+    <child link="${robot_name}head/vision_base"/>
+    <origin rpy=" 1.5708 0.0 0.0 " xyz=" 0.0 -0.058 0.0074676"/>
+  </joint>
+
+  <link name="${robot_name}head/vision_base">
+    <inertial>
+      <mass value=".1"/>
+      <inertia ixx=".0010" ixy="0.0" ixz="0.0" iyy=".0010" iyz="0.0" izz=".0010"/>
+    </inertial>
+  </link>
+
+  <!-- depth camera -->
+  <joint name="${robot_name}fixed/vision_base/swissranger_frame" type="fixed">
+    <parent link="${robot_name}head/vision_base"/>
+    <child link="${robot_name}head/swissranger_frame"/>
+    <!--<origin rpy="1.3908 0.0 1.5708 " xyz="0.1103264 0.0 -0.005523 "/> -->
+    <origin rpy="1.5708 0.0 1.5708 " xyz="0.1103264 0.0 -0.005523 "/>
+  </joint>
+
+ 
+  <link name="${robot_name}head/swissranger_frame">
+    <inertial>
+      <mass value=".01"/>
+      <inertia ixx=".0010" ixy="0.0" ixz="0.0" iyy=".0010" iyz="0.0" izz=".0010"/>
+    </inertial>
+  </link>
+
+  <!--stereo cameras --> 
+  <joint name="${robot_name}fixed/vision_base/vision_center_frame" type="fixed">
+    <parent link="${robot_name}head/vision_base"/>
+    <child link="${robot_name}head/vision_center_frame"/>
+    <dynamics damping="1.0" />
+    <origin rpy="1.5708 -1.5708 1.5708" xyz=" 0.066675 0.0 -0.116205 "/>
+  </joint>
+
+  <link name="${robot_name}head/vision_center_frame">
+    <inertial>
+      <mass value=".1"/>
+      <inertia ixx=".0010" ixy="0.0" ixz="0.0" iyy=".0010" iyz="0.0" izz=".0010"/>
+    </inertial>
+  </link>
+  
+  <joint name="${robot_name}fixed/vision_center_frame/left_camera_frame" type="fixed">
+    <parent link="${robot_name}head/vision_center_frame"/>
+    <child link="${robot_name}head/prosilica/left_camera_frame"/>
+    <dynamics damping="1.0" />
+    <origin rpy="0 0 -1.5708" xyz="0.0087 0.04887 0.01789"/>
+  </joint>
+
+  <link name="${robot_name}head/prosilica/left_camera_frame">
+    <inertial>
+      <mass value=".1"/>
+      <inertia ixx=".0010" ixy="0.0" ixz="0.0" iyy=".0010" iyz="0.0" izz=".0010"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_name}fixed/vision_center_frame/right_camera_frame" type="fixed">
+    <parent link="${robot_name}head/vision_center_frame"/>
+    <child link="${robot_name}head/prosilica/right_camera_frame"/>
+    <dynamics damping="1.0" />
+    <origin rpy="0 0 -1.5708" xyz="0.0087 -0.04887 0.01789"/>
+  </joint>
+
+  <link name="${robot_name}head/prosilica/right_camera_frame">
+    <inertial>
+      <mass value=".1"/>
+      <inertia ixx=".0010" ixy="0.0" ixz="0.0" iyy=".0010" iyz="0.0" izz=".0010"/>
+    </inertial>
+  </link>
+
+</robot> 

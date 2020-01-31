@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<robot>
+
+  <property name="left_leg_j0_damping" value= "10.0" />
+  <property name="left_leg_j0_friction" value= "0.0" />
+  <property name="left_leg_j1_damping" value= "5.0" />
+  <property name="left_leg_j1_friction" value= "0.0" />
+  <property name="left_leg_j2_damping" value= "5.0" />
+  <property name="left_leg_j2_friction" value= "0.0" />
+  <property name="left_leg_j3_damping" value= "5.0" />
+  <property name="left_leg_j3_friction" value= "0.0" />
+  <property name="left_leg_j4_damping" value= "5.0" />
+  <property name="left_leg_j4_friction" value= "0.0" />
+  <property name="left_leg_j5_damping" value= "5.0" />
+  <property name="left_leg_j5_friction" value= "0.0" />
+  <property name="left_leg_j6_damping" value= "5.0" />
+  <property name="left_leg_j6_friction" value= "0.0" />
+
+  <joint name="${robot_name}fixed/pelvis/left_leg_base" type="fixed">
+    <parent link="${robot_name}pelvis"/>
+    <child link="${robot_name}left_leg_base"/>
+    <origin rpy="0 0.000000 1.570796" xyz="0.0 0 0.0"/>
+  </joint>
+
+  <non_visual_link name="${robot_name}left_leg_base"/>
+
+  <joint name="${robot_name}fixed/left_leg_base/left_leg_j0_base" type="fixed">
+    <parent link="${robot_name}left_leg_base"/>
+    <child link="${robot_name}left_leg_j0_base"/>
+    <origin rpy="0.0 1.8325957 3.14159" xyz="-0.1104900 0.0 -0.0297180"/>	
+  </joint>
+  
+  <non_visual_link name="${robot_name}left_leg_j0_base"/>
+
+  <joint name="${robot_name}left_leg/joint0" type="revolute">
+    <parent link="${robot_name}left_leg_j0_base"/>
+    <child link="${robot_name}left_hip_roll"/>
+    <origin rpy="0.0 0 0" xyz="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${left_leg_j0_damping}" friction="${left_leg_j0_friction}" />
+    <limit effort="330.0" lower="-3.14159" upper="3.14159" velocity="1.0"/>
+    <traits spring_k="2.5"   />
+  </joint>
+
+  <link name="${robot_name}left_hip_roll">
+    <inertial>
+      <mass value="2.5410"/>
+      <inertia ixx="0.006434" ixy="0.0007087" ixz="-0.001543" iyy="0.009325" iyz="0.0008694" izz="0.006904"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.03372 -0.02428 0.07903"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone3.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone3.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+    </collision>
+  </link>
+
+  <joint name="${robot_name}left_leg/joint1" type="revolute">
+    <parent link="${robot_name}left_hip_roll"/>
+    <child link="${robot_name}left_hip_pitch"/>
+    <origin rpy="-1.570796  -0.2617994 0.0000000" xyz="0.050629765 +0.0022860 0.103498576" />
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${left_leg_j1_damping}" friction="${left_leg_j1_friction}" />
+    <limit effort="330.0" lower="-1.42244" upper="1.20427" velocity="1.0"/>
+    <traits spring_k="2.5"   />
+  </joint>
+
+  <link name="${robot_name}left_hip_pitch">
+    <inertial>
+      <mass value="4.6734"/>
+      <inertia ixx="0.01002" ixy="0.007194" ixz="0.002041" iyy="0.03307" iyz="-0.0007281" izz="0.03728"/>
+      <origin rpy="0 0 0" xyz="0.09450 -0.03354 0.008185"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone1.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone1.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="${robot_name}left_leg/joint2" type="revolute">
+    <parent link="${robot_name}left_hip_pitch"/>
+    <child link="${robot_name}left_upper_leg"/>
+    <origin rpy=" 1.570796 0.0 1.570796" xyz="0.200 -0.050 0.004"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${left_leg_j2_damping}" friction="${left_leg_j2_friction}" />
+    <limit effort="330.0" lower="-3.14159" upper="3.14159" velocity="1.0"/>
+    <traits spring_k="2.5"   />
+  </joint>
+
+  <link name="${robot_name}left_upper_leg">
+    <inertial>
+      <mass value="3.7745"/>
+      <inertia ixx="0.02163" ixy="-0.001453" ixz="0.003137" iyy="0.01832" iyz="0.004738" izz="0.009798"/>
+      <origin rpy="0 0 0" xyz="-0.01485 -0.02188 0.09676"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone2.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone2.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="${robot_name}left_leg/joint3" type="revolute">
+    <parent link="${robot_name}left_upper_leg"/>
+    <child link="${robot_name}left_knee"/>
+    <origin rpy="0.0 -1.570796 3.14159" xyz="-0.002 -0.050 0.157"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${left_leg_j3_damping}" friction="${left_leg_j3_friction}" />
+    <limit effort="330.0" lower="-0.10472" upper="2.68781" velocity="1.0"/>
+    <traits spring_k="2.5"   />
+  </joint>
+
+  <link name="${robot_name}left_knee">
+    <inertial>
+      <mass value="4.6734"/>
+      <inertia ixx="0.01002" ixy="0.007194" ixz="0.002041" iyy="0.03307" iyz="-0.0007281" izz="0.03728"/>
+      <origin rpy="0 0 0" xyz="0.09450 -0.03354 0.008185"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone1.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone1.dae"/>
+      </geometry>
+      <material name="gold"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="${robot_name}left_leg/joint4" type="revolute">
+    <parent link="${robot_name}left_knee"/>
+    <child link="${robot_name}left_lower_leg"/>
+    <origin rpy="0 1.570796 0" xyz="0.200 -0.050 0.004"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${left_leg_j4_damping}" friction="${left_leg_j4_friction}" />
+    <limit effort="330.0" lower="-3.14159" upper="3.14159" velocity="1.0"/>
+    <traits spring_k="2.5"   />
+  </joint>
+
+  <link name="${robot_name}left_lower_leg">
+    <inertial>
+      <mass value="3.7745"/>
+      <inertia ixx="0.02163" ixy="-0.001453" ixz="0.003137" iyy="0.01832" iyz="0.004738" izz="0.009798"/>
+      <origin rpy="0 0 0" xyz="-0.01485 -0.02188 0.09676"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone2.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone2.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="${robot_name}left_leg/joint5" type="revolute">
+    <parent link="${robot_name}left_lower_leg"/>
+    <child link="${robot_name}left_ankle_pitch"/>
+    <origin rpy="0.0 -1.570796 3.14159" xyz="-0.002 -0.050 0.157"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${left_leg_j5_damping}" friction="${left_leg_j5_friction}" />
+    <limit effort="330.0" lower="-0.10472" upper="2.68781" velocity="1.0"/>
+    <traits spring_k="2.5"   />
+  </joint>
+
+  <link name="${robot_name}left_ankle_pitch">
+    <inertial>
+      <mass value="4.6734"/>
+      <inertia ixx="0.01002" ixy="0.007194" ixz="0.002041" iyy="0.03307" iyz="-0.0007281" izz="0.03728"/>
+      <origin rpy="0 0 0" xyz="0.09450 -0.03354 0.008185"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone1.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_bone1.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="${robot_name}left_leg/joint6" type="revolute">
+    <parent link="${robot_name}left_ankle_pitch"/>
+    <child link="${robot_name}left_ankle_roll"/>
+    <origin rpy="3.14159 -1.570796 0" xyz="0.199643 -0.0508 0.00325"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="${left_leg_j6_damping}" friction="${left_leg_j6_friction}" />
+    <limit effort="330.0" lower="-3.14159" upper="3.14159" velocity="1.0"/>
+    <traits spring_k="2.5"   />
+  </joint>
+
+  <link name="${robot_name}left_ankle_roll">
+    <inertial>
+      <mass value="1.4461"/>
+      <inertia ixx="0.001780" ixy="0.00001801" ixz="0.0000002218" iyy="0.001767" iyz="0.0000006717" izz="0.002949"/>
+      <origin rpy="0 0 0" xyz="-0.00004402 0.0001052 0.02940"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder length=".06" radius=".066"/>
+      </geometry>
+      <material name="dirty_white"/>
+      <origin rpy="0 0 0" xyz="0 0 0.025"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length=".06" radius=".066"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.025"/>
+    </collision>
+  </link>
+
+</robot>

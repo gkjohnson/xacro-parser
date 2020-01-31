@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<robot>
+
+  <link name="${robot_name}pelvis">
+    <inertial>
+      <mass value="12.2831"/>
+      <inertia ixx="0.10679" ixy="0.00009239" ixz="-0.00002105" iyy="0.05595" iyz="0.0" izz="0.1022"/>
+      <origin xyz="0.00001909 0.0 -0.008524" rpy="0 0 0"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_pelvis.dae"/>
+      </geometry>
+      <material name="gold"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://${resource_package}/meshes/r2c_legs/r2cl_ext_pelvis.dae"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="${robot_name}fixed/robot_base/pelvis" type="fixed">
+    <parent link="${robot_name}robot_base"/>
+    <child link="${robot_name}pelvis"/>
+    <origin rpy="0 3.14159 0" xyz="0 0 0.098"/>
+  </joint>
+
+</robot>
