@@ -2,7 +2,6 @@
 /* global describe, it, expect, beforeEach */
 const { XacroParser } = require('../umd/XacroParser.js');
 const { JSDOM } = require('jsdom');
-const W3CXMLSerializer = require('w3c-xmlserializer');
 const { unformat } = require('./utils.js');
 const fs = require('fs');
 const path = require('path');
@@ -12,8 +11,10 @@ function getLocalContents(p) {
 }
 
 beforeEach(() => {
-    global.DOMParser = new JSDOM().window.DOMParser;
-    global.XMLSerializer = W3CXMLSerializer.XMLSerializer.interface;
+    const jsdom = new JSDOM();
+    const window = jsdom.window;
+    global.DOMParser = window.DOMParser;
+    global.XMLSerializer = window.XMLSerializer;
 });
 
 describe('XacroParser', () => {
@@ -66,7 +67,6 @@ describe('XacroParser', () => {
         const text = await parser.getFileContents(rootFile);
         const result = await parser.parse(text);
         let serialized = new XMLSerializer().serializeToString(result);
-        serialized = serialized.replace(/&#x9;/g, ' '); // unicode tab html entity
         serialized = serialized.replace(/(rpy=".+?") (xyz=".+?")/g, (match, m1, m2) => `${ m2 } ${ m1 }`);
         serialized = serialized.replace(/-?(([0-9]+?\.[0-9]+)|([0-9]+))([eE]-?[0-9]+)?/g, num => parseFloat(num).toFixed(6));
         serialized = serialized.replace(/(Kp=".+?") (Kd=".+?") (Ki=".+?")/g, (match, kp, kd, ki) => `${ kd } ${ ki } ${ kp }`);

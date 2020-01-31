@@ -1,7 +1,6 @@
 /* global describe, it, expect, beforeEach */
 const XacroLoader = require('../umd/XacroLoader.js');
 const { JSDOM } = require('jsdom');
-const W3CXMLSerializer = require('w3c-xmlserializer');
 
 function unformat(xml) {
     return xml.replace(/>\s+</g, '><').trim();
@@ -37,8 +36,10 @@ const files = {
 };
 
 beforeEach(() => {
-    global.DOMParser = new JSDOM().window.DOMParser;
-    global.XMLSerializer = W3CXMLSerializer.XMLSerializer.interface;
+    const jsdom = new JSDOM();
+    const window = jsdom.window;
+    global.DOMParser = window.DOMParser;
+    global.XMLSerializer = window.XMLSerializer;
     global.fetch = function(url) {
         url = url.replace(/^(\.\/)+/, './');
         return Promise.resolve({
