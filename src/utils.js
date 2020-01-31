@@ -48,6 +48,45 @@ export function removeEndCommentsFromArray(arr) {
     }
 }
 
+// Expression helpers
+export function isOperator(str) {
+    const regexp = /^[()/*+\-%|&=]$/;
+    return regexp.test(str);
+}
+
+export function isString(str) {
+    const regexp = /^(('.*?')|(".*?")|(`.*?`))$/;
+    return regexp.test(str);
+}
+
+// TODO: make this more robust
+export function isNumber(str) {
+    return !isNaN(parseFloat(str)) && !/[^0-9.eE-]/.test(str);
+}
+
+export function tokenize(str) {
+    const regexp = /(('.*?')|(".*?")|(`.*?`)|[()/*+\-%|&=[\]])/g;
+    return str
+        .replace(regexp, m => ` ${ m } `)
+        .trim()
+        .split(/\s+/g);
+}
+
+export function normalizeExpression(str) {
+    // Remove any instances of "--" or "++" that might occur from negating a negative number
+    // by adding a space that are not in a string.
+    return str.replace(/[-+]{2,}/, val => {
+        let positive = true;
+        for (let i = 0, l = val.length; i < l; i++) {
+            const operator = val[i];
+            if (operator === '-') {
+                positive = !positive;
+            }
+        }
+
+        return positive ? '+' : '-';
+    });
+}
 
 // Property Set Helpers
 export const PARENT_SCOPE = Symbol('parent');

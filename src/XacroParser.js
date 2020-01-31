@@ -3,6 +3,11 @@ import {
     removeEndCommentsFromArray,
     getElementsWithName,
     deepClone,
+    isOperator,
+    isString,
+    isNumber,
+    normalizeExpression,
+    tokenize,
     mergePropertySets,
     createNewPropertyScope,
     PARENT_SCOPE,
@@ -27,7 +32,6 @@ export class XacroParser {
         /* Evaluation */
         // Evaluate expressions and rospack commands in attribute text
         // TODO: expressions can basically be any python expression
-        // TODO: support proper expression evaluation without Function or eval
         function evaluateAttribute(str, properties) {
 
             // recursively unpack parameters
@@ -73,21 +77,17 @@ export class XacroParser {
 
                         stack.push(contents);
 
-                        const operators = /[()/*+\-%|&=[\]]+/g;
-                        const expr = contents
-                            .replace(operators, m => ` ${ m } `)
-                            .trim()
-                            .split(/\s+/g)
+                        const operators = /(()|()|()|[()/*+\-%|&=[\]])+/g;
+                        const expr = tokenize(contents)
                             .map(t => {
                                 operators.lastIndex = 0;
-                                if (operators.test(t)) return t;
-                                if (!isNaN(parseFloat(t))) return t;
-                                if (/^'.*?'$/.test(t)) return t;
-                                if (/^".*?"$/.test(t)) return t;
+                                if (isOperator(t)) return t;
+                                if (isNumber(t)) return t;
+                                if (isString(t)) return t;
 
                                 if (t in properties) {
                                     const arg = unpackParams(properties[t], properties);
-                                    if (isNaN(parseFloat(arg)) || /[^0-9.eE-]/.test(arg)) {
+                                    if (!isNumber(arg)) {
                                         return `"${ arg.toString().replace(/\\/g, '\\\\').replace(/"/g, '\\"') }"`;
                                     } else {
                                         return arg;
@@ -102,21 +102,15 @@ export class XacroParser {
 
                         stack.pop();
 
-                        if (/^"[^"]*"$/.test(expr)) {
+                        if (isString(expr)) {
                             return expr.substring(1, expr.length - 1);
-                        } else if (isNaN(parseFloat(expr)) || /[^0-9.eE-]/.test(expr)) {
-
-                            // Remove any instances of "--" or "++" that might occur from negating a negative number
-                            // by adding a space that are not in a string.
-                            // TODO: just remove them entirely?
-                            const cleanExpr = expr.replace(/[+-]{2}(?=([^"]*"[^"]*")*[^"]*$)/g, (m, rest) => ` ${ m[0] } ${ m[1] } ${ rest || '' }`);
-
-                            return handleExpressionEvaluation(cleanExpr);
-                        } else {
+                        } else if (isNumber(expr)) {
                             return expr;
+                        } else {
+                            const cleanExpr = normalizeExpression(expr);
+                            return handleExpressionEvaluation(cleanExpr);
                         }
                     }
-
                 });
 
                 return res;
