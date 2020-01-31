@@ -52,7 +52,9 @@ export class XacroParser {
                     }
 
                     const isRospackCommand = /^\$\(/.test(match);
-                    const contents = match.substring(2, match.length - 1);
+                    let contents = match.substring(2, match.length - 1);
+                    contents = unpackParams(contents, properties);
+
                     if (isRospackCommand) {
 
                         const command = unpackParams(contents, properties);
@@ -94,9 +96,7 @@ export class XacroParser {
                                         return arg;
                                     }
                                 } else {
-                                    throw new Error(
-                                        `XacroParser: Missing parameter "${ t }".`
-                                    );
+                                    return t;
                                 }
                             })
                             .join('');
@@ -255,6 +255,7 @@ export class XacroParser {
             if (!requirePrefix) {
                 switch (tagName) {
 
+                    case 'arg':
                     case 'property':
                     case 'macro':
                     case 'insert_block':
@@ -381,9 +382,9 @@ export class XacroParser {
                     currWorkingPath = prevWorkingPath;
                     return;
                 }
+                case 'xacro:arg':
                 case 'xacro:attribute':
                 case 'xacro:element':
-                    removeEndCommentsFromArray(resultsList);
                     throw new Error(`XacroParser: ${ tagName } tags not supported.`);
                 default: {
                     // TODO: check if there's a 'call' attribute here which indicates that

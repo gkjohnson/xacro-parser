@@ -51,12 +51,12 @@ export function removeEndCommentsFromArray(arr) {
 
 // Expression helpers
 export function isOperator(str) {
-    const regexp = /^[()/*+\-%|&=]$/;
+    const regexp = /^[()/*+\-%|&=[\]]+$/;
     return regexp.test(str);
 }
 
 export function isString(str) {
-    const regexp = /^(('.*?')|(".*?")|(`.*?`))$/;
+    const regexp = /^(('[^']*?')|("[^"]*?")|(`[^`]*?`))$/;
     return regexp.test(str);
 }
 
@@ -65,8 +65,9 @@ export function isNumber(str) {
     return !isNaN(parseFloat(str)) && !/[^0-9.eE-]/.test(str);
 }
 
+// TODO: this needs to tokenize numbers together
 export function tokenize(str) {
-    const regexp = /(('.*?')|(".*?")|(`.*?`)|[()/*+\-%|&=[\]])/g;
+    const regexp = /(('[^']*?')|("[^"]*?")|(`[^`]*?`)|([()/*+\-%|&=[\]]+))/g;
     return str
         .replace(regexp, m => ` ${ m } `)
         .trim()
