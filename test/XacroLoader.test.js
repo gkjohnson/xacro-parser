@@ -130,6 +130,45 @@ describe('XacroLoader', () => {
         });
     });
 
+    describe('comments', () => {
+
+        it.only('should be stripped before xacro elements', done => {
+            const content =
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <!--third comment before property -->
+
+                    <!--second comment before property -->
+                    <!--comment before property -->
+                    <xacro:property name="test" value="val"/>
+
+                    <!--comment before link-->
+                    <link name="\${test}_link">
+                        <child attr="_\${test}_\${test}"/>
+                    </link>
+                </robot>
+            `;
+
+            const loader = new XacroLoader();
+            loader.parse(content, res => {
+                const str = new XMLSerializer().serializeToString(res);
+                expect(unformat(str)).toEqual(unformat(
+                    `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <!--comment before link-->
+                    <link name="val_link">
+                        <child attr="_val_val"/>
+                    </link>
+                </robot>`
+                ));
+
+            });
+
+            done();
+
+        });
+
+    });
+
     describe('macros', () => {
         it('should expand a basic macro.', done => {
             const content =
