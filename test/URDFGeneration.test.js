@@ -1,9 +1,8 @@
 // Tests from https://github.com/ros/xacro/blob/melodic-devel/test/test_xacro.py
-/* global describe, it, expect, beforeEach, jest */
+/* global describe, it, expect, beforeEach */
 const { XacroParser } = require('../umd/XacroParser.js');
 const { JSDOM } = require('jsdom');
 const W3CXMLSerializer = require('w3c-xmlserializer');
-const request = require('request');
 const { unformat } = require('./utils.js');
 const fs = require('fs');
 const path = require('path');
