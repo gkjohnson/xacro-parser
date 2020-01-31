@@ -405,7 +405,7 @@ export class XacroParser {
                         console.warn('XacroParser: xacro:include name spaces not supported.');
                     }
                     const filename = evaluateAttribute(node.getAttribute('filename'), properties);
-                    const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\//.test(filename);
+                    const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:[/\\]/.test(filename);
                     const filePath = isAbsolute ? filename : currWorkingPath + filename;
 
                     const prevWorkingPath = currWorkingPath;
