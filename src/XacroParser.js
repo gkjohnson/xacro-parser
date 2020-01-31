@@ -161,9 +161,7 @@ export class XacroParser {
             try {
                 return unpackParams(str, allProps);
             } catch (e) {
-                console.warn(`XacroParser: Failed to process expression "${ str }".`);
-                console.warn(e.message);
-                return str;
+                throw new Error(`XacroParser: Failed to process expression "${ str }". \n` + e.message);
             }
 
         }
@@ -176,7 +174,7 @@ export class XacroParser {
             const macro = macros[macroName];
 
             if (!macro) {
-                console.warn(`XacroParser: Cannot find macro "${ macroName }"`);
+                throw new Error(`XacroParser: Cannot find macro "${ macroName }"`);
             }
 
             // Copy the properties and macros so we can modify them with

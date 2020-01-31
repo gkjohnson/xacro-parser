@@ -92,7 +92,7 @@ describe('XacroParser', () => {
         serialized = serialized.replace(/-?(([0-9]+?\.[0-9]+)|([0-9]+))([eE]-?[0-9]+)?/g, num => parseFloat(num).toFixed(6));
         serialized = serialized.replace(/(Kp=".+?") (Kd=".+?") (Ki=".+?")/g, (match, kp, kd, ki) => `${ kd } ${ ki } ${ kp }`);
 
-        let answer = await getFileContents(path.resolve(valDescription, './baseline/valkyrie_A.urdf'));
+        let answer = await getLocalContents(path.resolve(valDescription, './baseline/valkyrie_A.urdf'));
         answer = answer.replace(/(rpy=".+?") (xyz=".+?")/g, (match, m1, m2) => `${ m2 } ${ m1 }`);
         answer = answer.replace('<?xml version="1.0" ?>', '').trim();
         answer = answer.replace(/-?(([0-9]+?\.[0-9]+)|([0-9]+))([eE]-?[0-9]+)?/g, num => parseFloat(num).toFixed(6));
