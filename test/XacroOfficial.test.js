@@ -49,6 +49,9 @@ beforeEach(() => {
 });
 
 function runXacro(content, done, options, onError) {
+    onError = onError || (err => {
+        throw err;
+    });
     return new Promise(resolve => {
         const loader = new XacroLoader();
         Object.assign(loader, options);
@@ -454,7 +457,7 @@ describe('Basic Xacro Tests', () => {
         )
     );
 
-    it.skip('test_equality_expression_in_if_statement', async() =>
+    it('test_equality_expression_in_if_statement', async() =>
         runXacro(
             `<a xmlns:xacro="http://www.ros.org/wiki/xacro">
                 <xacro:property name="var" value="useit"/>
@@ -492,7 +495,7 @@ describe('Basic Xacro Tests', () => {
         )
     );
 
-    it.skip('test_math_expressions', async() =>
+    it('test_math_expressions', async() =>
         runXacro(
             `<a xmlns:xacro="http://www.ros.org/wiki/xacro">
                 <foo function="\${1. + sin(pi)}"/>
@@ -815,6 +818,7 @@ describe('Basic Xacro Tests', () => {
 
     it.todo('test_overwrite_globals');
 
+    // TODO: handle this case
     it.skip('test_no_double_evaluation', async() =>
         runXacro(
             `<a xmlns:xacro="http://www.ros.org/xacro">
@@ -833,7 +837,7 @@ describe('Basic Xacro Tests', () => {
 
     it.todo('test_property_forwarding');
 
-    it.skip('test_extension_in_expression', async() =>
+    it('test_extension_in_expression', async() =>
         runXacro(
             `<a xmlns:xacro="http://www.ros.org/wiki/xacro">\${'test'+'$(arg var)'}</a>`,
             res => {
@@ -849,7 +853,7 @@ describe('Basic Xacro Tests', () => {
         )
     );
 
-    it.skip('test_extension_in_expression', async() =>
+    it('test_extension_in_expression', async() =>
         runXacro(
             `<a xmlns:xacro="http://www.ros.org/wiki/xacro">$(arg \${'v'+'ar'})</a>`,
             res => {
