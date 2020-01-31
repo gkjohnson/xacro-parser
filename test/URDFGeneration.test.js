@@ -18,7 +18,7 @@ beforeEach(() => {
 
 describe('XacroParser', () => {
 
-    it.only('should parse the Robonaut 2 Xacro correctly.', async() => {
+    it('should parse the Robonaut 2 Xacro correctly.', async() => {
 
         const r2Description = path.resolve(__dirname, './data/r2_description/');
         const stem = path.resolve(r2Description, './robots/');
