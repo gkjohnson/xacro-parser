@@ -161,9 +161,7 @@ export class XacroParser {
             try {
                 return unpackParams(str, allProps);
             } catch (e) {
-                console.warn(`XacroParser: Failed to process expression "${ str }".`);
-                console.warn(e.message);
-                return str;
+                throw new Error(`XacroParser: Failed to process expression "${ str }". \n` + e.message);
             }
 
         }
@@ -176,7 +174,7 @@ export class XacroParser {
             const macro = macros[macroName];
 
             if (!macro) {
-                console.warn(`XacroParser: Cannot find macro "${ macroName }"`);
+                throw new Error(`XacroParser: Cannot find macro "${ macroName }"`);
             }
 
             // Copy the properties and macros so we can modify them with
@@ -250,7 +248,7 @@ export class XacroParser {
                 // TODO: Support caret and default syntax
                 // TODO: is there any difference between the := and = syntax?
                 if (/^\^/.test(def) || /\|/.test(def)) {
-                    console.warn(`XacroParser: ROS Jade pass-through notation not supported in macro defaults: ${ def }`);
+                    throw new Error(`XacroParser: ROS Jade pass-through notation not supported in macro defaults: ${ def }`);
                 }
 
                 obj.name = name;
@@ -402,7 +400,7 @@ export class XacroParser {
                 }
                 case 'xacro:include': {
                     if (node.hasAttribute('ns')) {
-                        console.warn('XacroParser: xacro:include name spaces not supported.');
+                        throw new Error('XacroParser: xacro:include name spaces not supported.');
                     }
                     const filename = evaluateAttribute(node.getAttribute('filename'), properties);
                     const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:[/\\]/.test(filename);
@@ -423,8 +421,7 @@ export class XacroParser {
                 }
                 case 'xacro:attribute':
                 case 'xacro:element':
-                    console.warn(`XacroParser: ${ tagName } tags not supported.`);
-                    return null;
+                    throw new Error(`XacroParser: ${ tagName } tags not supported.`);
                 default: {
                     // TODO: check if there's a 'call' attribute here which indicates that
                     // a macro should be invoked?
@@ -512,7 +509,7 @@ export class XacroParser {
             const promises = includeEl.map(el => {
                 // TODO: Handle namespaces on the include.
                 if (el.hasAttribute('ns')) {
-                    console.warn('XacroParser: xacro:include name spaces not supported.');
+                    throw new Error('XacroParser: xacro:include name spaces not supported.');
                 }
 
                 const filename = el.getAttribute('filename');

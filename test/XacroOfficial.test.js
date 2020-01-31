@@ -47,7 +47,7 @@ beforeEach(() => {
     };
 });
 
-function runXacro(content, done, options) {
+function runXacro(content, done, options, onError) {
     return new Promise(resolve => {
         const loader = new XacroLoader();
         Object.assign(loader, options);
@@ -56,6 +56,9 @@ function runXacro(content, done, options) {
                 const str = new XMLSerializer().serializeToString(res);
                 done(unformat(str));
                 resolve();
+            },
+            err => {
+                onError(err);
             }
         );
     });
@@ -605,21 +608,18 @@ describe('Basic Xacro Tests', () => {
         )
     );
 
-    it('test_recursive_definition', async() =>
+    it('test_recursive_definition', done => {
         runXacro(
             `<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
                 <xacro:property name="a" value="\${a2}"/>
                 <xacro:property name="a2" value="\${2*a}"/>
                 <a doubled="\${a2}"/>
             </robot>`,
-            res => {
-                expect(res).toEqual(unformat(`
-                <robot>
-                    <a doubled="\${a2}"/>
-                </robot>
-            `));
-            }
-        )
+            () => done(new Error()),
+            null,
+            () => done()
+        );
+    }
     );
 
     it('test_multiple_recursive_evaluation', async() =>

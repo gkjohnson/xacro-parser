@@ -197,7 +197,6 @@ describe('XacroLoader', () => {
                     </xacro:macro>
                     <xacro:test a="1" b="\${input}"/>
                     <xacro:test a="1" b="\${input}" c="3"/>
-                    <other c="\${c}"/>
                 </robot>
             `;
             const loader = new XacroLoader();
@@ -208,11 +207,27 @@ describe('XacroLoader', () => {
                         `<robot>
                             <child a="1" b="10" c="10"/>
                             <child a="1" b="10" c="3"/>
-                            <other c="\${c}"/>
                         </robot>`
                     ));
                     done();
                 }
+            );
+        });
+
+        it('should throw an error if a parameter cannot be resolved.', done => {
+            const content =
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <xacro:property name="input" value="10"/>
+                    <xacro:macro name="test" params="a b c:=\${input}">
+                        <child a="\${a}" b="\${b}" c="\${c}"/>
+                    </xacro:macro>
+                    <other c="\${c}"/>
+                </robot>
+            `;
+            const loader = new XacroLoader();
+            loader.parse(
+                content, () => done(new Error()), () => done()
             );
         });
 
@@ -509,35 +524,47 @@ describe('XacroLoader', () => {
             global.E = () => called++;
             global.e123 = () => called++;
 
-            const content =
-            `<?xml version="1.0"?>
-                <robot xmlns:xacro="http://ros.org/wiki/xacro">
-                    <xacro:property name="tf" value="testFunc" />
-                    <result
-                        a="\${testFunc()}"
-                        b="\${global.testFunc()}"
-                        c="\${\${testFunc}()}"
-                        d="\${global.e()}"
-                        e="\${global.E()}"
-                        f="\${global['e']()}"
-                        g="\${e()}"
-                        h="\${E()}"
-                        i="\${e123()}"
-                    />
-                </robot>
-            `;
+            // these should throw errors because they can't be evaluated.
+            const promises =
+                [
+                    'testFunc()',
+                    'global.testFunc()',
+                    '$' + '{testFunc}()',
+                    'global.e()',
+                    'global.E()',
+                    'global[\'e\']()',
+                    'e()',
+                    'E()',
+                    'e123()',
+                ].map(exp => new Promise((resolve, reject) => {
+                    const content =
+                        `<?xml version="1.0"?>
+                            <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                                <xacro:property name="tf" value="testFunc" />
+                                <result a="\${${ exp }}"/>
+                            </robot>
+                        `;
+                    const loader = new XacroLoader();
+                    loader.parse(content, () => reject(new Error()), () => resolve());
+                }));
 
-            const loader = new XacroLoader();
-            loader.parse(content, () => {
-                expect(called).toEqual(0);
-
-                delete global.e;
-                delete global.e123;
-                delete global.E;
-                delete global.testFunc;
-                done();
-            });
-
+            Promise
+                .all(promises)
+                .then(() => {
+                    delete global.e;
+                    delete global.e123;
+                    delete global.E;
+                    delete global.testFunc;
+                    expect(called).toEqual(0);
+                    done();
+                })
+                .catch(() => {
+                    delete global.e;
+                    delete global.e123;
+                    delete global.E;
+                    delete global.testFunc;
+                    done(new Error());
+                });
         });
     });
 
@@ -709,10 +736,12 @@ describe('XacroLoader', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-                    <result x="\${x}" y="\${y}" z="\${z}"/>
                     <xacro:property name="x" value="100"/>
                     <xacro:if value="1">
                         <xacro:property name="y" value="200"/>
+                    </xacro:if>
+                    <xacro:if value="1">
+                        <xacro:property name="z" value="500"/>
                     </xacro:if>
                     <xacro:if value="0">
                         <xacro:property name="z" value="300"/>
@@ -734,14 +763,36 @@ describe('XacroLoader', () => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
-                            <result x="\${x}" y="\${y}" z="\${z}"/>
-                            <result x="100" y="200" z="\${z}"/>
+                            <result x="100" y="200" z="500"/>
                             <a/>
                             <b/>
                         </robot>`
                     ));
                     done();
                 }
+            );
+        });
+
+        it('should throw an error if true but a property is out of order', done => {
+            const content =
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <result x="\${x}" y="\${y}" z="\${z}"/>
+                    <xacro:property name="x" value="100"/>
+                    <xacro:if value="1">
+                        <xacro:property name="y" value="200"/>
+                    </xacro:if>
+                    <xacro:if value="0">
+                        <xacro:property name="z" value="300"/>
+                    </xacro:if>
+                </robot>
+            `;
+
+            const loader = new XacroLoader();
+            loader.localProperties = false;
+            loader.inOrder = true;
+            loader.parse(
+                content, () => done(new Error()), () => done()
             );
         });
 
@@ -790,12 +841,12 @@ describe('XacroLoader', () => {
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
                     <xacro:property name="a" value="aa"/>
-                    <xacro:macro name="test-macro" params="b">
+                    <xacro:macro name="test-macro">
                         <child/>
                     </xacro:macro>
 
                     <test a="\${a}"/>
-                    <xacro:test-macro b="\${b}"/>
+                    <xacro:test-macro/>
 
                     <xacro:include filename="./a.xacro"/>
                     <test a="\${a}"/>
@@ -846,17 +897,7 @@ describe('XacroLoader', () => {
             loader.localProperties = true;
             loader.inOrder = true;
             loader.parse(
-                content, res => {
-                    const str = new XMLSerializer().serializeToString(res);
-                    expect(unformat(str)).toEqual(unformat(
-                        `<robot>
-                            <result value="100"/>
-                            <after value="\${input}"/>
-                            <after value="200"/>
-                        </robot>`
-                    ));
-                    done();
-                }
+                content, () => done(new Error()), () => done()
             );
         });
 
@@ -912,31 +953,11 @@ describe('XacroLoader', () => {
                     </robot>
                 `;
 
+            // this should throw an error because a property is not defined.
             const loader = new XacroLoader();
             loader.requirePrefix = true;
             loader.parse(
-                content, res => {
-                    const str = new XMLSerializer().serializeToString(res);
-                    expect(unformat(str)).toEqual(unformat(`
-                        <robot>
-                            <include filename="./a.xacro"/>
-                            <property name="input" value="100"/>
-                            <property name="block"><a/></property>
-
-                            <if value="1">100</if>
-                            <unless value="1">200</unless>
-
-                            <macro name="test">
-                                <result value="\${input}"/>
-                            </macro>
-
-                            <test/>
-                            <insert_block name="block"/>
-                            <after value="\${input}"/>
-                        </robot>
-                    `));
-                    done();
-                }
+                content, () => done(new Error()), () => done()
             );
         });
 
