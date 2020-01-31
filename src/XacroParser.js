@@ -1,9 +1,13 @@
-import { getUrlBase } from './utils.js';
+import {
+    getUrlBase,
+    removeEndCommentsFromArray,
+    getElementsWithName,
+    deepClone,
+    mergePropertySets,
+    createNewPropertyScope,
+    PARENT_SCOPE,
+} from './utils.js';
 
-// TODO: Verify against ros-ran xacro files
-// TODO: Report errors / warnings back to the client
-
-const PARENT_SCOPE = Symbol('parent');
 export class XacroParser {
 
     constructor() {
@@ -19,68 +23,6 @@ export class XacroParser {
     }
 
     async parse(data) {
-
-        /* Utilities */
-        function removeEndCommentsFromArray(arr) {
-
-            while (arr.length > 0) {
-
-                const el = arr[arr.length - 1];
-                if (el.nodeType !== el.ELEMENT_NODE) {
-                    arr.pop();
-                } else {
-                    break;
-                }
-
-            }
-
-        }
-
-        function mergeObjects(...args) {
-            const res = {};
-            for (let i = 0, l = args.length; i < l; i++) {
-                const obj = args[i];
-                for (const key in obj) {
-                    res[key] = obj[key];
-                }
-                if (PARENT_SCOPE in obj) {
-                    res[PARENT_SCOPE] = obj[PARENT_SCOPE];
-                }
-            }
-            return res;
-        }
-
-        function createNewScope(properties) {
-            const res = mergeObjects(properties);
-            res[PARENT_SCOPE] = properties;
-            return res;
-        }
-
-        // Deep clone an xml node without the macro or property tags.
-        function deepClone(node, stripPropsMacros) {
-            const res = node.cloneNode();
-            const childNodes = node.childNodes;
-            for (let i = 0, l = childNodes.length; i < l; i++) {
-                const c = childNodes[i];
-                const tagName = c.tagName;
-                if (!stripPropsMacros || (tagName !== 'xacro:property' && tagName !== 'xacro:macro')) {
-                    res.appendChild(deepClone(c, stripPropsMacros));
-                }
-            }
-            return res;
-        }
-
-        // QuerySelectorAll that respects tag prefixes like 'xacro:'
-        function getElementsWithName(node, name, res = []) {
-            if (node.tagName === name) {
-                res.push(node);
-            }
-            for (let i = 0, l = node.children.length; i < l; i++) {
-                const child = node.children[i];
-                getElementsWithName(child, name, res);
-            }
-            return res;
-        }
 
         /* Evaluation */
         // Evaluate expressions and rospack commands in attribute text
@@ -172,7 +114,7 @@ export class XacroParser {
             }
 
             const stack = [];
-            const allProps = mergeObjects(globalProperties, properties);
+            const allProps = mergePropertySets(globalProperties, properties);
             try {
                 return unpackParams(str, allProps);
             } catch (e) {
@@ -196,8 +138,8 @@ export class XacroParser {
             // macro input fields and local macro definitions.
             const ogProperties = properties;
             const ogMacros = macros;
-            properties = createNewScope(properties);
-            macros = mergeObjects(macros);
+            properties = createNewPropertyScope(properties);
+            macros = mergePropertySets(macros);
 
             // Modify the properties with macro param inputs
             let children = [];
