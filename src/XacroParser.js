@@ -12,6 +12,7 @@ import {
     createNewPropertyScope,
     PARENT_SCOPE,
 } from './utils.js';
+import { evaluateExpression } from './evaluateExpression.js';
 
 export class XacroParser {
 
@@ -502,7 +503,7 @@ export class XacroParser {
 
         // TODO: remove unsave eval
         const handleRospackCommand = (stem, ...args) => rospackCommands[stem](...args);
-        const handleExpressionEvaluation = expr => new Function(`return ${ expr };`)(); // eslint-disable-line no-new-func
+        const handleExpressionEvaluation = evaluateExpression;
 
         let localProperties = this.localProperties;
         let currWorkingPath = workingPath;
