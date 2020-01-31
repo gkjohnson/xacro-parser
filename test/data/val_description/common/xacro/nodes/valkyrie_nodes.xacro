@@ -1,0 +1,83 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="valkyrie_nodes">
+
+	<xacro:property name="HipYawNode" value="/pelvis/${prefix}_leg_j1" />
+	<xacro:property name="HipRollNode" value="/${prefix}_leg/j2" />
+	<xacro:property name="HipPitchNode" value="/${prefix}_leg/j3" />
+	<xacro:property name="KneePitchNode" value="/${prefix}_leg/j4" />
+	<xacro:property name="AnkleLeftActuatorNode" value="/${prefix}_leg/ankle/left_actuator" />
+	<xacro:property name="AnkleRightActuatorNode" value="/${prefix}_leg/ankle/right_actuator" />
+
+	<xacro:property name="ShoulderPitchNode" value="/trunk/${prefix}_arm_j1" />
+	<xacro:property name="ShoulderRollNode" value="/${prefix}_arm/j2" />
+	<xacro:property name="ShoulderYawNode" value="/${prefix}_arm/j3" />
+	<xacro:property name="ElbowPitchNode" value="/${prefix}_arm/j4" />
+	<xacro:property name="ForearmYawNode" value="/${prefix}_arm/j5" />
+	<xacro:property name="WristTopActuatorNode" value="/${prefix}_arm/wrist/top_actautor" />
+	<xacro:property name="WristBottomActuatorNode" value="/${prefix}_arm/wrist/bottom_actuator" />
+	<xacro:property name="WristLeftActuatorNode" value="/${prefix}_arm/wrist/left_actuator" />
+	<xacro:property name="WristRightActuatorNode" value="/${prefix}_arm/wrist/right_actuator" />
+
+    	<xacro:property name="IndexNode" value="/${prefix}_arm/hand/index" />
+    	<xacro:property name="MiddleNode" value="/${prefix}_arm/hand/middle" />
+    	<xacro:property name="PinkyNode" value="/${prefix}_arm/hand/pinky" />
+    	<xacro:property name="ThumbProxNode" value="/${prefix}_arm/hand/thumb_proximal" />
+    	<xacro:property name="ThumbDistNode" value="/${prefix}_arm/hand/thumb_distal" />
+    	<xacro:property name="ThumbRollNode" value="/${prefix}_arm/hand/thumb_roll" />
+    	<xacro:property name="WristLeftNode" value="/${prefix}_arm/wrist/left_actuator" />
+    	<xacro:property name="WristRightNode" value="/${prefix}_arm/wrist/right_actuator" />
+
+	<xacro:property name="LowerNeckPitchNode" value="/neck/j1" />
+	<xacro:property name="NeckYawNode" value="/neck/j2" />
+	<xacro:property name="UpperNeckPitchNode" value="/neck/j3" />
+
+	<xacro:property name="TrunkYawNode" value="/pelvis/waist" /> <!--Yaw-->
+	<xacro:property name="WaistLeftActuatorNode" value="/trunk/left_actuator" /> <!--pitch-->
+	<xacro:property name="WaistRightActuatorNode" value="/trunk/right_actuator" /> <!--roll-->
+
+	<xacro:property name="Athena1Node" value="/${prefix}_arm/athena1"/>
+	<xacro:property name="Athena2Node" value="/${prefix}_arm/athena2"/>
+
+	<xacro:property name="pelvis_middle_imu_node" value="/sensors/middlePelvisIMU" />
+	<xacro:property name="pelvis_rear_imu_node" value="/sensors/rearPelvisIMU" />
+	<xacro:property name="torso_left_imu_node" value="/sensors/leftTorsoIMU" />
+
+	<xacro:property name="left_foot_ATI_node" value="/left_leg/ankle/left_actuator" />
+	<xacro:property name="right_foot_ATI_node" value="/right_leg/ankle/left_actuator" />
+
+	<xacro:property name="HandSensorNode" value="_arm/forearm_sensors"/>
+	
+	<xacro:property name="IndexFingerNode" value="/${prefix}_arm/hand/index"/>
+	<xacro:property name="IndexFingerPitch1Node" value="/${prefix}_arm/forearm_sensors/index"/>
+	<xacro:property name="IndexFingerPitch2Node" value="/${prefix}_arm/forearm_sensors/index"/>
+	<xacro:property name="IndexFingerPitch3Node" value="/${prefix}_arm/forearm_sensors/index"/>
+
+	<xacro:property name="MiddleFingerNode" value="/${prefix}_arm/hand/middle"/>
+	<xacro:property name="MiddleFingerPitch1Node" value="/${prefix}_arm/forearm_sensors/middle"/>
+	<xacro:property name="MiddleFingerPitch2Node" value="/${prefix}_arm/forearm_sensors/middle"/>
+	<xacro:property name="MiddleFingerPitch3Node" value="/${prefix}_arm/forearm_sensors/middle"/>
+
+	<xacro:property name="PinkyFingerNode" value="/${prefix}_arm/hand/pinky"/>
+	<xacro:property name="PinkyPitch1Node" value="/${prefix}_arm/forearm_sensors/pinky"/>
+	<xacro:property name="PinkyPitch2Node" value="/${prefix}_arm/forearm_sensors/pinky"/>
+	<xacro:property name="PinkyPitch3Node" value="/${prefix}_arm/forearm_sensors/pinky"/>
+
+	<xacro:property name="ThumbRollNode" value="/${prefix}_arm/hand/thumb_roll"/>
+	<xacro:property name="ThumbProximalNode" value="/${prefix}_arm/hand/thumb_proximal"/>
+	<xacro:property name="ThumbDistalNode" value="/${prefix}_arm/hand/thumb_distal"/>
+	<xacro:property name="ThumbRollSensNode" value="/${prefix}_arm/forearm_sensors/thumb"/>
+	<xacro:property name="ThumbPitch1Node" value="/${prefix}_arm/forearm_sensors/thumb"/>
+	<xacro:property name="ThumbPitch2Node" value="/${prefix}_arm/forearm_sensors/thumb"/>
+	<xacro:property name="ThumbPitch3Node" value="/${prefix}_arm/forearm_sensors/thumb"/>
+
+	<xacro:macro name="all_channels" >
+		<Channels>
+			<Channel id="/right_arm" />
+			<Channel id="/left_arm" />
+			<Channel id="/right_leg" />
+			<Channel id="/left_leg" />
+			<Channel id="/neck" />
+			<Channel id="/trunk" />
+		</Channels>
+	</xacro:macro>
+    
+</robot>

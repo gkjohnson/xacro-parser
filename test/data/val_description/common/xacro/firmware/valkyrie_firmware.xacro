@@ -1,0 +1,139 @@
+<?xml version="1.0" ?>
+<robot name="valkyrie_firmware_locations" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Public Base URL -->
+    <xacro:property name="PublicProcFirmwareBaseURL" value="http://nasa-jsc-robotics.bintray.com/val-firmware/"/>
+    <xacro:property name="PublicFPGAFirmwareBaseURL" value="http://nasa-jsc-robotics.bintray.com/val-firmware/"/>
+
+    <!-- Private Base URL -->
+    <xacro:property name="PrivateProcFirmwareBaseURL" value="http://flexo.jsc.nasa.gov/bamboo/browse/EMB-SEAP/latest/artifact/shared/"/>
+    <xacro:property name="PrivateFPGAFirmwareBaseURL" value="http://flexo.jsc.nasa.gov/bamboo/browse/EMB-TURD/latest/artifact/"/>
+
+    <!-- Base URL Structure -->
+    <xacro:macro name="firmware_base_url" >
+        <TurbodriverProcessorFirmware>
+            <PublicProcFirmwareBaseURL id="${PublicProcFirmwareBaseURL}"/>
+            <PrivateProcFirmwareBaseURL id="${PrivateProcFirmwareBaseURL}"/>
+        </TurbodriverProcessorFirmware>
+        <TurbodriverFPGAFirmware>
+            <PublicFPGAFirmwareBaseURL id="${PublicFPGAFirmwareBaseURL}"/>
+            <PrivateFPGAFirmwareBaseURL id="${PrivateFPGAFirmwareBaseURL}"/>
+        </TurbodriverFPGAFirmware>
+    </xacro:macro>
+
+    <!-- Public Proc Extension URL -->
+    <xacro:property name="PublicTurboProcRotaryFirmwareExtension" value="turboproc-rotary/daria.1/turbo_bootloader.bin"/>
+    <xacro:property name="PublicTurboProcLinearFirmwareExtension" value="turboproc-linear/daria.1/turbo_bootloader.bin"/>
+
+    <!-- Private Proc Extension URL -->
+    <xacro:property name="PrivateTurboProcRotaryFirmwareExtension" value="Rotary-Binary-for-Bootloader/turbo_bootloader.bin"/>
+    <xacro:property name="PrivateTurboProcLinearFirmwareExtension" value="Linear-Binary-for-Bootloader/turbo_bootloader.bin"/>
+
+    <!-- Public FPGA Extension URLs -->
+    <xacro:property name="PublicTurboFPGAFirmwareExtension00" value="turbofpga00/daria.1/V1_turbodriver_daria1_c0n0.sbf.gz"/>
+    <xacro:property name="PublicTurboFPGAFirmwareExtension01" value="turbofpga01/daria.1/V1_turbodriver_daria1_c0n1.sbf.gz"/>
+    <xacro:property name="PublicTurboFPGAFirmwareExtension02" value="turbofpga02/daria.1/V1_turbodriver_daria1_c0n2.sbf.gz"/>
+    <xacro:property name="PublicTurboFPGAFirmwareExtension03" value="turbofpga03/daria.1/V1_turbodriver_daria1_c0n3.sbf.gz"/>
+    <xacro:property name="PublicTurboFPGAFirmwareExtension04" value="turbofpga04/daria.1/V1_turbodriver_daria1_c0n4.sbf.gz"/>
+    <xacro:property name="PublicTurboFPGAFirmwareExtension05" value="turbofpga05/daria.1/V1_turbodriver_daria1_c0n5.sbf.gz"/>
+    <xacro:property name="PublicTurboFPGAFirmwareExtension06" value="turbofpga06/daria.1/V1_turbodriver_daria1_c0n6.sbf.gz"/>
+    <xacro:property name="PublicTurboFPGAFirmwareExtension07" value="turbofpga07/daria.1/V1_turbodriver_daria1_c0n7.sbf.gz"/>
+
+    <!-- Private FPGA Extension URLs -->
+    <xacro:property name="PrivateTurboFPGAFirmwareExtension00" value="BS/SBF-File/V1_turbodriver_daria1_c0n0.sbf.gz"/>
+    <xacro:property name="PrivateTurboFPGAFirmwareExtension01" value="BS/SBF-File/V1_turbodriver_daria1_c0n1.sbf.gz"/>
+    <xacro:property name="PrivateTurboFPGAFirmwareExtension02" value="BS/SBF-File/V1_turbodriver_daria1_c0n2.sbf.gz"/>
+    <xacro:property name="PrivateTurboFPGAFirmwareExtension03" value="BS/SBF-File/V1_turbodriver_daria1_c0n3.sbf.gz"/>
+    <xacro:property name="PrivateTurboFPGAFirmwareExtension04" value="BS/SBF-File/V1_turbodriver_daria1_c0n4.sbf.gz"/>
+    <xacro:property name="PrivateTurboFPGAFirmwareExtension05" value="BS/SBF-File/V1_turbodriver_daria1_c0n5.sbf.gz"/>
+    <xacro:property name="PrivateTurboFPGAFirmwareExtension06" value="BS/SBF-File/V1_turbodriver_daria1_c0n6.sbf.gz"/>
+    <xacro:property name="PrivateTurboFPGAFirmwareExtension07" value="BS/SBF-File/V1_turbodriver_daria1_c0n7.sbf.gz"/>
+
+    <!-- Arm Public -->
+    <xacro:property name="ShoulderPitchPublicProcFirmware" value="${PublicTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="leftShoulderPitchPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension01}" />
+    <xacro:property name="rightShoulderPitchPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension04}" />
+    <xacro:property name="ShoulderRollPublicProcFirmware" value="${PublicTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="ShoulderRollPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension02}" />
+    <xacro:property name="ShoulderYawPublicProcFirmware" value="${PublicTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="ShoulderYawPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension03}" />
+    <xacro:property name="ElbowPitchPublicProcFirmware" value="${PublicTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="ElbowPitchPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension04}" />
+    <xacro:property name="ForearmYawPublicProcFirmware" value="" />
+    <xacro:property name="ForearmYawPublicFPGAFirmware" value="" />
+    <!-- Arm Private -->
+    <xacro:property name="ShoulderPitchPrivateProcFirmware" value="${PrivateTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="leftShoulderPitchPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension01}" />
+    <xacro:property name="rightShoulderPitchPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension04}" />
+    <xacro:property name="ShoulderRollPrivateProcFirmware" value="${PrivateTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="ShoulderRollPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension02}" />
+    <xacro:property name="ShoulderYawPrivateProcFirmware" value="${PrivateTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="ShoulderYawPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension03}" />
+    <xacro:property name="ElbowPitchPrivateProcFirmware" value="${PrivateTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="ElbowPitchPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension04}" />
+    <xacro:property name="ForearmYawPrivateProcFirmware" value="" />
+    <xacro:property name="ForearmYawPrivateFPGAFirmware" value="" />
+
+    <!-- Leg Public -->
+    <xacro:property name="HipRollPublicProcFirmware" value="${PublicTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="HipRollPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension02}" />
+    <xacro:property name="HipPitchPublicProcFirmware" value="${PublicTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="HipPitchPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension03}" />
+    <xacro:property name="KneePitchPublicProcFirmware" value="${PublicTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="KneePitchPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension04}" />
+    <xacro:property name="AnkleRightActuatorPublicProcFirmware" value="${PublicTurboProcLinearFirmwareExtension}" />
+    <xacro:property name="AnkleRightActuatorPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension05}" />
+    <xacro:property name="AnkleLeftActuatorPublicProcFirmware" value="${PublicTurboProcLinearFirmwareExtension}" />
+    <xacro:property name="AnkleLeftActuatorPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension06}" />
+    <!-- Leg Private -->
+    <xacro:property name="HipRollPrivateProcFirmware" value="${PrivateTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="HipRollPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension02}" />
+    <xacro:property name="HipPitchPrivateProcFirmware" value="${PrivateTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="HipPitchPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension03}" />
+    <xacro:property name="KneePitchPrivateProcFirmware" value="${PrivateTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="KneePitchPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension04}" />
+    <xacro:property name="AnkleRightActuatorPrivateProcFirmware" value="${PrivateTurboProcLinearFirmwareExtension}" />
+    <xacro:property name="AnkleRightActuatorPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension05}" />
+    <xacro:property name="AnkleLeftActuatorPrivateProcFirmware" value="${PrivateTurboProcLinearFirmwareExtension}" />
+    <xacro:property name="AnkleLeftActuatorPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension06}" />
+
+    <!-- Pelvis Public -->
+    <xacro:property name="TrunkYawPublicProcFirmware" value="${PublicTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="TrunkYawPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension01}" />
+    <xacro:property name="LeftHipYawPublicProcFirmware" value="${PublicTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="LeftHipYawPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension03}" />
+    <xacro:property name="RightHipYawPublicProcFirmware" value="${PublicTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="RightHipYawPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension05}" />
+    <!-- Pelvis Private -->
+    <xacro:property name="TrunkYawPrivateProcFirmware" value="${PrivateTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="TrunkYawPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension01}" />
+    <xacro:property name="LeftHipYawPrivateProcFirmware" value="${PrivateTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="LeftHipYawPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension03}" />
+    <xacro:property name="RightHipYawPrivateProcFirmware" value="${PrivateTurboProcRotaryFirmwareExtension}" />
+    <xacro:property name="RightHipYawPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension05}" />
+
+    <!-- Trunk Public -->
+    <xacro:property name="WaistLeftActuatorPublicProcFirmware" value="${PublicTurboProcLinearFirmwareExtension}" />
+    <xacro:property name="WaistLeftActuatorPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension02}" />
+    <xacro:property name="WaistRightActuatorPublicProcFirmware" value="${PublicTurboProcLinearFirmwareExtension}" />
+    <xacro:property name="WaistRightActuatorPublicFPGAFirmware" value="${PublicTurboFPGAFirmwareExtension03}" />
+    <!-- Trunk Private -->
+    <xacro:property name="WaistLeftActuatorPrivateProcFirmware" value="${PrivateTurboProcLinearFirmwareExtension}" />
+    <xacro:property name="WaistLeftActuatorPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension02}" />
+    <xacro:property name="WaistRightActuatorPrivateProcFirmware" value="${PrivateTurboProcLinearFirmwareExtension}" />
+    <xacro:property name="WaistRightActuatorPrivateFPGAFirmware" value="${PrivateTurboFPGAFirmwareExtension03}" />
+
+    <!-- Neck Public -->
+    <xacro:property name="LowerNeckPitchProcessorFirmware" value="" />
+    <xacro:property name="LowerNeckPitchFPGAFirmware" value="" />
+    <xacro:property name="NeckYawProcessorFirmware" value="" />
+    <xacro:property name="NeckYawFPGAFirmware" value="" />
+    <xacro:property name="UpperNeckPitchProcessorFirmware" value="" />
+    <xacro:property name="UpperNeckPitchFPGAFirmware" value="" />
+
+    <!-- Forearm -->
+    <xacro:property name="leftForearmProcessorFirmware" value=""/>
+    <xacro:property name="leftForearmFPGAFirmware" value=""/>
+    <xacro:property name="rightForearmProcessorFirmware" value=""/>
+    <xacro:property name="rightForearmFPGAFirmware" value=""/>
+</robot>

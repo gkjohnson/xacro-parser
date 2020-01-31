@@ -1,0 +1,14 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="test_bench_nodes">
+
+	<xacro:property name="HandSensorNode" value="_arm/forearm_sensors"/>
+    <xacro:property name="testbench_node" value="/right_arm/j5" />
+    <xacro:property name="IndexNode" value="/right_arm/hand/index" />
+    <xacro:property name="MiddleNode" value="/right_arm/hand/middle" />
+    <xacro:property name="PinkyNode" value="/right_arm/hand/pinky" />
+    <xacro:property name="ThumbProxNode" value="/right_arm/hand/thumb_proximal" />
+    <xacro:property name="ThumbDistNode" value="/right_arm/hand/thumb_distal" />
+    <xacro:property name="ThumbRollNode" value="/right_arm/hand/thumb_roll" />
+    <xacro:property name="WristLeftNode" value="/right_arm/wrist/left_actuator" />
+    <xacro:property name="WristRightNode" value="/right_arm/wrist/right_actuator" />
+
+</robot>
