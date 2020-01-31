@@ -45,7 +45,7 @@ describe('XacroParser', () => {
 
     });
 
-    it('should parse the Valkyrie Xacro correctly.', async() => {
+    it.only('should parse the Valkyrie Xacro correctly.', async() => {
 
         const valDescription = path.resolve(__dirname, './data/val_description/');
         const stem = path.resolve(valDescription, './model/robots/');

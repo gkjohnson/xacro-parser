@@ -43,5 +43,8 @@
     "nyc": "^13.3.0",
     "rollup": "^0.66.6",
     "request": "^2.88.0"
+  },
+  "dependencies": {
+    "expr-eval": "^2.0.2"
   }
 }
