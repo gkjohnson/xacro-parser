@@ -32,11 +32,19 @@ export class XacroParser {
 
             // recursively unpack parameters
             function unpackParams(str, properties) {
-                if (typeof str === 'number') return str;
 
+                // if we're unpacking something that's already a number then just return
+                if (typeof str === 'number') {
+                    return str;
+                }
+
+                // process all of the ${} and $() expressions
                 const res = str.replace(/(\$?\$\([^)]+\))|(\$?\${[^}]+})/g, match => {
 
-                    if (/^\$\$/.test(match)) return match.substring(1);
+                    // if we encounter an escaped $$ then return early
+                    if (/^\$\$/.test(match)) {
+                        return match.substring(1);
+                    }
 
                     const isRospackCommand = /^\$\(/.test(match);
                     const contents = match.substring(2, match.length - 1);
@@ -46,10 +54,10 @@ export class XacroParser {
                         const tokens = command.split(/\s+/g);
                         const stem = tokens.shift();
 
-                        if (stem in rospackCommands) {
-                            return rospackCommands[stem](...tokens);
-                        } else {
-                            throw new Error(`XacroParser: Cannot run rospack command "${ contents }"`);
+                        try {
+                            return handleRospackCommand(stem, ...tokens);
+                        } catch (e) {
+                            throw new Error(`XacroParser: Cannot run rospack command "${ contents }".\n` + e.message);
                         }
 
                     } else {
@@ -65,7 +73,7 @@ export class XacroParser {
 
                         stack.push(contents);
 
-                        const operators = /[()/*+\-%|&=]+/g;
+                        const operators = /[()/*+\-%|&=[\]]+/g;
                         const expr = contents
                             .replace(operators, m => ` ${ m } `)
                             .trim()
@@ -93,15 +101,17 @@ export class XacroParser {
                             .join('');
 
                         stack.pop();
-                        if (isNaN(parseFloat(expr)) || /[^0-9.eE-]/.test(expr)) {
+
+                        if (/^"[^"]*"$/.test(expr)) {
+                            return expr.substring(1, expr.length - 1);
+                        } else if (isNaN(parseFloat(expr)) || /[^0-9.eE-]/.test(expr)) {
 
                             // Remove any instances of "--" or "++" that might occur from negating a negative number
-                            // that are not in a string.
+                            // by adding a space that are not in a string.
+                            // TODO: just remove them entirely?
                             const cleanExpr = expr.replace(/[+-]{2}(?=([^"]*"[^"]*")*[^"]*$)/g, (m, rest) => ` ${ m[0] } ${ m[1] } ${ rest || '' }`);
 
-                            // TODO: Remove the potentially unsafe use of Function
-                            return (new Function(`return ${ cleanExpr };`))(); // eslint-disable-line no-new-func
-
+                            return handleExpressionEvaluation(cleanExpr);
                         } else {
                             return expr;
                         }
@@ -495,6 +505,10 @@ export class XacroParser {
         const includeMap = {};
         const globalProperties = { True: 1, False: 0 };
         globalProperties[PARENT_SCOPE] = globalProperties;
+
+        // TODO: remove unsave eval
+        const handleRospackCommand = (stem, ...args) => rospackCommands[stem](...args);
+        const handleExpressionEvaluation = expr => new Function(`return ${ expr };`)(); // eslint-disable-line no-new-func
 
         let localProperties = this.localProperties;
         let currWorkingPath = workingPath;
