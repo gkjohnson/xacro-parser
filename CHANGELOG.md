@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Remove comments that preceed xacro elements.
+- Throw errors rather than log warnings when a xacro fails to be created properly.
+
 ## [0.1.0] - 2020-01-09
 
 ### Changed
