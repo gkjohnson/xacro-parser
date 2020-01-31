@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="pinky_finger">
+  <xacro:macro name="add_self_collide">
+    <gazebo>
+      <self_collide>true</self_collide>
+    </gazebo>
+
+    <gazebo reference="pelvis">
+      <self_collide>false</self_collide>
+    </gazebo>
+    <gazebo reference="leftHipYawLink">
+      <self_collide>false</self_collide>
+    </gazebo>
+    <gazebo reference="rightHipYawLink">
+      <self_collide>false</self_collide>
+    </gazebo>
+    </xacro:macro>
+  </robot>

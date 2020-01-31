@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="gazebo_hand_contact">
+  <xacro:macro name="gazebo_hand_contact" params="link_name">
+    <gazebo reference="${link_name}">
+      <kp>1e5</kp>
+      <kd>1</kd>
+      <maxVel>0.1</maxVel>
+      <minDepth>0.0015</minDepth>
+    </gazebo>
+  </xacro:macro>
+</robot>

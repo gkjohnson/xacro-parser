@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="pelvis_includes">
+
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/pelvis/mass_parameters.xacro"/>
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/pelvis/pelvis.xacro" />
+
+</robot>

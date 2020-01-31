@@ -1,0 +1,6 @@
+<robot xmlns:xacro="http://ros.orgt/wiki/xacro" name="common_bodies">
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/index_finger/index_finger.xacro" />
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/middle_finger/middle_finger.xacro" />
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/pinky_finger/pinky_finger.xacro" />
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/thumb/thumb.xacro" />
+</robot>

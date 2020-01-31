@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="valkyrie_thumb_mechanical_info">
+  
+  <!-- Pulley-1 diameter = 0.01707m -->
+  <!-- Pulley-2 diameter = 0.0127m -->
+  <!-- Pulley-3 diameter = 0.01016 -->
+  <xacro:property name="Pulley2Ratio" value="1.344" />
+  <xacro:property name="Pulley3Ratio" value="1.68" />
+  
+</robot>

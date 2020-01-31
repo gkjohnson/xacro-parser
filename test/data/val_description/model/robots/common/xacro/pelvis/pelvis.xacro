@@ -1,0 +1,45 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="Pelvis">
+    <xacro:property name="Pelvis_Link_Name" value="pelvis" />
+
+    <xacro:macro name="make_pelvis">
+        <xacro:standard_link name="${Pelvis_Link_Name}"
+                        mass="${PelvisLinkMass}"
+                        origin_xyz="${PelvisLinkComPosition}"
+                        ixx="${PelvisLinkInertia_IXX}" ixy="${PelvisLinkInertia_IXY}" ixz="${PelvisLinkInertia_IXZ}"
+                        iyy="${PelvisLinkInertia_IYY}" iyz="${PelvisLinkInertia_IYZ}" izz="${PelvisLinkInertia_IZZ}"
+                        origin_rpy="0 0 0"
+                        visual_mesh="${pelvis_mesh_dir}/pelvis.dae"
+                        collision_mesh="${pelvis_mesh_dir}/pelvis.dae"/>
+    </xacro:macro>
+
+    <xacro:macro name="v1_pelvis_middle_sensors_usb" params="sensor_node_tag sensor_api_tag sensor_port_tag">
+        <xacro:microstrain_sensor sensorName="pelvisRearImu"
+                                  parentLink="${Pelvis_Link_Name}"
+                                  origin_xyz="${PelvisRearImuFrameOrigin_XYZ}"
+                                  origin_rpy="${PelvisRearImuFrameOrientation_RPY}" />
+
+        <xacro:usb_microstrain_sensor sensorName="pelvisMiddleImu"
+                                  parentLink="${Pelvis_Link_Name}"
+                                  origin_xyz="${PelvisMiddleImuFrameOrigin_XYZ}"
+                                  origin_rpy="${PelvisMiddleImuFrameOrientation_RPY}"
+                                  sensor_node="${sensor_node_tag}"
+                                  sensor_api="${sensor_api_tag}"
+                                  sensor_port="${sensor_port_tag}" />
+    </xacro:macro>
+
+    <xacro:macro name="v1_pelvis_rear_sensors_usb" params="sensor_node_tag sensor_api_tag sensor_port_tag">
+        <xacro:usb_microstrain_sensor sensorName="pelvisRearImu"
+                                  parentLink="${Pelvis_Link_Name}"
+                                  origin_xyz="${PelvisRearImuFrameOrigin_XYZ}"
+                                  origin_rpy="${PelvisRearImuFrameOrientation_RPY}" 
+                        				  sensor_node="${sensor_node_tag}"
+                        				  sensor_api="${sensor_api_tag}"
+                        				  sensor_port="${sensor_port_tag}" />
+
+        <xacro:microstrain_sensor sensorName="pelvisMiddleImu"
+                                  parentLink="${Pelvis_Link_Name}"
+                                  origin_xyz="${PelvisMiddleImuFrameOrigin_XYZ}"
+                                  origin_rpy="${PelvisMiddleImuFrameOrientation_RPY}" />
+	
+    </xacro:macro>
+</robot>

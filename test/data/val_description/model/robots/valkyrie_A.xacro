@@ -1,0 +1,37 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="valkyrie">
+
+	<xacro:property name="leg_mesh_dir" value="package://val_description/model/meshes/legs"/>
+    <xacro:property name="arm_mesh_dir" value="package://val_description/model/meshes/arms"/>
+    <xacro:property name="waist_mesh_dir" value="package://val_description/model/meshes/torso"/>
+    <xacro:property name="head_mesh_dir" value="package://val_description/model/meshes/head"/>
+    <xacro:property name="pelvis_mesh_dir" value="package://val_description/model/meshes/pelvis"/>
+    <xacro:property name="fingers_mesh_dir" value="package://val_description/model/meshes/fingers"/>
+
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/generic_models.xacro" />
+    <xacro:include filename="$(find val_description)/common/xacro/nodes/valkyrie_nodes.xacro"/>
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/sensors/sensor_transforms.xacro"/>
+
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/config/valkyrie_A_transmissions.xacro" />
+	<xacro:include filename="$(find val_description)/common/xacro/serial_numbers/valkyrie_A_serials.xacro"/>
+    <xacro:include filename="$(find val_description)/common/xacro/api/valkyrie_A_api.xacro"/>
+    <xacro:include filename="$(find val_description)/common/xacro/dev_ports/valkyrie_A_ports.xacro"/>
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/common_bodies.xacro" />
+
+    <!-- Pelvis include -->
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/pelvis/pelvis_includes.xacro"/>
+
+    <!-- Leg include -->
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/leg/leg_includes.xacro"/>
+
+    <!-- Head include -->
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/head/head_includes.xacro"/>
+
+    <!-- Arm include -->
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/arm/arm_includes.xacro"/>
+
+    <!-- Waist include -->
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/waist/waist_includes.xacro"/>
+
+    <xacro:include filename="$(find val_description)/model/robots/common/xacro/valkyrie_base_hw.xacro"/>
+
+</robot>

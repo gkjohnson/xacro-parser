@@ -1,0 +1,66 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="valkyrie_nodes">
+
+    <xacro:property name="ForearmYawKp" value="1000" />
+    <xacro:property name="ForearmYawKd" value="0.0" />
+    <xacro:property name="ForearmYawKi" value="0.0" />
+    <xacro:property name="WristPitchKp" value="500" />
+    <xacro:property name="WristPitchKd" value="0" />
+    <xacro:property name="WristPitchKi" value="0.0" />
+    <xacro:property name="WristRollKp" value="500" />
+    <xacro:property name="WristRollKd" value="0" />
+    <xacro:property name="WristRollKi" value="0.0" />
+
+    <xacro:property name="LowerNeckPitchKp" value="50" />
+    <xacro:property name="LowerNeckPitchKd" value="3" />
+    <xacro:property name="LowerNeckPitchKi" value="3" />
+    <xacro:property name="NeckYawKp" value="50" />
+    <xacro:property name="NeckYawKd" value="3" />
+    <xacro:property name="NeckYawKi" value="0.0" />
+    <xacro:property name="UpperNeckPitchKp" value="50" />
+    <xacro:property name="UpperNeckPitchKd" value="3" />
+    <xacro:property name="UpperNeckPitchKi" value="0.0" />
+
+    <xacro:property name="ThumbRollKp" value="5.0" />
+    <xacro:property name="ThumbRollKd" value="0.0" />
+    <xacro:property name="ThumbRollKi" value="0.0" />
+    <xacro:property name="ThumbPitch1Kp" value="5.0" />
+    <xacro:property name="ThumbPitch1Kd" value="0.0" />
+    <xacro:property name="ThumbPitch1Ki" value="0.0" />
+    <xacro:property name="ThumbPitch2Kp" value="5.0" />
+    <xacro:property name="ThumbPitch2Kd" value="0.0" />
+    <xacro:property name="ThumbPitch2Ki" value="0.0" />
+    <xacro:property name="ThumbPitch3Kp" value="5.0" />
+    <xacro:property name="ThumbPitch3Kd" value="0.0" />
+    <xacro:property name="ThumbPitch3Ki" value="0.0" />
+
+    <xacro:property name="IndexFingerPitch1Kp" value="5.0" />
+    <xacro:property name="IndexFingerPitch1Kd" value="0.0" />
+    <xacro:property name="IndexFingerPitch1Ki" value="0.0" />
+    <xacro:property name="IndexFingerPitch2Kp" value="5.0" />
+    <xacro:property name="IndexFingerPitch2Kd" value="0.0" />
+    <xacro:property name="IndexFingerPitch2Ki" value="0.0" />
+    <xacro:property name="IndexFingerPitch3Kp" value="5.0" />
+    <xacro:property name="IndexFingerPitch3Kd" value="0.0" />
+    <xacro:property name="IndexFingerPitch3Ki" value="0.0" />
+
+    <xacro:property name="MiddleFingerPitch1Kp" value="5.0" />
+    <xacro:property name="MiddleFingerPitch1Kd" value="0.0" />
+    <xacro:property name="MiddleFingerPitch1Ki" value="0.0" />
+    <xacro:property name="MiddleFingerPitch2Kp" value="5.0" />
+    <xacro:property name="MiddleFingerPitch2Kd" value="0.0" />
+    <xacro:property name="MiddleFingerPitch2Ki" value="0.0" />
+    <xacro:property name="MiddleFingerPitch3Kp" value="5.0" />
+    <xacro:property name="MiddleFingerPitch3Kd" value="0.0" />
+    <xacro:property name="MiddleFingerPitch3Ki" value="0.0" />
+
+    <xacro:property name="PinkyPitch1Kp" value="5.0" />
+    <xacro:property name="PinkyPitch1Kd" value="0.0" />
+    <xacro:property name="PinkyPitch1Ki" value="0.0" />
+    <xacro:property name="PinkyPitch2Kp" value="5.0" />
+    <xacro:property name="PinkyPitch2Kd" value="0.0" />
+    <xacro:property name="PinkyPitch2Ki" value="0.0" />
+    <xacro:property name="PinkyPitch3Kp" value="5.0" />
+    <xacro:property name="PinkyPitch3Kd" value="0.0" />
+    <xacro:property name="PinkyPitch3Ki" value="0.0" />
+
+</robot>

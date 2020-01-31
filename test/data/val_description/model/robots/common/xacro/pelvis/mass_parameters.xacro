@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="pelvis_mass_parameters">
+
+  <xacro:property name="PelvisLinkMass" value="8.22" />
+  <xacro:property name="PelvisLinkComPosition" value="-0.00532 -0.003512 -0.0036" />
+  <xacro:property name="PelvisLinkInertia_IXX" value="0.11866378" />
+  <xacro:property name="PelvisLinkInertia_IXY" value="-0.000143482" />
+  <xacro:property name="PelvisLinkInertia_IXZ" value="0.003271293" />
+  <xacro:property name="PelvisLinkInertia_IYY" value="0.097963425" />
+  <xacro:property name="PelvisLinkInertia_IYZ" value="0.002159545" />
+  <xacro:property name="PelvisLinkInertia_IZZ" value="0.083854638" />
+
+</robot>

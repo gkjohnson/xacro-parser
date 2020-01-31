@@ -1,0 +1,14 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="leg_includes">
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/leg/joint_axes.xacro"/>
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/leg/link_names.xacro"/>
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/leg/joint_limits.xacro"/>
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/leg/frame_parameters.xacro"/>
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/leg/mass_parameters.xacro"/>
+
+	<xacro:include filename="$(find val_description)/common/xacro/joint_names/valkyrie_joint_names.xacro"/>
+	<xacro:include filename="$(find val_description)/common/xacro/actuator_names/valkyrie_actuator_names.xacro"/>
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/gains.xacro"/>	
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/sensors/ati_force_torque.xacro"/>
+
+	<xacro:include filename="$(find val_description)/model/robots/common/xacro/leg/leg.xacro"/>	
+</robot>
