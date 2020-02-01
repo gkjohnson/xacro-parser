@@ -1,8 +1,7 @@
 import { getUrlBase } from './utils.js';
 import { XacroParser } from './XacroParser.js';
 
-export default
-class XacroLoader extends XacroParser {
+export class XacroLoader extends XacroParser {
 
     constructor() {
 
