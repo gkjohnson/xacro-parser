@@ -33,7 +33,7 @@ export class XacroParser {
         /* Evaluation */
         // Evaluate expressions and rospack commands in attribute text
         // TODO: expressions can basically be any python expression
-        function evaluateAttribute(str, properties) {
+        function evaluateAttribute(str, properties, finalValue = false) {
 
             // recursively unpack parameters
             function unpackParams(str, properties) {
@@ -48,7 +48,7 @@ export class XacroParser {
 
                     // if we encounter an escaped $$ then return early
                     if (/^\$\$/.test(match)) {
-                        return match.substring(1);
+                        return match;
                     }
 
                     const isRospackCommand = /^\$\(/.test(match);
@@ -121,7 +121,13 @@ export class XacroParser {
             const stack = [];
             const allProps = mergePropertySets(globalProperties, properties);
             try {
-                return unpackParams(str, allProps);
+                // fix the escaped dollar signs only at the end to prevent double evaluation and only
+                // if the value is not an intermediate value like a computed property.
+                let result = unpackParams(str, allProps);
+                if (finalValue) {
+                    result = result.replace(/\${2}([({])/g, (val, brace) => `$${ brace }`);
+                }
+                return result;
             } catch (e) {
                 throw new Error(`XacroParser: Failed to process expression "${ str }". \n` + e.message);
             }
@@ -246,7 +252,7 @@ export class XacroParser {
         async function processNode(node, properties, macros, resultsList = []) {
             if (node.nodeType !== node.ELEMENT_NODE) {
                 const res = node.cloneNode();
-                res.textContent = evaluateAttribute(res.textContent, properties);
+                res.textContent = evaluateAttribute(res.textContent, properties, true);
                 resultsList.push(res);
                 return;
             }
@@ -338,7 +344,7 @@ export class XacroParser {
                 case 'xacro:unless': {
                     removeEndCommentsFromArray(resultsList);
 
-                    const value = evaluateAttribute(node.getAttribute('value'), properties);
+                    const value = evaluateAttribute(node.getAttribute('value'), properties, true);
                     let bool = null;
                     if (!isNaN(parseFloat(value))) {
                         bool = !!parseFloat(value);
@@ -366,7 +372,7 @@ export class XacroParser {
                     if (node.hasAttribute('ns')) {
                         throw new Error('XacroParser: xacro:include name spaces not supported.');
                     }
-                    const filename = evaluateAttribute(node.getAttribute('filename'), properties);
+                    const filename = evaluateAttribute(node.getAttribute('filename'), properties, true);
                     const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:[/\\]/.test(filename);
                     const filePath = isAbsolute ? filename : currWorkingPath + filename;
 
@@ -398,7 +404,7 @@ export class XacroParser {
                         const res = node.cloneNode();
                         for (let i = 0, l = res.attributes.length; i < l; i++) {
                             const attr = res.attributes[i];
-                            const value = evaluateAttribute(attr.value, properties);
+                            const value = evaluateAttribute(attr.value, properties, true);
                             res.setAttribute(attr.name, value);
                         }
 

@@ -818,8 +818,7 @@ describe('Basic Xacro Tests', () => {
 
     it.todo('test_overwrite_globals');
 
-    // TODO: handle this case
-    it.skip('test_no_double_evaluation', async() =>
+    it('test_no_double_evaluation', async() =>
         runXacro(
             `<a xmlns:xacro="http://www.ros.org/xacro">
                 <xacro:macro name="foo" params="a b:=\${a} c:=$\${a}"> a=\${a} b=\${b} c=\${c} </xacro:macro>
