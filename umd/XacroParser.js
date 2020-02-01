@@ -1,22 +1,180 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.XacroParser = global.XacroParser || {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('expr-eval')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'expr-eval'], factory) :
+    (factory((global.XacroParser = global.XacroParser || {}),global.exprEval));
+}(this, (function (exports,exprEval) { 'use strict';
 
     function getUrlBase(url) {
-
         const tokens = url.split(/[\\/]/g);
         tokens.pop();
-        if (tokens.length === 0) return './';
-        return tokens.join('/') + '/';
-
+        if (tokens.length === 0) {
+            return './';
+        } else {
+            return tokens.join('/') + '/';
+        }
     }
 
-    // TODO: Verify against ros-ran xacro files
-    // TODO: Report errors / warnings back to the client
+    // XML Helpers
+    // QuerySelectorAll that respects tag prefixes like 'xacro:'
+    function getElementsWithName(node, name, res = []) {
+        if (node.tagName === name) {
+            res.push(node);
+        }
+        for (let i = 0, l = node.children.length; i < l; i++) {
+            const child = node.children[i];
+            getElementsWithName(child, name, res);
+        }
+        return res;
+    }
 
+    // Deep clone an xml node without the macro or property tags.
+    function deepClone(node, stripPropsMacros) {
+        const cloned = node.cloneNode();
+        const childNodes = node.childNodes;
+        for (let i = 0, l = childNodes.length; i < l; i++) {
+            const child = childNodes[i];
+            const tagName = child.tagName;
+            if (!stripPropsMacros || (tagName !== 'xacro:property' && tagName !== 'xacro:macro')) {
+                cloned.appendChild(deepClone(child, stripPropsMacros));
+            }
+        }
+        return cloned;
+    }
+
+    // Takes an array of xml elements and removes the last elements that
+    // are comments or newlines.
+    function removeEndCommentsFromArray(arr) {
+        while (arr.length > 0) {
+            const el = arr[arr.length - 1];
+            if (el.nodeType !== el.ELEMENT_NODE) {
+                arr.pop();
+            } else {
+                break;
+            }
+        }
+    }
+
+    // Expression helpers
+    function isOperator(str) {
+        const regexp = /^[()/*+\-%|&=[\]]+$/;
+        return regexp.test(str);
+    }
+
+    function isString(str) {
+        const regexp = /^(('[^']*?')|("[^"]*?")|(`[^`]*?`))$/;
+        return regexp.test(str);
+    }
+
+    // TODO: make this more robust
+    function isNumber(str) {
+        return !isNaN(parseFloat(str)) && !/[^0-9.eE-]/.test(str);
+    }
+
+    // TODO: this needs to tokenize numbers together
+    function tokenize(str) {
+        const regexp = /(('[^']*?')|("[^"]*?")|(`[^`]*?`)|([()/*+\-%|&=[\]]+))/g;
+        return str
+            .replace(regexp, m => ` ${ m } `)
+            .trim()
+            .split(/\s+/g);
+    }
+
+    function normalizeExpression(str) {
+        // Remove any instances of "--" or "++" that might occur from negating a negative number
+        // by adding a space that are not in a string.
+        return str.replace(/[-+]{2,}/, val => {
+            let positive = true;
+            for (let i = 0, l = val.length; i < l; i++) {
+                const operator = val[i];
+                if (operator === '-') {
+                    positive = !positive;
+                }
+            }
+
+            return positive ? '+' : '-';
+        });
+    }
+
+    // Property Set Helpers
     const PARENT_SCOPE = Symbol('parent');
+
+    // merges a set of properties together into a single set retaining
+    // the parent scope link as well.
+    function mergePropertySets(...args) {
+        const res = {};
+        for (let i = 0, l = args.length; i < l; i++) {
+            const obj = args[i];
+            for (const key in obj) {
+                res[key] = obj[key];
+            }
+            if (PARENT_SCOPE in obj) {
+                res[PARENT_SCOPE] = obj[PARENT_SCOPE];
+            }
+        }
+        return res;
+    }
+
+    // Copies a property set and creates a link to the original set as a parent scope
+    function createNewPropertyScope(properties) {
+        const res = mergePropertySets(properties);
+        res[PARENT_SCOPE] = properties;
+        return res;
+    }
+
+    const parser = new exprEval.Parser();
+
+    parser.unaryOps = {
+        '-': parser.unaryOps['-'],
+        '+': parser.unaryOps['+'],
+        '!': parser.unaryOps['!'],
+    };
+
+    parser.functions = {
+        sin: Math.sin,
+        cos: Math.cos,
+        tan: Math.tan,
+        asin: Math.asin,
+        acos: Math.acos,
+        atan: Math.atan,
+        log: Math.log,
+        atan2: Math.atan2,
+        pow: Math.pow,
+    };
+
+    parser.binaryOps = {
+        ...parser.binaryOps,
+        '+': (a, b) => {
+            if (isNumber(a)) {
+                a = Number(a);
+            }
+
+            if (isNumber(b)) {
+                b = Number(b);
+            }
+
+            return a + b;
+        },
+        'in': (a, b) => {
+            if (Array.isArray(b)) {
+                return b.includes(a);
+            } else if (typeof b === 'string') {
+                return b.includes(a);
+            } else {
+                return a in b;
+            }
+        },
+    };
+
+    parser.consts = {
+        ...parser.consts,
+        pi: Math.PI,
+        e: Math.E,
+    };
+
+    function evaluateExpression(expr) {
+        return parser.evaluate(expr);
+    }
+
     class XacroParser {
 
         constructor() {
@@ -33,79 +191,41 @@
 
         async parse(data) {
 
-            /* Utilities */
-            function mergeObjects(...args) {
-                const res = {};
-                for (let i = 0, l = args.length; i < l; i++) {
-                    const obj = args[i];
-                    for (const key in obj) {
-                        res[key] = obj[key];
-                    }
-                    if (PARENT_SCOPE in obj) {
-                        res[PARENT_SCOPE] = obj[PARENT_SCOPE];
-                    }
-                }
-                return res;
-            }
-
-            function createNewScope(properties) {
-                const res = mergeObjects(properties);
-                res[PARENT_SCOPE] = properties;
-                return res;
-            }
-
-            // Deep clone an xml node without the macro or property tags.
-            function deepClone(node, stripPropsMacros) {
-                const res = node.cloneNode();
-                const childNodes = node.childNodes;
-                for (let i = 0, l = childNodes.length; i < l; i++) {
-                    const c = childNodes[i];
-                    const tagName = c.tagName;
-                    if (!stripPropsMacros || (tagName !== 'xacro:property' && tagName !== 'xacro:macro')) {
-                        res.appendChild(deepClone(c, stripPropsMacros));
-                    }
-                }
-                return res;
-            }
-
-            // QuerySelectorAll that respects tag prefixes like 'xacro:'
-            function getElementsWithName(node, name, res = []) {
-                if (node.tagName === name) {
-                    res.push(node);
-                }
-                for (let i = 0, l = node.children.length; i < l; i++) {
-                    const child = node.children[i];
-                    getElementsWithName(child, name, res);
-                }
-                return res;
-            }
-
             /* Evaluation */
             // Evaluate expressions and rospack commands in attribute text
             // TODO: expressions can basically be any python expression
-            // TODO: support proper expression evaluation without Function or eval
-            function evaluateAttribute(str, properties) {
+            function evaluateAttribute(str, properties, finalValue = false) {
 
                 // recursively unpack parameters
                 function unpackParams(str, properties) {
-                    if (typeof str === 'number') return str;
 
+                    // if we're unpacking something that's already a number then just return
+                    if (typeof str === 'number') {
+                        return str;
+                    }
+
+                    // process all of the ${} and $() expressions
                     const res = str.replace(/(\$?\$\([^)]+\))|(\$?\${[^}]+})/g, match => {
 
-                        if (/^\$\$/.test(match)) return match.substring(1);
+                        // if we encounter an escaped $$ then return early
+                        if (/^\$\$/.test(match)) {
+                            return match;
+                        }
 
                         const isRospackCommand = /^\$\(/.test(match);
-                        const contents = match.substring(2, match.length - 1);
+                        let contents = match.substring(2, match.length - 1);
+                        contents = unpackParams(contents, properties);
+
                         if (isRospackCommand) {
 
                             const command = unpackParams(contents, properties);
                             const tokens = command.split(/\s+/g);
                             const stem = tokens.shift();
 
-                            if (stem in rospackCommands) {
-                                return rospackCommands[stem](...tokens);
-                            } else {
-                                throw new Error(`XacroParser: Cannot run rospack command "${ contents }"`);
+                            try {
+                                return handleRospackCommand(stem, ...tokens);
+                            } catch (e) {
+                                throw new Error(`XacroParser: Cannot run rospack command "${ contents }".\n` + e.message);
                             }
 
                         } else {
@@ -121,48 +241,38 @@
 
                             stack.push(contents);
 
-                            const operators = /[()/*+\-%|&=]+/g;
-                            const expr = contents
-                                .replace(operators, m => ` ${ m } `)
-                                .trim()
-                                .split(/\s+/g)
+                            const operators = /(()|()|()|[()/*+\-%|&=[\]])+/g;
+                            const expr = tokenize(contents)
                                 .map(t => {
                                     operators.lastIndex = 0;
-                                    if (operators.test(t)) return t;
-                                    if (!isNaN(parseFloat(t))) return t;
-                                    if (/^'.*?'$/.test(t)) return t;
-                                    if (/^".*?"$/.test(t)) return t;
+                                    if (isOperator(t)) return t;
+                                    if (isNumber(t)) return t;
+                                    if (isString(t)) return t;
 
                                     if (t in properties) {
                                         const arg = unpackParams(properties[t], properties);
-                                        if (isNaN(parseFloat(arg)) || /[^0-9.eE-]/.test(arg)) {
+                                        if (!isNumber(arg)) {
                                             return `"${ arg.toString().replace(/\\/g, '\\\\').replace(/"/g, '\\"') }"`;
                                         } else {
                                             return arg;
                                         }
                                     } else {
-                                        throw new Error(
-                                            `XacroParser: Missing parameter "${ t }".`
-                                        );
+                                        return t;
                                     }
                                 })
                                 .join('');
 
                             stack.pop();
-                            if (isNaN(parseFloat(expr)) || /[^0-9.eE-]/.test(expr)) {
 
-                                // Remove any instances of "--" or "++" that might occur from negating a negative number
-                                // that are not in a string.
-                                const cleanExpr = expr.replace(/[+-]{2}(?=([^"]*"[^"]*")*[^"]*$)/g, (m, rest) => ` ${ m[0] } ${ m[1] } ${ rest || '' }`);
-
-                                // TODO: Remove the potentially unsafe use of Function
-                                return (new Function(`return ${ cleanExpr };`))(); // eslint-disable-line no-new-func
-
-                            } else {
+                            if (isString(expr)) {
+                                return expr.substring(1, expr.length - 1);
+                            } else if (isNumber(expr)) {
                                 return expr;
+                            } else {
+                                const cleanExpr = normalizeExpression(expr);
+                                return handleExpressionEvaluation(cleanExpr);
                             }
                         }
-
                     });
 
                     return res;
@@ -170,41 +280,45 @@
                 }
 
                 const stack = [];
-                const allProps = mergeObjects(globalProperties, properties);
+                const allProps = mergePropertySets(globalProperties, properties);
                 try {
-                    return unpackParams(str, allProps);
+                    // fix the escaped dollar signs only at the end to prevent double evaluation and only
+                    // if the value is not an intermediate value like a computed property.
+                    let result = unpackParams(str, allProps);
+                    if (finalValue) {
+                        result = result.replace(/\${2}([({])/g, (val, brace) => `$${ brace }`);
+                    }
+                    return result;
                 } catch (e) {
-                    console.warn(`XacroParser: Failed to process expression "${ str }".`);
-                    console.warn(e.message);
-                    return str;
+                    throw new Error(`XacroParser: Failed to process expression "${ str }". \n` + e.message);
                 }
 
             }
 
             // Evaluate the given node as a macro
-            async function evaluateMacro(node, properties, macros) {
+            async function evaluateMacro(node, properties, macros, resultsList) {
 
                 // Find the macro
                 const macroName = node.tagName.replace(/^xacro:/, '');
                 const macro = macros[macroName];
 
                 if (!macro) {
-                    console.warn(`XacroParser: Cannot find macro "${ macroName }"`);
+                    throw new Error(`XacroParser: Cannot find macro "${ macroName }"`);
                 }
 
                 // Copy the properties and macros so we can modify them with
                 // macro input fields and local macro definitions.
                 const ogProperties = properties;
                 const ogMacros = macros;
-                properties = createNewScope(properties);
-                macros = mergeObjects(macros);
+                properties = createNewPropertyScope(properties);
+                macros = mergePropertySets(macros);
 
                 // Modify the properties with macro param inputs
                 let children = [];
                 for (const c of node.children) {
-                    children.push(await processNode(c, ogProperties, ogMacros));
+                    await processNode(c, ogProperties, ogMacros, children);
                 }
-                children = children.flat().filter(c => !!c).filter(c => c.nodeType === c.ELEMENT_NODE);
+                children = children.filter(c => c.nodeType === c.ELEMENT_NODE);
 
                 let blockCount = 0;
                 for (const p in macro.params) {
@@ -222,18 +336,12 @@
                 }
 
                 // Expand the macro
-                const res = [];
                 const macroChildren = [...macro.node.childNodes];
                 for (const c of macroChildren) {
-                    const nodes = await processNode(c, properties, macros);
-                    if (Array.isArray(nodes)) {
-                        res.push(...nodes);
-                    } else {
-                        res.push(nodes);
-                    }
+                    const nodes = [];
+                    await processNode(c, properties, macros, nodes);
+                    resultsList.push(...nodes);
                 }
-
-                return res;
             }
 
             /* Parsing */
@@ -263,7 +371,7 @@
                     // TODO: Support caret and default syntax
                     // TODO: is there any difference between the := and = syntax?
                     if (/^\^/.test(def) || /\|/.test(def)) {
-                        console.warn(`XacroParser: ROS Jade pass-through notation not supported in macro defaults: ${ def }`);
+                        throw new Error(`XacroParser: ROS Jade pass-through notation not supported in macro defaults: ${ def }`);
                     }
 
                     obj.name = name;
@@ -302,17 +410,19 @@
             }
 
             // Recursively process and expand a node
-            async function processNode(node, properties, macros) {
+            async function processNode(node, properties, macros, resultsList = []) {
                 if (node.nodeType !== node.ELEMENT_NODE) {
                     const res = node.cloneNode();
-                    res.textContent = evaluateAttribute(res.textContent, properties);
-                    return res;
+                    res.textContent = evaluateAttribute(res.textContent, properties, true);
+                    resultsList.push(res);
+                    return;
                 }
 
                 let tagName = node.tagName.toLowerCase();
                 if (!requirePrefix) {
                     switch (tagName) {
 
+                        case 'arg':
                         case 'property':
                         case 'macro':
                         case 'insert_block':
@@ -335,6 +445,8 @@
                 switch (tagName) {
 
                     case 'xacro:property': {
+                        removeEndCommentsFromArray(resultsList);
+
                         const name = node.getAttribute('name');
 
                         let value;
@@ -372,23 +484,28 @@
                         break;
                     }
                     case 'xacro:macro': {
+                        removeEndCommentsFromArray(resultsList);
+
                         const macro = parseMacro(node);
                         macros[macro.name] = macro;
                         break;
                     }
                     case 'xacro:insert_block': {
+                        removeEndCommentsFromArray(resultsList);
+
                         const name = node.getAttribute('name');
                         const nodes = properties[name];
-                        const res = [];
 
                         for (const c of nodes) {
-                            res.push(await processNode(c, properties, macros));
+                            await processNode(c, properties, macros, resultsList);
                         }
-                        return res;
+                        return;
                     }
                     case 'xacro:if':
                     case 'xacro:unless': {
-                        const value = evaluateAttribute(node.getAttribute('value'), properties);
+                        removeEndCommentsFromArray(resultsList);
+
+                        const value = evaluateAttribute(node.getAttribute('value'), properties, true);
                         let bool = null;
                         if (!isNaN(parseFloat(value))) {
                             bool = !!parseFloat(value);
@@ -404,21 +521,20 @@
 
                         if (bool) {
                             const childNodes = [...node.childNodes];
-                            const res = [];
                             for (const c of childNodes) {
-                                res.push(await processNode(c, properties, macros));
+                                await processNode(c, properties, macros, resultsList);
                             }
-                            return res;
-                        } else {
-                            return null;
                         }
+                        return;
                     }
                     case 'xacro:include': {
+                        removeEndCommentsFromArray(resultsList);
+
                         if (node.hasAttribute('ns')) {
-                            console.warn('XacroParser: xacro:include name spaces not supported.');
+                            throw new Error('XacroParser: xacro:include name spaces not supported.');
                         }
-                        const filename = evaluateAttribute(node.getAttribute('filename'), properties);
-                        const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\//.test(filename);
+                        const filename = evaluateAttribute(node.getAttribute('filename'), properties, true);
+                        const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:[/\\]/.test(filename);
                         const filePath = isAbsolute ? filename : currWorkingPath + filename;
 
                         const prevWorkingPath = currWorkingPath;
@@ -426,50 +542,44 @@
 
                         const includeContent = await loadInclude(filePath);
                         const childNodes = [...includeContent.children[0].childNodes];
-                        const res = [];
                         for (const c of childNodes) {
-                            res.push(await processNode(c, properties, macros));
+                            await processNode(c, properties, macros, resultsList);
                         }
 
                         currWorkingPath = prevWorkingPath;
-                        return res.flat();
+                        return;
                     }
+                    case 'xacro:arg':
                     case 'xacro:attribute':
                     case 'xacro:element':
-                        console.warn(`XacroParser: ${ tagName } tags not supported.`);
-                        return null;
+                        throw new Error(`XacroParser: ${ tagName } tags not supported.`);
                     default: {
                         // TODO: check if there's a 'call' attribute here which indicates that
                         // a macro should be invoked?
                         if (/^xacro:/.test(tagName) || tagName in macros) {
-                            return evaluateMacro(node, properties, macros);
+                            removeEndCommentsFromArray(resultsList);
+
+                            return evaluateMacro(node, properties, macros, resultsList);
                         } else {
 
                             const res = node.cloneNode();
                             for (let i = 0, l = res.attributes.length; i < l; i++) {
                                 const attr = res.attributes[i];
-                                const value = evaluateAttribute(attr.value, properties);
+                                const value = evaluateAttribute(attr.value, properties, true);
                                 res.setAttribute(attr.name, value);
                             }
 
                             const childNodes = [...node.childNodes];
+                            const resultChildren = [];
                             for (let i = 0, l = childNodes.length; i < l; i++) {
-                                const child = await processNode(childNodes[i], properties, macros);
-                                if (child) {
-                                    if (Array.isArray(child)) {
-                                        child.filter(c => !!c).forEach(c => res.appendChild(c));
-                                    } else {
-                                        res.appendChild(child);
-                                    }
-                                }
+                                await processNode(childNodes[i], properties, macros, resultChildren);
                             }
-                            return res;
+                            resultChildren.forEach(c => res.appendChild(c));
+                            resultsList.push(res);
                         }
                     }
 
                 }
-
-                return null;
             }
 
             // Process all property and macro tags into the objects
@@ -495,11 +605,12 @@
             async function processXacro(xacro, properties, macros) {
                 const res = xacro.cloneNode();
                 for (let i = 0, l = xacro.children.length; i < l; i++) {
-                    const child = await processNode(xacro.children[i], properties, macros);
-                    child.removeAttribute('xmlns:xacro');
-                    if (child) {
-                        res.appendChild(child);
-                    }
+                    const child = [];
+                    await processNode(xacro.children[i], properties, macros, child);
+
+                    const root = child[0];
+                    root.removeAttribute('xmlns:xacro');
+                    res.appendChild(root);
                 }
                 return res;
             }
@@ -510,8 +621,7 @@
                     const text = await scope.getFileContents(path);
                     return new DOMParser().parseFromString(text, 'text/xml');
                 } catch (e) {
-                    console.error('XacroParser: Could not load included file: ', path);
-                    console.error(e);
+                    throw new Error(`XacroParser: Could not load included file: ${ path }`);
                 }
 
             }
@@ -526,12 +636,12 @@
                 const promises = includeEl.map(el => {
                     // TODO: Handle namespaces on the include.
                     if (el.hasAttribute('ns')) {
-                        console.warn('XacroParser: xacro:include name spaces not supported.');
+                        throw new Error('XacroParser: xacro:include name spaces not supported.');
                     }
 
                     const filename = el.getAttribute('filename');
                     const namespace = el.getAttribute('ns') || null;
-                    const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:\//.test(filename);
+                    const isAbsolute = /^[/\\]/.test(filename) || /^[a-zA-Z]+:[/\\]/.test(filename);
                     const filePath = isAbsolute ? filename : workingPath + filename;
                     const pr = loadInclude(filePath)
                         .then(content => {
@@ -550,16 +660,21 @@
             // TODO: Provide a default "arg" command function that defaults to
             // xacro:arg fields.
             const scope = this;
-            let localProperties = this.localProperties;
             const inOrder = this.inOrder;
-            const workingPath = this.workingPath;
-            let currWorkingPath = workingPath;
+            const workingPath = this.workingPath + (!/[\\/]$/.test(this.workingPath) ? '/' : '');
             const requirePrefix = this.requirePrefix;
             const rospackCommands = this.rospackCommands;
-            const globalProperties = { True: 1, False: 0 };
-            globalProperties[PARENT_SCOPE] = globalProperties;
             const globalMacros = {};
             const includeMap = {};
+            const globalProperties = { True: 1, False: 0 };
+            globalProperties[PARENT_SCOPE] = globalProperties;
+
+            // TODO: remove unsave eval
+            const handleRospackCommand = (stem, ...args) => rospackCommands[stem](...args);
+            const handleExpressionEvaluation = evaluateExpression;
+
+            let localProperties = this.localProperties;
+            let currWorkingPath = workingPath;
             let content = new DOMParser().parseFromString(data, 'text/xml');
 
             if (localProperties && !inOrder) {
