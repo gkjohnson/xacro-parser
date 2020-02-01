@@ -1,5 +1,5 @@
 /* global describe, it, expect, beforeEach */
-const XacroLoader = require('../umd/XacroLoader.js');
+const { XacroLoader } = require('../umd/index.js');
 const { JSDOM } = require('jsdom');
 
 function unformat(xml) {
