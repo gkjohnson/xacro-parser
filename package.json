@@ -35,12 +35,12 @@
     "urdf-models"
   ],
   "devDependencies": {
-    "concurrently": "^4.0.1",
+    "concurrently": "^5.2.0",
     "eslint": "^5.14.1",
-    "jest": "^24.1.0",
-    "jest-cli": "^24.1.0",
+    "jest": "^26.0.1",
+    "jest-cli": "^26.0.1",
     "jsdom": "^16.2.2",
-    "nyc": "^13.3.0",
+    "nyc": "^15.0.1",
     "request": "^2.88.0",
     "rollup": "^1.31.0"
   },
