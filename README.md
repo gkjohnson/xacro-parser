@@ -93,7 +93,7 @@ parser.localProperties = false;
 
 ## >= ROS Jade
 
-Options required for xacros created with a ROS version <= release 9.
+Options required for xacros created with a ROS version >= release 9.
 
 ```js
 parser.inOrder = true;
