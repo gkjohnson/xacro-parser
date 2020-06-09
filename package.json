@@ -32,7 +32,7 @@
     "robotics",
     "ros",
     "urdf",
-    "urdf-models"
+    "urdf-models",
     "parser",
     "robot-operating-system"
   ],
