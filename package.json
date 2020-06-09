@@ -33,6 +33,8 @@
     "ros",
     "urdf",
     "urdf-models"
+    "parser",
+    "robot-operating-system"
   ],
   "devDependencies": {
     "concurrently": "^5.2.0",
