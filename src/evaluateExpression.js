@@ -19,6 +19,7 @@ parser.functions = {
     log: Math.log,
     atan2: Math.atan2,
     pow: Math.pow,
+    radians: (degrees) => { degrees * (Math.PI/180) }
 };
 
 parser.binaryOps = {
