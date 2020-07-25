@@ -485,6 +485,8 @@ describe('XacroLoader', () => {
                         b="\${100 / 10}"
                         c="\${val / 10}"
                         d="\${val*(val+.02)}"
+                        e="\${radians(180)/radians(90)}"
+                        f="\${degrees(radians(45))}"
                     />
                 </robot>
             `;
@@ -494,7 +496,7 @@ describe('XacroLoader', () => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
-                            <result a="2" b="10" c="10" d="10002"/>
+                            <result a="2" b="10" c="10" d="10002" e="2" f="45"/>
                         </robot>`
                     ));
                     done();
