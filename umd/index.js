@@ -1976,7 +1976,8 @@
         log: Math.log,
         atan2: Math.atan2,
         pow: Math.pow,
-        radians: (degrees) => { return degrees * (Math.PI/180) }
+        radians: (degrees) => { return degrees * (Math.PI / 180); },
+        degrees: (radians) => { return radians * (180 / Math.PI); },
     };
 
     parser.binaryOps = {
