@@ -2498,7 +2498,10 @@
             // xacro:arg fields.
             const scope = this;
             const inOrder = this.inOrder;
-            const workingPath = this.workingPath + (!/[\\/]$/.test(this.workingPath) ? '/' : '');
+
+            // add a file separator to the end of the working path if it's specified
+            // and doesn't have one.
+            const workingPath = this.workingPath + (this.workingPath && !/[\\/]$/.test(this.workingPath) ? '/' : '');
             const requirePrefix = this.requirePrefix;
             const rospackCommands = this.rospackCommands;
             const globalMacros = {};
