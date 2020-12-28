@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Support for `radians` and `degrees` functions in xacro expressions.
+
 ### Fix
 - README typo.
+- Case where a file separator would be added to the working path even if it wasn't specified.
 
 ## [0.2.1] - 2020-05-25
 

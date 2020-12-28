@@ -133,7 +133,7 @@ describe('XacroLoader', () => {
 
     describe('comments', () => {
 
-        it.only('should be stripped before xacro elements', done => {
+        it('should be stripped before xacro elements', done => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
