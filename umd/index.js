@@ -2511,8 +2511,19 @@
             const globalProperties = { True: 1, False: 0 };
             globalProperties[PARENT_SCOPE] = globalProperties;
 
-            // TODO: remove unsave eval
-            const handleRospackCommand = (stem, ...args) => rospackCommands[stem](...args);
+            const handleRospackCommand = (stem, ...args) => {
+
+                if (rospackCommands instanceof Function) {
+
+                    return rospackCommands(stem, ...args);
+
+                } else {
+
+                    return rospackCommands[stem](...args);
+
+                }
+
+            };
             const handleExpressionEvaluation = evaluateExpression;
 
             let localProperties = this.localProperties;
@@ -2606,7 +2617,22 @@
 
         getFileContents(path) {
 
-            return fetch(path, this.fetchOptions).then(res => res.text());
+            return fetch(path, this.fetchOptions)
+                .then(res => {
+
+                    console.log( 'HERE', res.ok);
+
+                    if (res.ok) {
+
+                        return res.text();
+
+                    } else {
+
+                        throw new Error(`XacroLoader: Failed to load url '${ path }' with error code ${ res.status } : ${ res.statusText }.`);
+
+                    }
+
+                });
 
         }
 

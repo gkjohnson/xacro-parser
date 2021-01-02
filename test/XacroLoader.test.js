@@ -43,6 +43,7 @@ beforeEach(() => {
     global.fetch = function(url) {
         url = url.replace(/^(\.\/)+/, './');
         return Promise.resolve({
+            ok: url in files,
             text() {
                 if (url in files) {
                     return Promise.resolve(files[url]);
@@ -749,6 +750,7 @@ describe('XacroLoader', () => {
             global.fetch = function(url) {
                 res.push(url);
                 return Promise.resolve({
+                    ok: url in files,
                     text() { return files[url]; },
                 });
             };
