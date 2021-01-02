@@ -512,7 +512,19 @@ export class XacroParser {
         globalProperties[PARENT_SCOPE] = globalProperties;
 
         // TODO: remove unsave eval
-        const handleRospackCommand = (stem, ...args) => rospackCommands[stem](...args);
+        const handleRospackCommand = (stem, ...args) => {
+
+            if (rospackCommands instanceof Function) {
+
+                return rospackCommands(stem, ...args);
+
+            } else {
+
+                return rospackCommands[stem](...args);
+
+            }
+
+        };
         const handleExpressionEvaluation = evaluateExpression;
 
         let localProperties = this.localProperties;

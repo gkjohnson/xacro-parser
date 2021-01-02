@@ -140,22 +140,49 @@ The working directory to search for dependent files in when parsing `include` ta
 ### .rospackCommands
 
 ```js
-rospackCommands = {} : Object
+rospackCommands = {} | ( ( command : String, ...args : Array<String> ) => String ) : Object
 ```
 
 A map of rospack command stem to handling function that take all arguments as function parameters. An example implementation of the `rospack find` command:
 
 ```js
-{
-  find: function(pkg) {
-    switch(pkg) {
-      case 'valkyrie_description':
-        return '/absolute/path/to/valkyrie_description/';
-      case 'r2_description':
-        return '/absolute/path/to/r2_description/'
+loader.rospackCommands =
+  {
+
+    find: function( pkg ) {
+
+      switch( pkg ) {
+
+        case 'valkyrie_description':
+          return '/absolute/path/to/valkyrie_description/';
+        case 'r2_description':
+          return '/absolute/path/to/r2_description/'
+
+      }
+
     }
-  }
-}
+
+  };
+```
+
+Alternatively a function can be provided to evaluate the command:
+
+```js
+load.rospackCommands = ( command, ...args ) => {
+
+    if ( command === 'find' ) {
+
+        const [ pkg ] = args;
+        switch( pkg ) {
+            case 'valkyrie_description':
+                return '/absolute/path/to/valkyrie_description/';
+            case 'r2_description':
+                return '/absolute/path/to/r2_description/'
+        }
+
+    }
+
+};
 ```
 
 ### .parse

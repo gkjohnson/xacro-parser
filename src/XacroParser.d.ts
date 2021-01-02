@@ -1,6 +1,6 @@
 export default class XacroParser {
 
-    rospackCommands?: { [key: string]: (...args:string[]) => string };
+    rospackCommands?: { [key: string]: (...args:string[]) => string } | ((command, ...args: string[]) => string);
     localProperties?: boolean;
     inOrder?: boolean;
     workingPath?: string;
