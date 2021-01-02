@@ -647,6 +647,34 @@ describe('XacroLoader', () => {
             );
         });
 
+        it('should call rospack with a function as an argument.', done => {
+            const content =
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <result a="$(find-package test args)" />
+                </robot>
+            `;
+
+            const loader = new XacroLoader();
+            loader.rospackCommands = (command, ...args) => {
+                expect(command).toEqual('find-package');
+                expect(args).toEqual(['test', 'args']);
+                return 'package';
+            };
+
+            loader.parse(
+                content, res => {
+                    const str = new XMLSerializer().serializeToString(res);
+                    expect(unformat(str)).toEqual(unformat(
+                        `<robot>
+                            <result a="package"/>
+                        </robot>`
+                    ));
+                    done();
+                }
+            );
+        });
+
         it.todo('shoulds support rospack substitution args with default values.');
     });
 
