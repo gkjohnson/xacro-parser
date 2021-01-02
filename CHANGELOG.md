@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Option to pass a function as the rospack commands option.
 
+### Fixed
+- XacroLoader: throw a human readable error if fetch fails.
+
 ## [0.2.2] - 2020-12-28
 
 ### Added
