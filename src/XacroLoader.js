@@ -57,7 +57,20 @@ export class XacroLoader extends XacroParser {
 
     getFileContents(path) {
 
-        return fetch(path, this.fetchOptions).then(res => res.text());
+        return fetch(path, this.fetchOptions)
+            .then(res => {
+
+                if (res.ok) {
+
+                    return res.text();
+
+                } else {
+
+                    throw new Error(`XacroLoader: Failed to load url '${ path }' with error code ${ res.status } : ${ res.statusText }.`);
+
+                }
+
+            });
 
     }
 
