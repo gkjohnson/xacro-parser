@@ -1,6 +1,7 @@
+#!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
-const { XacroParser } = require('../src/XacroParser.js');
+const { XacroParser } = require('../umd/index.js');
 const { JSDOM } = require('jsdom');
 
 const jsdom = new JSDOM();
@@ -9,9 +10,6 @@ global.DOMParser = window.DOMParser;
 global.XMLSerializer = window.XMLSerializer;
 
 const args = process.argv;
-const inputFile = args[2];
-const inOrder = !args.includes('--oldorder');
-
 if (args.includes('--help')) {
 
     console.log('xacro-parser <input-file> [--oldorder]');
@@ -19,6 +17,15 @@ if (args.includes('--help')) {
 
 }
 
+const inputFile = args[2];
+if (!inputFile) {
+
+    console.error('input file required');
+    process.exit(1);
+
+}
+
+const inOrder = !args.includes('--oldorder');
 const parser = new XacroParser();
 parser.inOrder = inOrder;
 parser.requirePrefix = inOrder;
