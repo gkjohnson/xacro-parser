@@ -2620,8 +2620,6 @@
             return fetch(path, this.fetchOptions)
                 .then(res => {
 
-                    console.log( 'HERE', res.ok);
-
                     if (res.ok) {
 
                         return res.text();
