@@ -511,7 +511,6 @@ export class XacroParser {
         const globalProperties = { True: 1, False: 0 };
         globalProperties[PARENT_SCOPE] = globalProperties;
 
-        // TODO: remove unsave eval
         const handleRospackCommand = (stem, ...args) => {
 
             if (rospackCommands instanceof Function) {
