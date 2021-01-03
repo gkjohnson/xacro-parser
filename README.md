@@ -31,7 +31,7 @@ parser.getFileContents = path => {
 };
 
 const xacroContents = fs.readFileSync( './path/to/directory/file.xacro', { encoding: 'utf8' } );
-parser.parse(xacroContents).then( result => {
+parser.parse( xacroContents ).then( result => {
 
   // xacro XML
 
