@@ -234,7 +234,7 @@ export class XacroParser {
             if (params) {
                 const inputs = params
                     .trim()
-                    .split(/\s+/g)
+                    .split(/ +(?=[\w]+\:)/g)
                     .map(s => parseMacroParam(s));
                 inputs.forEach(inp => {
                     inputMap[inp.name] = inp;
