@@ -214,7 +214,7 @@ export class XacroParser {
                 }
 
                 obj.name = name;
-                obj.def = def;
+                obj.def = def.replace(/'/g, '');
             } else {
                 obj.name = param;
                 obj.def = null;
