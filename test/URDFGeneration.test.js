@@ -1,5 +1,4 @@
 // Tests from https://github.com/ros/xacro/blob/melodic-devel/test/test_xacro.py
-/* global describe, it, expect, beforeEach */
 import { XacroParser } from '../src/XacroParser.js';
 import { JSDOM } from 'jsdom';
 import { unformat } from './utils.js';
