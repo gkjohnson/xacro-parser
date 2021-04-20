@@ -1,4 +1,4 @@
-export default class XacroParser {
+export class XacroParser {
 
     rospackCommands?: { [key: string]: (...args:string[]) => string } | ((command, ...args: string[]) => string);
     localProperties?: boolean;
