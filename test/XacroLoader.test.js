@@ -1,6 +1,5 @@
-/* global describe, it, expect, beforeEach */
-const { XacroLoader } = require('../umd/index.js');
-const { JSDOM } = require('jsdom');
+import { XacroLoader } from '../src/XacroLoader.js';
+import { JSDOM } from 'jsdom';
 
 function unformat(xml) {
     return xml.replace(/>\s+</g, '><').trim();
@@ -72,7 +71,7 @@ describe('XacroLoader', () => {
                 </robot>
                 `,
                 () => {},
-                e => done()
+                e => done(),
             );
         });
     });
@@ -97,10 +96,10 @@ describe('XacroLoader', () => {
                             <link name="val_link">
                                 <child attr="_val_val"/>
                             </link>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -124,10 +123,10 @@ describe('XacroLoader', () => {
                         `<robot>
                             <a/>
                             <b/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
     });
@@ -160,7 +159,7 @@ describe('XacroLoader', () => {
                     <link name="val_link">
                         <child attr="_val_val"/>
                     </link>
-                </robot>`
+                </robot>`,
                 ));
 
             });
@@ -195,10 +194,10 @@ describe('XacroLoader', () => {
                             <macro-child2 attr="test">
                                 <child/>
                             </macro-child2>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -221,10 +220,10 @@ describe('XacroLoader', () => {
                         `<robot>
                             <child a="1" b="2" c="10"/>
                             <child a="1" b="2" c="3"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -248,10 +247,10 @@ describe('XacroLoader', () => {
                         `<robot>
                             <child a="1" b="10" c="10"/>
                             <child a="1" b="10" c="3"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -268,7 +267,7 @@ describe('XacroLoader', () => {
             `;
             const loader = new XacroLoader();
             loader.parse(
-                content, () => done(new Error()), () => done()
+                content, () => done(new Error()), () => done(),
             );
         });
 
@@ -304,10 +303,10 @@ describe('XacroLoader', () => {
                             <second/>
                             <third/>
                             <fourth/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -338,10 +337,10 @@ describe('XacroLoader', () => {
                         `<robot>
                             <a/>
                             <c/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -369,10 +368,10 @@ describe('XacroLoader', () => {
                             <a/>
                             <b/>
                             <child x="1" y="2" z="3"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -398,10 +397,10 @@ describe('XacroLoader', () => {
                         `<robot>
                             <result c="100"/>
                             <after/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -435,10 +434,10 @@ describe('XacroLoader', () => {
                         `<robot>
                             <child/>
                             <after/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -467,10 +466,10 @@ describe('XacroLoader', () => {
                         `<robot>
                             <included/>
                             <included/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
     });
@@ -498,10 +497,10 @@ describe('XacroLoader', () => {
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
                             <result a="2" b="10" c="10" d="10002" e="2" f="45"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -525,10 +524,10 @@ describe('XacroLoader', () => {
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
                             <result a="0" b="0" c="-1"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
 
         });
@@ -552,10 +551,10 @@ describe('XacroLoader', () => {
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
                             <result a="\${1 + 1}" b="$\${1 + 1}" c="$$\${1 + 1}"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -640,11 +639,11 @@ describe('XacroLoader', () => {
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
                             <result a="package" b="cwd" c="cwd"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     expect(called).toEqual(2);
                     done();
-                }
+                },
             );
         });
 
@@ -669,10 +668,10 @@ describe('XacroLoader', () => {
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
                             <result a="package"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -700,7 +699,7 @@ describe('XacroLoader', () => {
                             <test a="a-val"/>
                             <child b="b-val"/>
                             <child b="b-val"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
                 },
@@ -724,7 +723,7 @@ describe('XacroLoader', () => {
                         `<robot>
                             <inlined-c/>
                             <inlined-b/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
                 },
@@ -771,7 +770,7 @@ describe('XacroLoader', () => {
                         'http://website.com/path/./folder/./b.xacro',
                     ]);
                     done();
-                }
+                },
             );
 
         });
@@ -793,7 +792,7 @@ describe('XacroLoader', () => {
                         `<robot>
                             <inlined-c/>
                             <inlined-b/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
                 },
@@ -838,10 +837,10 @@ describe('XacroLoader', () => {
                             <result x="100" y="200" z="500"/>
                             <a/>
                             <b/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -864,7 +863,7 @@ describe('XacroLoader', () => {
             loader.localProperties = false;
             loader.inOrder = true;
             loader.parse(
-                content, () => done(new Error()), () => done()
+                content, () => done(new Error()), () => done(),
             );
         });
 
@@ -901,10 +900,10 @@ describe('XacroLoader', () => {
                             <result x="100" y="200" z="300"/>
                             <b/>
                             <b/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -940,10 +939,10 @@ describe('XacroLoader', () => {
                             <test a="a-val"/>
                             <child b="b-val"/>
                             <child b="b-val"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
 
@@ -969,7 +968,7 @@ describe('XacroLoader', () => {
             loader.localProperties = true;
             loader.inOrder = true;
             loader.parse(
-                content, () => done(new Error()), () => done()
+                content, () => done(new Error()), () => done(),
             );
         });
 
@@ -996,10 +995,10 @@ describe('XacroLoader', () => {
                         `<robot>
                             <result value="100"/>
                             <after value="100"/>
-                        </robot>`
+                        </robot>`,
                     ));
                     done();
-                }
+                },
             );
         });
     });
@@ -1029,7 +1028,7 @@ describe('XacroLoader', () => {
             const loader = new XacroLoader();
             loader.requirePrefix = true;
             loader.parse(
-                content, () => done(new Error()), () => done()
+                content, () => done(new Error()), () => done(),
             );
         });
 
@@ -1068,7 +1067,7 @@ describe('XacroLoader', () => {
                         </robot>
                     `));
                     done();
-                }
+                },
             );
         });
     });

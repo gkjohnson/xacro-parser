@@ -1,8 +1,7 @@
 // Tests from https://github.com/ros/xacro/blob/melodic-devel/test/test_xacro.py
-/* global describe, it, expect, beforeEach */
-const { XacroLoader} = require('../umd/index.js');
-const { JSDOM } = require('jsdom');
-const { unformat } = require('./utils.js');
+import { XacroLoader } from '../src/XacroLoader.js';
+import { JSDOM } from 'jsdom';
+import { unformat } from './utils.js';
 
 const files = {
     './a.xacro':
@@ -63,7 +62,7 @@ function runXacro(content, done, options, onError) {
             },
             err => {
                 onError(err);
-            }
+            },
         );
     });
 
@@ -88,8 +87,8 @@ describe('Basic Xacro Tests', () => {
                     <b bar="2 2.0"/>
                 </xml>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_should_replace_before_macroexpand', async() =>
@@ -119,8 +118,8 @@ describe('Basic Xacro Tests', () => {
                     </in_the_outer>
                 </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_evaluate_macro_params_before_body');
@@ -139,8 +138,8 @@ describe('Basic Xacro Tests', () => {
                     <bar a="1 -2" c="3"/>
                 </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_property_replacement', async() =>
@@ -155,8 +154,8 @@ describe('Basic Xacro Tests', () => {
                     <the_foo result="42"/>
                 </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_property_scope_parent', async() =>
@@ -174,8 +173,8 @@ describe('Basic Xacro Tests', () => {
                     <a foo="42"/>
                 </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_property_scope_global', async() =>
@@ -196,8 +195,8 @@ describe('Basic Xacro Tests', () => {
                     <a foo="42"/>
                 </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_math_ignores_spaces', async() =>
@@ -209,8 +208,8 @@ describe('Basic Xacro Tests', () => {
                     <f v="0.25"/>
                 </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_substitution_args_find');
@@ -223,8 +222,8 @@ describe('Basic Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                 <a b="\${foo}" c="$\${foo}" d="text \${foo}" e="text $\${foo}" f="$(pwd)"/>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_just_a_dollar_sign', async() =>
@@ -234,8 +233,8 @@ describe('Basic Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                 <a b="$" c="text $" d="text $ text"/>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_multiple_insert_blocks', async() =>
@@ -256,8 +255,8 @@ describe('Basic Xacro Tests', () => {
                         <a_block/>
                     </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_multiple_insert_blocks', async() => {
@@ -279,7 +278,7 @@ describe('Basic Xacro Tests', () => {
                         <block2/>
                     </a>
                 `));
-            }
+            },
         );
 
         await runXacro(
@@ -300,7 +299,7 @@ describe('Basic Xacro Tests', () => {
                         <block1/>
                     </a>
                 `));
-            }
+            },
         );
 
     });
@@ -319,8 +318,8 @@ describe('Basic Xacro Tests', () => {
                         <test number="100"/>
                     </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_insert_block_property', async() =>
@@ -341,8 +340,8 @@ describe('Basic Xacro Tests', () => {
                         <foo><some_block attr="2">bar</some_block></foo>
                     </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_include');
@@ -369,8 +368,8 @@ describe('Basic Xacro Tests', () => {
                         <b/>
                     </robot>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_invalid_if_statement');
@@ -397,8 +396,8 @@ describe('Basic Xacro Tests', () => {
                         <d/>
                     </robot>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_float_if_statement', async() =>
@@ -417,8 +416,8 @@ describe('Basic Xacro Tests', () => {
                         <b/>
                     </robot>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_property_if_statement', async() =>
@@ -436,8 +435,8 @@ describe('Basic Xacro Tests', () => {
                         <b/><c/>
                     </robot>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_consecutive_if', async() =>
@@ -453,8 +452,8 @@ describe('Basic Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                     <a></a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_equality_expression_in_if_statement', async() =>
@@ -475,8 +474,8 @@ describe('Basic Xacro Tests', () => {
                         <bar>foo</bar>
                     </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_no_evaluation', async() =>
@@ -491,8 +490,8 @@ describe('Basic Xacro Tests', () => {
                         <foo>5 -2</foo>
                     </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_math_expressions', async() =>
@@ -506,8 +505,8 @@ describe('Basic Xacro Tests', () => {
                         <foo function="1.0"/>
                     </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_consider_non_elements_if', async() =>
@@ -521,8 +520,8 @@ describe('Basic Xacro Tests', () => {
                         <!-- comment --> text <b>bar</b>
                     </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_consider_non_elements_block', async() =>
@@ -547,8 +546,8 @@ describe('Basic Xacro Tests', () => {
                     <a_block/>
                 </a>
                 `));
-            }
-        )
+            },
+        ),
     );
 
     it.skip('test_ignore_xacro_comments', async() =>
@@ -574,8 +573,8 @@ describe('Basic Xacro Tests', () => {
                     <!-- C -->
                 </a>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_recursive_evaluation', async() =>
@@ -591,8 +590,8 @@ describe('Basic Xacro Tests', () => {
                     <a doubled="84"/>
                 </robot>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_recursive_evaluation', async() =>
@@ -608,8 +607,8 @@ describe('Basic Xacro Tests', () => {
                     <a doubled="84"/>
                 </robot>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_recursive_definition', done => {
@@ -621,9 +620,9 @@ describe('Basic Xacro Tests', () => {
             </robot>`,
             () => done(new Error()),
             null,
-            () => done()
+            () => done(),
         );
-    }
+    },
     );
 
     it('test_multiple_recursive_evaluation', async() =>
@@ -641,8 +640,8 @@ describe('Basic Xacro Tests', () => {
                     <answer product="6"/>
                 </robot>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_multiple_definition_and_evaluation', async() =>
@@ -660,8 +659,8 @@ describe('Basic Xacro Tests', () => {
                     <answer b="42 42 42"/>
                 </robot>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_transitive_evaluation', async() =>
@@ -679,8 +678,8 @@ describe('Basic Xacro Tests', () => {
                     <answer d="42"/>
                 </robot>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_multi_tree_evaluation', async() =>
@@ -699,8 +698,8 @@ describe('Basic Xacro Tests', () => {
                     <answer f="88.2"/>
                 </robot>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_from_issue', async() =>
@@ -720,8 +719,8 @@ describe('Basic Xacro Tests', () => {
                     </link>
                 </robot>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_recursive_bad_math');
@@ -753,8 +752,8 @@ describe('Basic Xacro Tests', () => {
                     </joint>
                 </robot>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_default_param_override', async() =>
@@ -783,8 +782,8 @@ describe('Basic Xacro Tests', () => {
                     </joint>
                 </robot>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_param_missing');
@@ -812,8 +811,8 @@ describe('Basic Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                 <a><foo/></a>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_overwrite_globals');
@@ -830,8 +829,8 @@ describe('Basic Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                 <a><d d="\${a}"> a=2 b=1 c=\${a} </d></a>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_property_forwarding');
@@ -848,8 +847,8 @@ describe('Basic Xacro Tests', () => {
                 rospackCommands: {
                     arg: () => 'xacro',
                 },
-            }
-        )
+            },
+        ),
     );
 
     it('test_extension_in_expression', async() =>
@@ -864,8 +863,8 @@ describe('Basic Xacro Tests', () => {
                 rospackCommands: {
                     arg: () => 'xacro',
                 },
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_target_namespace');
@@ -885,8 +884,8 @@ describe('In Order Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                 <a></a>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it.skip('test_issue_63_fixed_with_inorder_processing', async() =>
@@ -901,8 +900,8 @@ describe('In Order Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                 <a></a>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_yaml_support');
@@ -923,8 +922,8 @@ describe('In Order Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                 <a><f val="42"/><f val="200"/></a>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_check_order_warning');
@@ -948,8 +947,8 @@ describe('In Order Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                 <a><foo/></a>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_unicode_literal_parsing', async() =>
@@ -959,8 +958,8 @@ describe('In Order Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                 <a>🍔 </a>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it('test_unicode_property', async() =>
@@ -973,8 +972,8 @@ describe('In Order Xacro Tests', () => {
                 expect(res).toEqual(unformat(`
                 <a><b c="🍔"/></a>
             `));
-            }
-        )
+            },
+        ),
     );
 
     it.todo('test_unicode_property_attribute');
