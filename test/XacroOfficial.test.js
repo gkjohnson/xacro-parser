@@ -1,8 +1,8 @@
 // Tests from https://github.com/ros/xacro/blob/melodic-devel/test/test_xacro.py
 /* global describe, it, expect, beforeEach */
-const { XacroLoader} = require('../umd/index.js');
-const { JSDOM } = require('jsdom');
-const { unformat } = require('./utils.js');
+import { XacroLoader } from '../src/XacroLoader.js';
+import { JSDOM } from 'jsdom';
+import { unformat } from './utils.js';
 
 const files = {
     './a.xacro':
