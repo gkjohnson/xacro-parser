@@ -1,6 +1,6 @@
 /* global describe, it, expect, beforeEach */
-const { XacroLoader } = require('../umd/index.js');
-const { JSDOM } = require('jsdom');
+import { XacroLoader } from '../src/XacroLoader.js';
+import { JSDOM } from 'jsdom';
 
 function unformat(xml) {
     return xml.replace(/>\s+</g, '><').trim();
