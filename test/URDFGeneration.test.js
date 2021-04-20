@@ -1,10 +1,10 @@
 // Tests from https://github.com/ros/xacro/blob/melodic-devel/test/test_xacro.py
 /* global describe, it, expect, beforeEach */
-const { XacroParser } = require('../umd/index.js');
-const { JSDOM } = require('jsdom');
-const { unformat } = require('./utils.js');
-const fs = require('fs');
-const path = require('path');
+import { XacroParser } from '../src/XacroParser.js';
+import { JSDOM } from 'jsdom';
+import { unformat } from './utils.js';
+import fs from 'fs';
+import path from 'path';
 
 function getLocalContents(p) {
     return fs.readFileSync(p, {encoding: 'utf8'});
