@@ -24,15 +24,18 @@ global.DOMParser = new JSDOM().window.DOMParser;
 
 const parser = new XacroParser();
 parser.workingPath = './path/to/directory/';
-parser.getFileContents = path => fs.readFile(path, { encoding: 'utf8' });
+parser.getFileContents = path => {
 
-const xacroContents = fs.readFileSync('./path/to/directory/file.xacro', { encoding: 'utf8' });
-parser.parse(xacroContents).then(result => {
+  return fs.readFile( path, { encoding: 'utf8' } );
+  
+};
+
+const xacroContents = fs.readFileSync( './path/to/directory/file.xacro', { encoding: 'utf8' } );
+parser.parse( xacroContents ).then( result => {
 
   // xacro XML
 
-});
-
+} );
 ```
 
 ## Loading Files from Server
@@ -42,16 +45,24 @@ parser.parse(xacroContents).then(result => {
 import fs from 'fs';
 import { XacroParser } from 'xacro-parser';
 
-const parser = new XacroParser();
-parser.workingPath = './path/to/directory/';
-parser.getFileContents = path => fetch(path).then(res => res.text());
+fetch( './path/to/directory/file.xacro' )
+  .then( res => res.text() )
+  .then( xacroContents => {
 
-const xacroContents = fetch('./path/to/directory/file.xacro', { encoding: 'utf8' });
-parser.parse(xacroContents).then(result => {
+    const parser = new XacroParser();
+    parser.workingPath = './path/to/directory/';
+    parser.getFileContents = path => {
 
-  // xacro XML
+      return fetch( path ).then( res => res.text() );
+  
+    };
+    parser.parse( xacroContents ).then( result => {
 
-});
+      // xacro XML
+
+    } );
+    
+} );
 
 ```
 
@@ -74,7 +85,7 @@ loader.load(
 
         // parse error
 
-    });
+    } );
 ```
 
 # Different Versions of ROS

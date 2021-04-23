@@ -74,7 +74,7 @@ export class XacroParser {
                                     stack.join(' > ')
                                 } > ${
                                     contents
-                                }`
+                                }`,
                             );
                         }
 

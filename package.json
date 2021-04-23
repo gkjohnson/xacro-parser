@@ -2,8 +2,9 @@
   "name": "xacro-parser",
   "version": "0.2.3",
   "description": "Utility for parsing and converting ROS Xacro files in Javascript.",
-  "main": "umd/index.js",
-  "module": "src/index.js",
+  "main": "src/index.js",
+  "type": "module",
+  "sideEffects": false,
   "scripts": {
     "start": "concurrently --kill-others \"rollup -c -w\" \"cd .. && static-server\"",
     "build": "rollup -c",
@@ -37,8 +38,13 @@
     "robot-operating-system"
   ],
   "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "@rollup/plugin-node-resolve": "^7.0.0",
     "concurrently": "^5.2.0",
-    "eslint": "^5.14.1",
+    "babel-jest": "^25.4.0",
+    "eslint": "^7.10.0",
+    "eslint-plugin-jest": "^24.1.0",
     "jest": "^26.0.1",
     "jest-cli": "^26.0.1",
     "jsdom": "^16.4.0",
@@ -47,7 +53,6 @@
     "rollup": "^1.31.0"
   },
   "dependencies": {
-    "@rollup/plugin-node-resolve": "^7.0.0",
     "expr-eval": "^2.0.2"
   }
 }

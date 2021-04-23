@@ -5,6 +5,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Support for default macro values specified using quotes.
+
+### Changed
+- Added `"type": "module"` and `"sideEffects": false` to the package.json.
+
+### Fixed
+- Typescript definitions exporting the `XacroLoader` and `XacroParser` classes incorrectly.
+
+### Removed
+- Unneeded dependency.
+
+## [0.2.3] - 2021-01-01
 
 ### Added
 - Option to pass a function as the rospack commands option.
