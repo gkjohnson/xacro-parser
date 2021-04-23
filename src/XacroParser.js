@@ -103,7 +103,7 @@ export class XacroParser {
                                 // inadvertently creating a variable token.
                                 operators.lastIndex = 0;
                                 if (/^[^0-9.]/.test(t) && !operators.test(t)) {
-                                    return ` ${t} `;
+                                    return ` ${ t } `;
                                 } else {
                                     return t;
                                 }
