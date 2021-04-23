@@ -488,6 +488,12 @@ describe('XacroLoader', () => {
                         e="\${radians(180)/radians(90)}"
                         f="\${degrees(radians(45))}"
                     />
+                    <result
+                        g="\${not 1}"
+                        h="\${!1}"
+                        i="\${1e-2}"
+                        j="\${true||false}"
+                    />
                 </robot>
             `;
             const loader = new XacroLoader();
@@ -497,6 +503,7 @@ describe('XacroLoader', () => {
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
                             <result a="2" b="10" c="10" d="10002" e="2" f="45"/>
+                            <result g="false" h="false" i="1e-2" j="true"/>
                         </robot>`,
                     ));
                     done();

@@ -6,7 +6,8 @@ const parser = new Parser();
 parser.unaryOps = {
     '-': parser.unaryOps['-'],
     '+': parser.unaryOps['+'],
-    '!': parser.unaryOps['!'],
+    '!': parser.unaryOps['not'],
+    'not': parser.unaryOps['not'],
 };
 
 parser.functions = {
@@ -45,6 +46,10 @@ parser.binaryOps = {
             return a in b;
         }
     },
+    '||': (a, b) => Boolean(a || b),
+
+    // binary AND is not supported by expr-eval. See expr-eval issue #253.
+    // '&&': (a, b) => Boolean(a || b),
 };
 
 parser.consts = {
