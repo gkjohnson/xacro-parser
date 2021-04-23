@@ -254,6 +254,33 @@ describe('XacroLoader', () => {
             );
         });
 
+        it.only('should resolve params and defaults with string properties.', done => {
+            const content =
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <xacro:property name="input" value="10"/>
+                    <xacro:macro name="test" params="a:='1.0 2.0 3.0' b:='1.0 2.0'">
+                        <child a="\${a}" b="\${b}"/>
+                    </xacro:macro>
+                    <xacro:test/>
+                    <xacro:test a="1"/>
+                </robot>
+            `;
+            const loader = new XacroLoader();
+            loader.parse(
+                content, res => {
+                    const str = new XMLSerializer().serializeToString(res);
+                    expect(unformat(str)).toEqual(unformat(
+                        `<robot>
+                            <child a="1.0 2.0 3.0" b="1.0 2.0"/>
+                            <child a="1" b="1.0 2.0"/>
+                        </robot>`,
+                    ));
+                    done();
+                },
+            );
+        });
+
         it('should throw an error if a parameter cannot be resolved.', done => {
             const content =
                 `<?xml version="1.0"?>
