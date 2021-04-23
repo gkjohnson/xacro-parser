@@ -2214,7 +2214,11 @@
                     }
 
                     obj.name = name;
-                    obj.def = def;
+                    if (def.startsWith('\'') && def.endsWith('\'')) {
+                        obj.def = def.substr(1, def.length - 2);
+                    } else {
+                        obj.def = def;
+                    }
                 } else {
                     obj.name = param;
                     obj.def = null;
@@ -2234,7 +2238,7 @@
                 if (params) {
                     const inputs = params
                         .trim()
-                        .split(/\s+/g)
+                        .match(/[^\s']+(['][^']*['])?/g)
                         .map(s => parseMacroParam(s));
                     inputs.forEach(inp => {
                         inputMap[inp.name] = inp;
