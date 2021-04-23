@@ -80,7 +80,7 @@ export class XacroParser {
 
                         stack.push(contents);
 
-                        const operators = /(()|()|()|[()/*+\-%|&=[\]])+/g;
+                        const operators = /([()/*+!\-%|&=[\]])+/g;
                         const expr = tokenize(contents)
                             .map(t => {
                                 operators.lastIndex = 0;
@@ -98,8 +98,15 @@ export class XacroParser {
                                 } else {
                                     return t;
                                 }
-                            })
-                            .join(' ');
+                            }).map(t => {
+                                // add some spaces around non numbers and operators to avoid
+                                // inadvertently creating a variable token.
+                                if (/^[^0-9.]/.test(t) && !operators.test(t)) {
+                                    return ` ${t} `;
+                                } else {
+                                    return t;
+                                }
+                            }).join('');
 
                         stack.pop();
 

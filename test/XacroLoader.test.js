@@ -489,6 +489,7 @@ describe('XacroLoader', () => {
                         f="\${degrees(radians(45))}"
                         g="\${not 1}"
                         h="\${!1}"
+                        i="\${1e-2}"
                     />
                 </robot>
             `;
@@ -498,7 +499,7 @@ describe('XacroLoader', () => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
-                            <result a="2" b="10" c="10" d="10002" e="2" f="45" g="false" h="false"/>
+                            <result a="2" b="10" c="10" d="10002" e="2" f="45" g="false" h="false" i="1e-2"/>
                         </robot>`,
                     ));
                     done();
