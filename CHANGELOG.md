@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Support for default macro values specified using quotes.
 - Support for `not` operator.
-- Support for the `&&` operator.
 
 ### Changed
 - Added `"type": "module"` and `"sideEffects": false` to the package.json.
@@ -16,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Typescript definitions exporting the `XacroLoader` and `XacroParser` classes incorrectly.
 - `!` operator performing a factorial rather than a boolean inversion.
-- `||` operator performing concatenation rather than boolean OR.
+- `||` operator performing concatenation rather than boolean OR. Note that the `&&` operator is not currently supported by `expr-eval` which is used for expressions. Instead `and` can be used.
 
 ### Removed
 - Unneeded dependency.
