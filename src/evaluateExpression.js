@@ -46,6 +46,8 @@ parser.binaryOps = {
             return a in b;
         }
     },
+    '||': (a, b) => Boolean(a || b),
+    '&&': (a, b) => Boolean(a || b),
 };
 
 parser.consts = {
