@@ -101,6 +101,7 @@ export class XacroParser {
                             }).map(t => {
                                 // add some spaces around non numbers and operators to avoid
                                 // inadvertently creating a variable token.
+                                operators.lastIndex = 0;
                                 if (/^[^0-9.]/.test(t) && !operators.test(t)) {
                                     return ` ${t} `;
                                 } else {
