@@ -7,12 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 ### Added
 - Support for default macro values specified using quotes.
+- Support for `not` operator.
+- Support for the `&&` operator.
 
 ### Changed
 - Added `"type": "module"` and `"sideEffects": false` to the package.json.
 
 ### Fixed
 - Typescript definitions exporting the `XacroLoader` and `XacroParser` classes incorrectly.
+- `!` operator performing a factorial rather than a boolean inversion.
+- `||` operator performing concatenation rather than boolean OR.
 
 ### Removed
 - Unneeded dependency.
