@@ -6,7 +6,8 @@ const parser = new Parser();
 parser.unaryOps = {
     '-': parser.unaryOps['-'],
     '+': parser.unaryOps['+'],
-    '!': parser.unaryOps['!'],
+    '!': parser.unaryOps['not'],
+    'not': parser.unaryOps['not'],
 };
 
 parser.functions = {

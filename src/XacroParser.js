@@ -99,7 +99,7 @@ export class XacroParser {
                                     return t;
                                 }
                             })
-                            .join('');
+                            .join(' ');
 
                         stack.pop();
 
