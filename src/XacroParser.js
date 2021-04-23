@@ -223,7 +223,9 @@ export class XacroParser {
 
                 obj.name = name;
                 if (def.startsWith('\'') && def.endsWith('\'')) {
-                    obj.def = def.substr(1, def.length - 2);
+                    // strip quotes from the default value if it happens to be a string like so:
+                    // a:='0.0 1.0 2.0'
+                    obj.def = def.substring(1, def.length - 1);
                 } else {
                     obj.def = def;
                 }
@@ -244,9 +246,10 @@ export class XacroParser {
             // parse params
             const inputMap = {};
             if (params) {
+                // find param definitions including string values like a:='0.0 1.0 2.0'
                 const inputs = params
                     .trim()
-                    .match(/[^\s']+(['][^']*['])?/g)
+                    .match(/[^\s']+('[^']*')?/g)
                     .map(s => parseMacroParam(s));
                 inputs.forEach(inp => {
                     inputMap[inp.name] = inp;
