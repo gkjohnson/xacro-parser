@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 ### Added
-- Support for default macro values specified using quotes.
+- Support for default macro values specified using single quotes.
 - Support for `not` operator.
 
 ### Changed
