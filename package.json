@@ -1,6 +1,6 @@
 {
   "name": "xacro-parser",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Utility for parsing and converting ROS Xacro files in Javascript.",
   "main": "src/index.js",
   "type": "module",
