@@ -257,8 +257,7 @@ parse(
 
 ## Limitations
 
-- The official xacro parser supports using basically any Python syntax in the `${}` syntax which can't be easily supported in Javascript. Instead basic argument substitution and expression evaluation is supported but this does not include yaml, arrays, dictionaries, or math functions like sin or cos [#15](https://github.com/gkjohnson/xacro-parser/issues/15), [#17](https://github.com/gkjohnson/xacro-parser/issues/17).
-- Evaluation uses `new Function` to evaluate expressions, which can be unsafe. An effort has been made to sanitize the expressions but it is not guaranteed to be complete [#4](https://github.com/gkjohnson/xacro-parser/issues/4).
+- The official xacro parser supports using basically any Python syntax in the `${}` syntax which can't be easily supported in Javascript. Instead basic argument substitution and expression evaluation is supported using the `expr-eval` package which may not support all expression types. Please submit an issue if evaluation fails to work on a file.
 
 # Undocumented Xacro Behavior
 
