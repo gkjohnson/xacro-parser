@@ -151,7 +151,7 @@ The working directory to search for dependent files in when parsing `include` ta
 ### .rospackCommands
 
 ```js
-rospackCommands = {} | ( ( command : String, ...args : Array<String> ) => String ) : Object
+rospackCommands = {} : ( ( command : String, ...args : Array<String> ) => String ) | Object
 ```
 
 A map of rospack command stem to handling function that take all arguments as function parameters. An example implementation of the `rospack find` command:
