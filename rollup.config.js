@@ -1,7 +1,7 @@
 const resolve = require('@rollup/plugin-node-resolve');
 const path = require('path');
 const inputPath = path.join(__dirname, `./src/index.js`);
-const outputPath = path.join(__dirname, `./umd/index.js`);
+const outputPath = path.join(__dirname, `./umd/index.cjs`);
 
 export default {
 

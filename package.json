@@ -2,14 +2,16 @@
   "name": "xacro-parser",
   "version": "0.3.1",
   "description": "Utility for parsing and converting ROS Xacro files in Javascript.",
-  "main": "src/index.js",
+  "main": "umd/index.cjs",
+  "module": "src/index.cjs",
   "type": "module",
   "sideEffects": false,
   "scripts": {
     "start": "concurrently --kill-others \"rollup -c -w\" \"cd .. && static-server\"",
     "build": "rollup -c",
     "test": "rollup -c && jest",
-    "lint": "eslint ./src/*.js ./test/*.js"
+    "lint": "eslint ./src/*.js ./test/*.js",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "src/*",
