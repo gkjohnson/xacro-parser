@@ -211,17 +211,18 @@ export class XacroParser {
             // strip the asterisks
             param = param.replace(/^\*{1,2}/g, '');
 
-            // Check if a default value is provided
-            if (/:=/.test(param)) {
-                const [name, def] = param.split(':=');
+            // Check if a default value is provided (= or := syntax)
+            if (param.includes('=')) {
+                const [name, def] = param.split('=');
 
                 // TODO: Support caret and default syntax
-                // TODO: is there any difference between the := and = syntax?
                 if (/^\^/.test(def) || /\|/.test(def)) {
                     throw new Error(`XacroParser: ROS Jade pass-through notation not supported in macro defaults: ${ def }`);
                 }
 
-                obj.name = name;
+                // Support := default values by dropping the ':' from `name`
+                obj.name = name.replace(/:$/, '');
+
                 if (def.startsWith('\'') && def.endsWith('\'')) {
                     // strip quotes from the default value if it happens to be a string like so:
                     // a:='0.0 1.0 2.0'
