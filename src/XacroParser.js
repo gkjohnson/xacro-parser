@@ -212,7 +212,7 @@ export class XacroParser {
             param = param.replace(/^\*{1,2}/g, '');
 
             // Check if a default value is provided (= or := syntax)
-            if (/?:=/.test(param)) {
+            if (/:?=/.test(param)) {
                 const [name, def] = param.split(/:?=/);
 
                 // TODO: Support caret and default syntax
