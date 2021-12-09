@@ -220,6 +220,8 @@ export class XacroParser {
                     throw new Error(`XacroParser: ROS Jade pass-through notation not supported in macro defaults: ${ def }`);
                 }
 
+                obj.name = name;
+
                 if (def.startsWith('\'') && def.endsWith('\'')) {
                     // strip quotes from the default value if it happens to be a string like so:
                     // a:='0.0 1.0 2.0'
