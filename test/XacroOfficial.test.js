@@ -124,7 +124,7 @@ describe('Basic Xacro Tests', () => {
 
     it.todo('test_evaluate_macro_params_before_body');
 
-    it.skip('test_macro_params_escaped_string', async() =>
+    it('test_macro_params_escaped_string', async() =>
         runXacro(
             `<a xmlns:xacro="http://www.ros.org/wiki/xacro">
                 <xacro:macro name="foo" params="a='1 -2' c=3">

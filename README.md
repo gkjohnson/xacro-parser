@@ -263,6 +263,10 @@ parse(
 
 While the documentation for the xacro format is relatively complete there are some features that cannot necessarily be well understood without looking at code or tests.
 
+## Default Parameter Value Assignment
+
+The xacro documentation on [default parameters](http://wiki.ros.org/xacro#Default_parameters) only mentions the `param:=default` syntax. However, examples in the wild such as [turtlebot_description](https://github.com/turtlebot/turtlebot/blob/melodic/turtlebot_description/urdf/stacks/hexagons.urdf.xacro#L13) appear to use `param=default`. This parser supports both syntaxes.
+
 ## Macro Property Scope
 
 The `xacro:property` tags can have a `scope` attribute on them that can take "global" and "parent" values, which adds the property to the global or parent scope respetively. Neither of these is the default, though. If the scope is not specified then the variable is only relevant to the macro scope.
