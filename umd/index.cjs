@@ -2271,10 +2271,13 @@
 
             // Recursively process and expand a node
             async function processNode(node, properties, macros, resultsList = []) {
-                if (node.nodeType !== node.ELEMENT_NODE) {
+                if (node.nodeType === node.TEXT_NODE) {
                     const res = node.cloneNode();
                     res.textContent = evaluateAttribute(res.textContent, properties, true);
                     resultsList.push(res);
+                    return;
+                } else if (node.nodeType !== node.ELEMENT_NODE) {
+                    resultsList.push(node.cloneNode());
                     return;
                 }
 
