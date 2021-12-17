@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.3.5] - 2021-12-17
+### Fixed
+- Comments are no longer processed as part of the xacro tag parsing.
+
 ## [0.3.4] - 2021-12-09
 ### Added
 - Support for the "=" syntax as well as ":=" for macro parameters.
