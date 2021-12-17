@@ -154,7 +154,7 @@ describe('XacroLoader', () => {
             loader.parse(content, res => {
                 const str = new XMLSerializer().serializeToString(res);
                 expect(unformat(str)).toEqual(unformat(
-                    `<robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    `<robot>
                     <!--comment before link-->
                     <link name="val_link">
                         <child attr="_val_val"/>
@@ -162,10 +162,37 @@ describe('XacroLoader', () => {
                 </robot>`,
                 ));
 
+                done();
             });
+        });
 
-            done();
+        it('should not process commands in comments.', done => {
+            const content =
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <!--
+                    <link name="\${test}_link">
+                        <child attr="_\${test}_\${test}"/>
+                    </link>
+                    -->
+                </robot>
+            `;
 
+            const loader = new XacroLoader();
+            loader.parse(content, res => {
+                const str = new XMLSerializer().serializeToString(res);
+                expect(unformat(str)).toEqual(unformat(
+                    `<robot>
+                    <!--
+                    <link name="\${test}_link">
+                        <child attr="_\${test}_\${test}"/>
+                     </link>
+                    -->
+                    </robot>`,
+                ));
+
+                done();
+            });
         });
 
     });
@@ -254,7 +281,7 @@ describe('XacroLoader', () => {
             );
         });
 
-        it.only('should resolve params and defaults with string properties.', done => {
+        it('should resolve params and defaults with string properties.', done => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
