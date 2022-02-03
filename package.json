@@ -11,7 +11,7 @@
     "start": "concurrently --kill-others \"rollup -c -w\" \"cd .. && static-server\"",
     "build": "rollup -c",
     "test": "rollup -c && jest",
-    "lint": "eslint ./src/*.js ./test/*.js",
+    "lint": "eslint \"./src/**/*.{js,ts}\" \"./test/**/*.{js,ts}\" && tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
   "files": [
