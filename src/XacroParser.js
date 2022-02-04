@@ -22,7 +22,6 @@ export class XacroParser {
         this.localProperties = true;
         this.rospackCommands = {};
         this.arguments = {};
-        this.argumentDefaults = {};
         this.workingPath = '';
     }
 
@@ -410,7 +409,7 @@ export class XacroParser {
                 }
                 case 'xacro:arg': {
                     const name = node.getAttribute('name');
-                    scope.argumentDefaults[name] = evaluateAttribute(node.getAttribute('default'), properties, true);
+                    argumentDefaults[name] = evaluateAttribute(node.getAttribute('default'), properties, true);
                     return;
                 }
                 case 'xacro:attribute':
@@ -530,6 +529,7 @@ export class XacroParser {
         const rospackCommands = this.rospackCommands;
         const globalMacros = {};
         const includeMap = {};
+        const argumentDefaults = {};
         const globalProperties = { True: 1, False: 0 };
         globalProperties[PARENT_SCOPE] = globalProperties;
 
@@ -552,7 +552,7 @@ export class XacroParser {
                 }
                 result = this.arguments[arg];
                 if (result == null) {
-                    result = this.argumentDefaults[arg];
+                    result = argumentDefaults[arg];
                 }
                 if (result == null) {
                     throw new Error(`XacroParser: Undefined substitution argument ${ arg }`);

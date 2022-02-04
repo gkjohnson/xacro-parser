@@ -918,7 +918,6 @@ describe('XacroLoader', () => {
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
-                    console.log(str);
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
                             <child a="rospack-a" b="b-val"/>
@@ -951,7 +950,6 @@ describe('XacroLoader', () => {
             loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
-                    console.log(str);
                     expect(unformat(str)).toEqual(unformat(
                         `<robot>
                             <child a="rospack-a" b="b-val"/>
