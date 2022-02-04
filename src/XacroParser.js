@@ -22,6 +22,7 @@ export class XacroParser {
         this.localProperties = true;
         this.rospackCommands = {};
         this.arguments = {};
+        this.argumentDefaults = {};
         this.workingPath = '';
     }
 
@@ -409,9 +410,7 @@ export class XacroParser {
                 }
                 case 'xacro:arg': {
                     const name = node.getAttribute('name');
-                    if (!(name in scope.arguments)) {
-                        scope.arguments[name] = evaluateAttribute(node.getAttribute('default'), properties, true);
-                    }
+                    scope.argumentDefaults[name] = evaluateAttribute(node.getAttribute('default'), properties, true);
                     return;
                 }
                 case 'xacro:attribute':
@@ -536,23 +535,32 @@ export class XacroParser {
 
         const handleRospackCommand = (stem, ...args) => {
 
+            let result;
             if (rospackCommands instanceof Function) {
+                result = rospackCommands(stem, ...args);
+            }
 
-                return rospackCommands(stem, ...args);
+            if (result == null && rospackCommands != null && typeof rospackCommands[stem] === 'function') {
+                result = rospackCommands[stem](...args);
+            }
 
-            } else if (!(stem in rospackCommands) && stem === 'arg') {
+            if (result == null && stem === 'arg') {
 
                 const arg = args[0];
-                if (arg != null && this.arguments[arg] != null) {
-                    return this.arguments[arg];
+                if (arg === undefined) {
+                    throw new Error(`XacroParser: $(arg) must specify a variable name`);
                 }
-                throw new Error(`XacroParser: Undefined substitution argument ${ arg }`);
-
-            } else {
-
-                return rospackCommands[stem](...args);
+                result = this.arguments[arg];
+                if (result == null) {
+                    result = this.argumentDefaults[arg];
+                }
+                if (result == null) {
+                    throw new Error(`XacroParser: Undefined substitution argument ${ arg }`);
+                }
 
             }
+
+            return result;
 
         };
         const handleExpressionEvaluation = evaluateExpression;

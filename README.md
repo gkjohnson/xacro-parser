@@ -157,7 +157,12 @@ arguments = {} : Object
 A map of argument names to values that will be substituted for `$(arg name)` tags. These take precedence over any `<xacro:arg>` defaults.
 
 ```js
-loader.arguments = { arg_name: 'arg_value' };
+loader.arguments =
+  {
+    transmission_hw_interface: "hardware_interface/PositionJointInterface",
+    arm_x_separation: -0.4,
+    laser_visual: true,
+  };
 ```
 
 ### .rospackCommands
