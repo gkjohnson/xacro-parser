@@ -27,7 +27,7 @@ parser.workingPath = './path/to/directory/';
 parser.getFileContents = path => {
 
   return fs.readFile( path, { encoding: 'utf8' } );
-  
+
 };
 
 const xacroContents = fs.readFileSync( './path/to/directory/file.xacro', { encoding: 'utf8' } );
@@ -54,14 +54,14 @@ fetch( './path/to/directory/file.xacro' )
     parser.getFileContents = path => {
 
       return fetch( path ).then( res => res.text() );
-  
+
     };
     parser.parse( xacroContents ).then( result => {
 
       // xacro XML
 
     } );
-    
+
 } );
 
 ```
@@ -147,6 +147,18 @@ workingPath = '' : string
 ```
 
 The working directory to search for dependent files in when parsing `include` tags. The path is required to end with '/'.
+
+### .arguments
+
+```js
+arguments = {} : Object
+```
+
+A map of argument names to values that will be substituted for `$(arg name)` tags. These take precedence over any `<xacro:arg>` defaults.
+
+```js
+loader.arguments = { arg_name: 'arg_value' };
+```
 
 ### .rospackCommands
 

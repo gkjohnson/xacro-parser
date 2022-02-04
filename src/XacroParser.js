@@ -21,6 +21,7 @@ export class XacroParser {
         this.requirePrefix = true;
         this.localProperties = true;
         this.rospackCommands = {};
+        this.arguments = {};
         this.workingPath = '';
     }
 
@@ -406,7 +407,13 @@ export class XacroParser {
                     currWorkingPath = prevWorkingPath;
                     return;
                 }
-                case 'xacro:arg':
+                case 'xacro:arg': {
+                    const name = node.getAttribute('name');
+                    if (!(name in scope.arguments)) {
+                        scope.arguments[name] = evaluateAttribute(node.getAttribute('default'), properties, true);
+                    }
+                    return;
+                }
                 case 'xacro:attribute':
                 case 'xacro:element':
                     throw new Error(`XacroParser: ${ tagName } tags not supported.`);
@@ -514,8 +521,6 @@ export class XacroParser {
             return results;
         }
 
-        // TODO: Provide a default "arg" command function that defaults to
-        // xacro:arg fields.
         const scope = this;
         const inOrder = this.inOrder;
 
@@ -534,6 +539,14 @@ export class XacroParser {
             if (rospackCommands instanceof Function) {
 
                 return rospackCommands(stem, ...args);
+
+            } else if (!(stem in rospackCommands) && stem === 'arg') {
+
+                const arg = args[0];
+                if (arg != null && this.arguments[arg] != null) {
+                    return this.arguments[arg];
+                }
+                throw new Error(`XacroParser: Undefined substitution argument ${ arg }`);
 
             } else {
 

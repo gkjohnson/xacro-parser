@@ -31,6 +31,12 @@ const files = {
             <inlined-c/>
         </robot>
     `,
+    './d.xacro':
+        `<?xml version="1.0"?>
+        <robot xmlns:xacro="http://ros.org/wiki/xacro">
+            <child d="$(arg d)"/>
+        </robot>
+    `,
 
 };
 
@@ -861,6 +867,55 @@ describe('XacroLoader', () => {
         });
         it.todo('should support absolute paths.');
         it.todo('should respect namespaces for macros and properties.');
+    });
+
+    describe('arg', () => {
+        it('should make provided args accessible to imported files.', done => {
+            const content =
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <xacro:include filename="./d.xacro"/>
+                </robot>
+            `;
+
+            const loader = new XacroLoader();
+            loader.arguments = {d: 'd-val'};
+            loader.parse(
+                content, res => {
+                    const str = new XMLSerializer().serializeToString(res);
+                    expect(unformat(str)).toEqual(unformat(
+                        `<robot>
+                            <child d="d-val"/>
+                        </robot>`,
+                    ));
+                    done();
+                },
+            );
+
+        });
+        it('should make xacro:arg defaults accessible to imported files.', done => {
+            const content =
+                `<?xml version="1.0"?>
+                <robot xmlns:xacro="http://ros.org/wiki/xacro">
+                    <xacro:arg name="d" default="d-val"/>
+                    <xacro:include filename="./d.xacro"/>
+                </robot>
+            `;
+
+            const loader = new XacroLoader();
+            loader.parse(
+                content, res => {
+                    const str = new XMLSerializer().serializeToString(res);
+                    expect(unformat(str)).toEqual(unformat(
+                        `<robot>
+                            <child d="d-val"/>
+                        </robot>`,
+                    ));
+                    done();
+                },
+            );
+
+        });
     });
 
     describe('options.inOrder', () => {

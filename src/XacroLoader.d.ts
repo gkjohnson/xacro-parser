@@ -1,6 +1,7 @@
 interface XacroLoaderOptions {
 
     rospackCommands?: { [key: string]: (...args:string[]) => string },
+    arguments?: { [key: string]: string | number | boolean },
     localProperties?: boolean,
     inOrder?: boolean,
     fetchOptions?: object,
