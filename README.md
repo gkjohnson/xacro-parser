@@ -267,7 +267,6 @@ parse(
 
 ## Unimplemented Features
 
-- Substituation args using the default arg tags and the `$(arg val)` command are not supported [#3](https://github.com/gkjohnson/xacro-parser/issues/3).
 - Macro argument pass-through using `param:=^|default` is not supported [#5](https://github.com/gkjohnson/xacro-parser/issues/5).
 - Calling macros with a dynamic name using the `<xacro:call macro="${var}"/>` syntax is not supported [#9](https://github.com/gkjohnson/xacro-parser/issues/9).
 - Include tag namespaces are not supported [#12](https://github.com/gkjohnson/xacro-parser/issues/12).
