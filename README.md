@@ -27,7 +27,7 @@ parser.workingPath = './path/to/directory/';
 parser.getFileContents = path => {
 
   return fs.readFile( path, { encoding: 'utf8' } );
-  
+
 };
 
 const xacroContents = fs.readFileSync( './path/to/directory/file.xacro', { encoding: 'utf8' } );
@@ -54,14 +54,14 @@ fetch( './path/to/directory/file.xacro' )
     parser.getFileContents = path => {
 
       return fetch( path ).then( res => res.text() );
-  
+
     };
     parser.parse( xacroContents ).then( result => {
 
       // xacro XML
 
     } );
-    
+
 } );
 
 ```
@@ -147,6 +147,23 @@ workingPath = '' : string
 ```
 
 The working directory to search for dependent files in when parsing `include` tags. The path is required to end with '/'.
+
+### .arguments
+
+```js
+arguments = {} : Object
+```
+
+A map of argument names to values that will be substituted for `$(arg name)` tags. These take precedence over any `<xacro:arg>` defaults.
+
+```js
+loader.arguments =
+  {
+    transmission_hw_interface: "hardware_interface/PositionJointInterface",
+    arm_x_separation: -0.4,
+    laser_visual: true,
+  };
+```
 
 ### .rospackCommands
 
@@ -250,7 +267,6 @@ parse(
 
 ## Unimplemented Features
 
-- Substituation args using the default arg tags and the `$(arg val)` command are not supported [#3](https://github.com/gkjohnson/xacro-parser/issues/3).
 - Macro argument pass-through using `param:=^|default` is not supported [#5](https://github.com/gkjohnson/xacro-parser/issues/5).
 - Calling macros with a dynamic name using the `<xacro:call macro="${var}"/>` syntax is not supported [#9](https://github.com/gkjohnson/xacro-parser/issues/9).
 - Include tag namespaces are not supported [#12](https://github.com/gkjohnson/xacro-parser/issues/12).

@@ -213,7 +213,17 @@ describe('Basic Xacro Tests', () => {
     );
 
     it.todo('test_substitution_args_find');
-    it.todo('test_substitution_args_arg');
+    it('test_substitution_args_arg', async() =>
+        runXacro(
+            `<a><f v="$(arg sub_arg)" /></a>`,
+            res => {
+                expect(res).toEqual(unformat(`
+            <a><f v="my_arg"/></a>
+            `));
+            },
+            {arguments: {sub_arg: 'my_arg'}},
+        ),
+    );
 
     it('test_escaping_dollar_braces', async() =>
         runXacro(
@@ -787,17 +797,94 @@ describe('Basic Xacro Tests', () => {
     );
 
     it.todo('test_param_missing');
-    it.todo('test_default_arg');
-    it.todo('test_default_arg_override');
-    it.todo('test_default_arg_missing');
-    it.todo('test_default_arg_empty');
+
+    it('test_default_arg', async() =>
+        runXacro(`<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+                    <xacro:arg name="foo" default="2"/>
+                    <link name="my_link">
+                        <origin xyz="0 0 $(arg foo)"/>
+                    </link>
+                </robot>`,
+        res => {
+            expect(res).toEqual(unformat(`
+            <robot>
+                <link name="my_link">
+                    <origin xyz="0 0 2"/>
+                </link>
+            </robot>
+        `));
+        }),
+    );
+
+    it('test_default_arg_override', async() =>
+        runXacro(`<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+                    <xacro:arg name="foo" default="2"/>
+                    <link name="my_link">
+                        <origin xyz="0 0 $(arg foo)"/>
+                    </link>
+                </robot>`,
+        res => {
+            expect(res).toEqual(unformat(
+                `<robot>
+                    <link name="my_link">
+                        <origin xyz="0 0 4"/>
+                    </link>
+                </robot>`));
+        },
+        {arguments: {foo: 4}},
+        ),
+    );
+
+    it('test_default_arg_missing', (done) =>
+        runXacro(`<a xmlns:xacro="http://www.ros.org/wiki/xacro">
+                    <a arg="$(arg foo)"/>
+                </a>`,
+        () => done(new Error()),
+        null,
+        () => done()),
+    );
+
+    it('test_default_arg_empty', async() =>
+        runXacro(`<a xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:arg name="foo" default=""/>$(arg foo)</a>`,
+        res => { expect(res).toEqual(unformat(`<a></a>`)); },
+        ),
+    );
+
     it.todo('test_broken_input_doesnt_create_empty_output_file');
     it.todo('test_create_subdirs');
     it.todo('test_iterable_literals_plain');
     it.todo('test_iterable_literals_eval');
     it.todo('test_enforce_xacro_ns');
-    it.todo('test_issue_68_numeric_arg');
-    it.todo('test_transitive_arg_evaluation');
+
+    it('test_issue_68_numeric_arg', async() =>
+        runXacro(
+            `<a xmlns:xacro="http://www.ros.org/wiki/xacro">
+                <xacro:arg name="foo" default="0.5"/>
+                <xacro:property name="prop" value="$(arg foo)" />
+                <a prop="\${prop-0.3}"/>
+            </a>`,
+            res => {
+                expect(res).toEqual(unformat(
+                    `<a>
+                        <a prop="0.2"/>
+                    </a>`));
+            }),
+    );
+
+    it('test_transitive_arg_evaluation', async() =>
+        runXacro(`<a xmlns:xacro="http://www.ros.org/wiki/xacro">
+                    <xacro:arg name="foo" default="0.5"/>
+                    <xacro:arg name="bar" default="$(arg foo)"/>
+                    <xacro:property name="prop" value="$(arg bar)" />
+                    <a prop="\${prop-0.3}"/>
+                </a>`, res => {
+            expect(res).toEqual(unformat(
+                `<a>
+                    <a prop="0.2"/>
+                </a>`));
+        }),
+    );
 
     it('test_macro_name_with_colon', async() =>
         runXacro(
@@ -844,9 +931,7 @@ describe('Basic Xacro Tests', () => {
             `));
             },
             {
-                rospackCommands: {
-                    arg: () => 'xacro',
-                },
+                arguments: {var: 'xacro'},
             },
         ),
     );
@@ -860,9 +945,7 @@ describe('Basic Xacro Tests', () => {
             `));
             },
             {
-                rospackCommands: {
-                    arg: () => 'xacro',
-                },
+                arguments: {var: 'xacro'},
             },
         ),
     );
@@ -888,7 +971,7 @@ describe('In Order Xacro Tests', () => {
         ),
     );
 
-    it.skip('test_issue_63_fixed_with_inorder_processing', async() =>
+    it('test_issue_63_fixed_with_inorder_processing', async() =>
         runXacro(
             `<a xmlns:xacro="http://www.ros.org/wiki/xacro">
                 <xacro:arg name="has_stuff" default="false"/>

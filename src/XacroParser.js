@@ -21,6 +21,7 @@ export class XacroParser {
         this.requirePrefix = true;
         this.localProperties = true;
         this.rospackCommands = {};
+        this.arguments = {};
         this.workingPath = '';
     }
 
@@ -406,7 +407,11 @@ export class XacroParser {
                     currWorkingPath = prevWorkingPath;
                     return;
                 }
-                case 'xacro:arg':
+                case 'xacro:arg': {
+                    const name = node.getAttribute('name');
+                    argumentDefaults[name] = evaluateAttribute(node.getAttribute('default'), properties, true);
+                    return;
+                }
                 case 'xacro:attribute':
                 case 'xacro:element':
                     throw new Error(`XacroParser: ${ tagName } tags not supported.`);
@@ -514,8 +519,6 @@ export class XacroParser {
             return results;
         }
 
-        // TODO: Provide a default "arg" command function that defaults to
-        // xacro:arg fields.
         const scope = this;
         const inOrder = this.inOrder;
 
@@ -526,20 +529,38 @@ export class XacroParser {
         const rospackCommands = this.rospackCommands;
         const globalMacros = {};
         const includeMap = {};
+        const argumentDefaults = {};
         const globalProperties = { True: 1, False: 0 };
         globalProperties[PARENT_SCOPE] = globalProperties;
 
         const handleRospackCommand = (stem, ...args) => {
 
+            let result;
             if (rospackCommands instanceof Function) {
+                result = rospackCommands(stem, ...args);
+            }
 
-                return rospackCommands(stem, ...args);
+            if (result == null && rospackCommands != null && typeof rospackCommands[stem] === 'function') {
+                result = rospackCommands[stem](...args);
+            }
 
-            } else {
+            if (result == null && stem === 'arg') {
 
-                return rospackCommands[stem](...args);
+                const arg = args[0];
+                if (arg === undefined) {
+                    throw new Error(`XacroParser: $(arg) must specify a variable name`);
+                }
+                result = this.arguments[arg];
+                if (result == null) {
+                    result = argumentDefaults[arg];
+                }
+                if (result == null) {
+                    throw new Error(`XacroParser: Undefined substitution argument ${ arg }`);
+                }
 
             }
+
+            return result;
 
         };
         const handleExpressionEvaluation = evaluateExpression;
