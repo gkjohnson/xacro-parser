@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.7] - 2022-02-04
 ### Added
-- XacroParser: Support for default "args" and "arguments" objet.
+- XacroParser: Support for default "args" and "arguments" object.
 
 ## [0.3.6] - 2022-02-03
 ### Fixed
