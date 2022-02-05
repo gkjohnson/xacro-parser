@@ -60,9 +60,9 @@ export function isString(str) {
     return regexp.test(str);
 }
 
-// TODO: make this more robust
+// https://stackoverflow.com/a/175787
 export function isNumber(str) {
-    return !isNaN(parseFloat(str)) && !/[^0-9.eE-]/.test(str);
+    return !isNaN(Number(str)) && !isNaN(parseFloat(str));
 }
 
 // TODO: this needs to tokenize numbers together
