@@ -4,6 +4,9 @@
 [![npm version](https://img.shields.io/npm/v/xacro-parser.svg?style=flat-square)](https://www.npmjs.com/package/xacro-parser)
 [![build](https://img.shields.io/github/workflow/status/gkjohnson/xacro-parser/Node.js%20CI?style=flat-square&label=build)](https://github.com/gkjohnson/xacro-parser/actions)
 [![lgtm code quality](https://img.shields.io/lgtm/grade/javascript/g/gkjohnson/xacro-parser.svg?style=flat-square&label=code-quality)](https://lgtm.com/projects/g/gkjohnson/xacro-parser/)
+[![github](https://flat.badgen.net/badge/icon/github?icon=github&label)](https://github.com/gkjohnson/xacro-parser/)
+[![twitter](https://flat.badgen.net/twitter/follow/garrettkjohnson)](https://twitter.com/garrettkjohnson)
+[![sponsors](https://img.shields.io/github/sponsors/gkjohnson?style=flat-square&color=1da1f2)](https://github.com/sponsors/gkjohnson/)
 
 Javascript parser and loader for processing the [ROS Xacro file format](http://wiki.ros.org/xacro).
 
