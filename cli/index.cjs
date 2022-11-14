@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
-const { XacroParser } = require('../umd/index.js');
+const { XacroParser } = require('../umd/index.cjs');
 const { JSDOM } = require('jsdom');
 
 const jsdom = new JSDOM();
