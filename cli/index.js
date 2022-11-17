@@ -16,8 +16,12 @@ const argv = yargs(hideBin(process.argv))
         default: false,
     })
     .option('package', {
-        type: 'string',
-        default: null,
+        type: 'object',
+        default: {},
+    })
+    .option('arg', {
+        type: 'object',
+        default: {},
     })
     .help()
     .argv;
@@ -43,9 +47,15 @@ parser.inOrder = inOrder;
 parser.requirePrefix = inOrder;
 parser.localProperties = inOrder;
 parser.workingPath = path.dirname(inputFile);
-parser.rospackCommands.find = () => {
+parser.rospackCommands.arg = arg => {
 
-    return path.join(process.cwd(), argv.package);
+    return argv.arg[arg];
+
+};
+
+parser.rospackCommands.find = pkg => {
+
+    return path.join(process.cwd(), argv.package[pkg] || argv.package.default);
 
 };
 
