@@ -61,12 +61,14 @@ export class XacroParser {
                     let contents = match.substring(2, match.length - 1);
                     contents = unpackParams(contents, properties);
 
-                    // TODO: this needs to handle cases where there are operators included between tokens
+                    // replace the dictionary accessor with a function call in place
                     const isDictionaryAccessor = /\[.+\]$/.test(contents);
                     if (isDictionaryAccessor) {
-                        const splits = contents.split(/[[\]]+/g);
-                        splits.pop();
-                        contents = `__read_property__( ${ splits.join( ',' ) } )`;
+                        contents = contents.replace(/([^[\s]+)(\[[^[]+\])+/g, (match, ...args) => {
+                            const splits = match.split(/[[\]]+/g);
+                            splits.pop();
+                            return `__read_property__( ${ splits.join(',') } )`;
+                        });
                     }
 
                     if (isRospackCommand) {
