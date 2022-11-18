@@ -6,6 +6,7 @@ import { XacroParser } from '../src/XacroParser.js';
 import { JSDOM } from 'jsdom';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import * as YAML from 'yaml';
 
 const argv = yargs(hideBin(process.argv))
     .positional('input', {
@@ -62,6 +63,14 @@ parser.rospackCommands.find = pkg => {
 parser.getFileContents = p => {
 
     return fs.readFileSync(p, { encoding: 'utf8' });
+
+};
+
+parser.expressionParser.functions.load_yaml = p => {
+
+    const contents = fs.readFileSync(p, { encoding: 'utf-8' });
+    const result = YAML.parse(contents);
+    return result;
 
 };
 

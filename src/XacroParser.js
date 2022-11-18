@@ -12,7 +12,7 @@ import {
     createNewPropertyScope,
     PARENT_SCOPE,
 } from './utils.js';
-import { evaluateExpression } from './evaluateExpression.js';
+import { ExpressionParser } from './ExpressionParser.js';
 
 export class XacroParser {
 
@@ -22,6 +22,7 @@ export class XacroParser {
         this.localProperties = true;
         this.rospackCommands = {};
         this.arguments = {};
+        this.expressionParser = new ExpressionParser();
         this.workingPath = '';
     }
 
@@ -587,7 +588,8 @@ export class XacroParser {
             return result;
 
         };
-        const handleExpressionEvaluation = evaluateExpression;
+
+        const handleExpressionEvaluation = (...args) => this.expressionParser.evaluate(...args);
 
         let localProperties = this.localProperties;
         let currWorkingPath = workingPath;
