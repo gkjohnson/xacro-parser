@@ -132,7 +132,7 @@ export class XacroParser {
                             return expr;
                         } else {
                             const cleanExpr = normalizeExpression(expr);
-                            return this.expressionParser.evaluate(cleanExpr, properties);
+                            return expressionParser.evaluate(cleanExpr, properties);
                         }
                     }
                 });
@@ -589,6 +589,7 @@ export class XacroParser {
 
         };
 
+        const expressionParser = this.expressionParser;
         let localProperties = this.localProperties;
         let currWorkingPath = workingPath;
         let content = new DOMParser().parseFromString(data, 'text/xml');
