@@ -157,7 +157,7 @@ export class XacroParser {
                 // fix the escaped dollar signs only at the end to prevent double evaluation and only
                 // if the value is not an intermediate value like a computed property.
                 let result = unpackParams(str, allProps);
-                if (finalValue && isString(result)) {
+                if (finalValue && typeof result === 'string') {
                     result = result.replace(/\${2}([({])/g, (val, brace) => `$${ brace }`);
                 }
                 return result;
