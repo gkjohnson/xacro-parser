@@ -66,6 +66,6 @@ parser.consts = {
     e: Math.E,
 };
 
-export function evaluateExpression(expr) {
-    return parser.evaluate(expr);
+export function evaluateExpression(expr, properties) {
+    return parser.evaluate(expr, properties);
 }
