@@ -22,6 +22,14 @@ parser.functions = {
     pow: Math.pow,
     radians: (degrees) => { return degrees * (Math.PI / 180); },
     degrees: (radians) => { return radians * (180 / Math.PI); },
+    __read_property__: (obj, ...args) => {
+        let curr = obj;
+        for (let i = 0, l = args.length; i < l; i++) {
+            curr = curr[args[i]];
+        }
+
+        return curr;
+    },
 };
 
 parser.binaryOps = {
