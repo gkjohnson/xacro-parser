@@ -142,7 +142,7 @@ export class XacroParser {
                         t = t.trim();
                     }
 
-                    return !!t;
+                    return t !== '' && t !== null && t !== undefined;
                 });
 
                 if (trimmedRes.length === 1) {
