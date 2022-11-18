@@ -68,7 +68,7 @@ export function isNumber(str) {
 // TODO: this needs to tokenize numbers together
 export function tokenize(str) {
     // split text within quotes (', ", `) or operators
-    const regexp = /(('[^']*?')|("[^"]*?")|(`[^`]*?`)|([()/*+\-%|!&=[\]]+?))/g;
+    const regexp = /(('[^']*?')|("[^"]*?")|(`[^`]*?`)|([()/*+\-%|!&=]+?))/g;
     return str
         .replace(regexp, m => ` ${ m } `)
         .trim()

@@ -39,13 +39,18 @@ export class XacroParser {
             // recursively unpack parameters
             function unpackParams(str, properties) {
 
-                // if we're unpacking something that's already a number then just return
-                if (typeof str === 'number') {
+                // if we're unpacking something that's already a number or object then just return
+                if (typeof str !== 'string') {
                     return str;
                 }
 
                 // process all of the ${} and $() expressions
-                const res = str.replace(/(\$?\$\([^)]+\))|(\$?\${[^}]+})/g, match => {
+                const tokens = str.split(/(\$?\$\([^)]+\))|(\$?\${[^}]+})/g).filter(t => !!t);
+                const res = tokens.map(match => {
+                    // skip tokens that shouldn't be evaluated
+                    if (!/^\$[{(].+/.test(match)) {
+                        return match;
+                    }
 
                     // if we encounter an escaped $$ then return early
                     if (/^\$\$/.test(match)) {
@@ -56,8 +61,15 @@ export class XacroParser {
                     let contents = match.substring(2, match.length - 1);
                     contents = unpackParams(contents, properties);
 
-                    if (isRospackCommand) {
+                    // TODO: this needs to handle cases where there are operators included between tokens
+                    const isDictionaryAccessor = /\[.+\]$/.test(contents);
+                    if (isDictionaryAccessor) {
+                        const splits = contents.split(/[[\]]+/g);
+                        splits.pop();
+                        contents = `__read_property__( ${ splits.join( ',' ) } )`;
+                    }
 
+                    if (isRospackCommand) {
                         const command = unpackParams(contents, properties);
                         const tokens = command.split(/\s+/g);
                         const stem = tokens.shift();
@@ -67,7 +79,6 @@ export class XacroParser {
                         } catch (e) {
                             throw new Error(`XacroParser: Cannot run rospack command "${ contents }".\n` + e.message);
                         }
-
                     } else {
                         if (stack.includes(contents)) {
                             throw new Error(
@@ -81,7 +92,7 @@ export class XacroParser {
 
                         stack.push(contents);
 
-                        const operators = /([()/*+!\-%|&=[\]])+/g;
+                        const operators = /([()/*+!\-%|&=])+/g;
                         const expr = tokenize(contents)
                             .map(t => {
                                 operators.lastIndex = 0;
@@ -91,7 +102,7 @@ export class XacroParser {
 
                                 if (t in properties) {
                                     const arg = unpackParams(properties[t], properties);
-                                    if (!isNumber(arg)) {
+                                    if (!isNumber(arg) && typeof arg !== 'object') {
                                         return `"${ arg.toString().replace(/\\/g, '\\\\').replace(/"/g, '\\"') }"`;
                                     } else {
                                         return arg;
@@ -118,13 +129,24 @@ export class XacroParser {
                             return expr;
                         } else {
                             const cleanExpr = normalizeExpression(expr);
-                            return handleExpressionEvaluation(cleanExpr);
+                            return handleExpressionEvaluation(cleanExpr, properties);
                         }
                     }
                 });
 
-                return res;
+                const trimmedRes = res.filter(t => {
+                    if (typeof t === 'string') {
+                        t = t.trim();
+                    }
 
+                    return !!t;
+                });
+
+                if (trimmedRes.length === 1) {
+                    return trimmedRes[0];
+                } else {
+                    return res.join('');
+                }
             }
 
             const stack = [];
@@ -133,7 +155,7 @@ export class XacroParser {
                 // fix the escaped dollar signs only at the end to prevent double evaluation and only
                 // if the value is not an intermediate value like a computed property.
                 let result = unpackParams(str, allProps);
-                if (finalValue) {
+                if (finalValue && isString(result)) {
                     result = result.replace(/\${2}([({])/g, (val, brace) => `$${ brace }`);
                 }
                 return result;
