@@ -132,7 +132,7 @@ export class XacroParser {
                             return expr;
                         } else {
                             const cleanExpr = normalizeExpression(expr);
-                            return handleExpressionEvaluation(cleanExpr, properties);
+                            return this.expressionParser.evaluate(cleanExpr, properties);
                         }
                     }
                 });
@@ -588,8 +588,6 @@ export class XacroParser {
             return result;
 
         };
-
-        const handleExpressionEvaluation = (...args) => this.expressionParser.evaluate(...args);
 
         let localProperties = this.localProperties;
         let currWorkingPath = workingPath;
