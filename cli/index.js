@@ -11,18 +11,22 @@ import * as YAML from 'yaml';
 const argv = yargs(hideBin(process.argv))
     .positional('input', {
         type: 'string',
+        description: 'The .xacro file to process.',
     })
     .option('oldorder', {
         type: 'boolean',
         default: false,
+        description: 'If enabled then the parser "inOrder" flag is disabled.',
     })
     .option('package', {
         type: 'object',
         default: {},
+        description: 'Set of package paths. Set a package path with "--package.<package name>=<package path>".',
     })
     .option('arg', {
         type: 'object',
         default: {},
+        description: 'Set of package ROS ecosystem args. Set an arg with "--arg.<arg name>=<arg value>".',
     })
     .help()
     .argv;
