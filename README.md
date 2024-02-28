@@ -44,7 +44,6 @@ parser.parse( xacroContents ).then( result => {
 
 ```js
 
-import fs from 'fs';
 import { XacroParser } from 'xacro-parser';
 
 fetch( './path/to/directory/file.xacro' )
