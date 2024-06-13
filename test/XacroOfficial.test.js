@@ -841,7 +841,7 @@ describe('Basic Xacro Tests', () => {
                 </a>`,
         () => done(new Error()),
         null,
-        () => done()),
+        () => done());
     } );
 
     it('test_default_arg_empty', async() =>
