@@ -835,14 +835,14 @@ describe('Basic Xacro Tests', () => {
         ),
     );
 
-    it('test_default_arg_missing', (done) =>
+    it('test_default_arg_missing', (done) => {
         runXacro(`<a xmlns:xacro="http://www.ros.org/wiki/xacro">
                     <a arg="$(arg foo)"/>
                 </a>`,
         () => done(new Error()),
         null,
         () => done()),
-    );
+    } );
 
     it('test_default_arg_empty', async() =>
         runXacro(`<a xmlns:xacro="http://www.ros.org/wiki/xacro">
