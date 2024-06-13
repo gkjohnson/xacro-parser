@@ -842,7 +842,7 @@ describe('Basic Xacro Tests', () => {
         () => done(new Error()),
         null,
         () => done());
-    } );
+    });
 
     it('test_default_arg_empty', async() =>
         runXacro(`<a xmlns:xacro="http://www.ros.org/wiki/xacro">
