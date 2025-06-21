@@ -67,6 +67,7 @@ export class ExpressionParser extends Parser {
         parser.consts = {
             ...parser.consts,
             pi: Math.PI,
+            tau: 2 * Math.PI,
             e: Math.E,
         };
     }
