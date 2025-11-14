@@ -1,5 +1,5 @@
 import { isNumber } from './utils.js';
-import { Parser } from 'expr-eval';
+import { Parser } from 'expr-eval-fork';
 
 export class ExpressionParser extends Parser {
 
