@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.11] - 2025-11-14
 ### Fixed
-- Switch to use "expr-eval-fork" from "expr-eval" due to security fixes.
+- Switch to use "expr-eval-fork" from "expr-eval" for security fixes.
 
 ## [0.3.10] - 2025-06-22
 ### Added
