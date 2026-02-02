@@ -3,75 +3,75 @@ import { XacroParser } from './XacroParser.js';
 
 export class XacroLoader extends XacroParser {
 
-    constructor() {
+	constructor() {
 
-        super();
-        this.fetchOptions = {};
+		super();
+		this.fetchOptions = {};
 
-    }
+	}
 
-    load(url, onComplete, onError) {
+	load( url, onComplete, onError ) {
 
-        const workingPath = getUrlBase(url);
-        if (this.workingPath === '') {
+		const workingPath = getUrlBase( url );
+		if ( this.workingPath === '' ) {
 
-            this.workingPath = workingPath;
+			this.workingPath = workingPath;
 
-        }
+		}
 
-        this
-            .getFileContents(url)
-            .then(text => {
+		this
+			.getFileContents( url )
+			.then( text => {
 
-                this.parse(text, onComplete, onError);
+				this.parse( text, onComplete, onError );
 
-            })
-            .catch(e => {
+			} )
+			.catch( e => {
 
-                if (onError) {
+				if ( onError ) {
 
-                    onError(e);
+					onError( e );
 
-                }
+				}
 
-            });
+			} );
 
-    }
+	}
 
-    parse(data, onComplete, onError) {
+	parse( data, onComplete, onError ) {
 
-        super
-            .parse(data)
-            .then(onComplete)
-            .catch(e => {
+		super
+			.parse( data )
+			.then( onComplete )
+			.catch( e => {
 
-                if (onError) {
+				if ( onError ) {
 
-                    onError(e);
+					onError( e );
 
-                }
+				}
 
-            });
+			} );
 
-    }
+	}
 
-    getFileContents(path) {
+	getFileContents( path ) {
 
-        return fetch(path, this.fetchOptions)
-            .then(res => {
+		return fetch( path, this.fetchOptions )
+			.then( res => {
 
-                if (res.ok) {
+				if ( res.ok ) {
 
-                    return res.text();
+					return res.text();
 
-                } else {
+				} else {
 
-                    throw new Error(`XacroLoader: Failed to load url '${ path }' with error code ${ res.status } : ${ res.statusText }.`);
+					throw new Error( `XacroLoader: Failed to load url '${ path }' with error code ${ res.status } : ${ res.statusText }.` );
 
-                }
+				}
 
-            });
+			} );
 
-    }
+	}
 
 }
