@@ -10,8 +10,8 @@
   "scripts": {
     "start": "concurrently --kill-others \"rollup -c -w\" \"cd .. && static-server\"",
     "build": "rollup -c",
-    "test": "rollup -c && jest",
-    "lint": "eslint ./src/*.js ./test/*.js && tsc --noEmit",
+    "test": "rollup -c && vitest run",
+    "lint": "eslint . && tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
   "files": [
@@ -41,21 +41,18 @@
     "robot-operating-system"
   ],
   "devDependencies": {
-    "@babel/core": "^7.11.6",
-    "@babel/preset-env": "^7.11.5",
+    "@eslint/js": "^9.0.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@types/node": "^24.3.1",
-    "babel-jest": "^29.7.0",
-    "concurrently": "^5.2.0",
-    "eslint": "^8.56.0",
-    "eslint-plugin-jest": "^29.0.1",
-    "jest": "^29.7.0",
-    "jest-cli": "^29.7.0",
-    "jsdom": "^16.4.0",
-    "nyc": "^15.0.1",
-    "request": "^2.88.0",
+    "@vitest/eslint-plugin": "^1.5.0",
+    "concurrently": "^8.2.1",
+    "eslint": "^9.0.0",
+    "eslint-config-mdcs": "^5.0.0",
+    "globals": "^16.5.0",
+    "jsdom": "^26.0.0",
     "rollup": "^4.53.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.14"
   },
   "dependencies": {
     "expr-eval-fork": "^3.0.0",
