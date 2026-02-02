@@ -49,6 +49,7 @@ export default [
 		rules: {
 			...vitest.configs.recommended.rules,
 			'vitest/valid-describe-callback': 0,
+			'vitest/expect-expect': 0,
 		},
 	},
 ];

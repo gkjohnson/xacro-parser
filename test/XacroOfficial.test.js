@@ -311,7 +311,7 @@ describe( 'Basic Xacro Tests', () => {
 		),
 	);
 
-	it( 'test_multiple_insert_blocks', async() => {
+	it( 'test_multiple_insert_blocks 2', async() => {
 
 		await runXacro(
 			`<a xmlns:xacro="http://www.ros.org/wiki/xacro">
@@ -679,7 +679,7 @@ describe( 'Basic Xacro Tests', () => {
 		),
 	);
 
-	it( 'test_recursive_evaluation', async() =>
+	it( 'test_recursive_evaluation 2', async() =>
 		runXacro(
 			`<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
                 <xacro:property name="a2" value="\${2*a}"/>
@@ -1070,7 +1070,7 @@ describe( 'Basic Xacro Tests', () => {
 		),
 	);
 
-	it( 'test_extension_in_expression', async() =>
+	it( 'test_extension_in_expression 2', async() =>
 		runXacro(
 			`<a xmlns:xacro="http://www.ros.org/wiki/xacro">$(arg \${'v'+'ar'})</a>`,
 			res => {
