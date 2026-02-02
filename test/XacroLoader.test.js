@@ -62,12 +62,12 @@ beforeEach(() => {
 
 describe('XacroLoader', () => {
     describe('error callback', () => {
-        it('should get called if the file couldn\'t be loaded', done => {
+        it('should get called if the file couldn\'t be loaded', () => new Promise((resolve) => {
             const loader = new XacroLoader();
-            loader.load('nonexistent.xacro', () => {}, e => done());
-        });
+            loader.load('nonexistent.xacro', () => {}, () => resolve());
+        }));
 
-        it('should get called if a child file couldn\'t be loaded', done => {
+        it('should get called if a child file couldn\'t be loaded', () => new Promise((resolve) => {
             const loader = new XacroLoader();
             loader.parse(
                 `<?xml version="1.0"?>
@@ -77,13 +77,13 @@ describe('XacroLoader', () => {
                 </robot>
                 `,
                 () => {},
-                e => done(),
+                () => resolve(),
             );
-        });
+        }));
     });
 
     describe('properties', () => {
-        it('should replace property values in attributes.', done => {
+        it('should replace property values in attributes.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -94,7 +94,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -104,12 +104,13 @@ describe('XacroLoader', () => {
                             </link>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should expand property blocks.', done => {
+        it('should expand property blocks.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -122,7 +123,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -131,15 +132,16 @@ describe('XacroLoader', () => {
                             <b/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
     });
 
     describe('comments', () => {
 
-        it('should be stripped before xacro elements', done => {
+        it('should be stripped before xacro elements', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -157,7 +159,7 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
-            loader.parse(content, res => {
+            return new Promise((resolve, reject) => loader.parse(content, res => {
                 const str = new XMLSerializer().serializeToString(res);
                 expect(unformat(str)).toEqual(unformat(
                     `<robot>
@@ -168,11 +170,11 @@ describe('XacroLoader', () => {
                 </robot>`,
                 ));
 
-                done();
-            });
+                resolve();
+            }, reject));
         });
 
-        it('should not process commands in comments.', done => {
+        it('should not process commands in comments.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -185,7 +187,7 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
-            loader.parse(content, res => {
+            return new Promise((resolve, reject) => loader.parse(content, res => {
                 const str = new XMLSerializer().serializeToString(res);
                 expect(unformat(str)).toEqual(unformat(
                     `<robot>
@@ -197,14 +199,14 @@ describe('XacroLoader', () => {
                     </robot>`,
                 ));
 
-                done();
-            });
+                resolve();
+            }, reject));
         });
 
     });
 
     describe('macros', () => {
-        it('should expand a basic macro.', done => {
+        it('should expand a basic macro.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -218,7 +220,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -229,12 +231,13 @@ describe('XacroLoader', () => {
                             </macro-child2>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should expand a macro with inputs.', done => {
+        it('should expand a macro with inputs.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -246,7 +249,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -255,12 +258,13 @@ describe('XacroLoader', () => {
                             <child a="1" b="2" c="3"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should resolve params and defaults with properties.', done => {
+        it('should resolve params and defaults with properties.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -273,7 +277,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -282,12 +286,13 @@ describe('XacroLoader', () => {
                             <child a="1" b="10" c="3"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should resolve params and defaults with string properties.', done => {
+        it('should resolve params and defaults with string properties.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -300,7 +305,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -309,12 +314,13 @@ describe('XacroLoader', () => {
                             <child a="1" b="1.0 2.0"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should throw an error if a parameter cannot be resolved.', done => {
+        it('should throw an error if a parameter cannot be resolved.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -326,12 +332,12 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
-                content, () => done(new Error()), () => done(),
-            );
+            return new Promise((resolve, reject) => loader.parse(
+                content, () => reject(new Error('Should have thrown')), () => resolve(),
+            ));
         });
 
-        it('should expand include blocks.', done => {
+        it('should expand include blocks.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -354,7 +360,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -365,12 +371,13 @@ describe('XacroLoader', () => {
                             <fourth/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should expand the body of the target before running the macro.', done => {
+        it('should expand the body of the target before running the macro.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -390,7 +397,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -399,12 +406,13 @@ describe('XacroLoader', () => {
                             <c/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should handle element references after the first parameters.', done => {
+        it('should handle element references after the first parameters.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -420,7 +428,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -430,12 +438,13 @@ describe('XacroLoader', () => {
                             <child x="1" y="2" z="3"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should expand macros recursively.', done => {
+        it('should expand macros recursively.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -450,7 +459,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -459,12 +468,13 @@ describe('XacroLoader', () => {
                             <after/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should pass insert_block commands down through nested macros.', done => {
+        it('should pass insert_block commands down through nested macros.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -487,7 +497,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -496,16 +506,17 @@ describe('XacroLoader', () => {
                             <after/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
         it.todo('should support pass through arguments with defaults using the :=^|val notation.');
     });
 
     describe('condition blocks', () => {
-        it('should expand conditional statements correctly.', done => {
+        it('should expand conditional statements correctly.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -519,7 +530,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -528,14 +539,15 @@ describe('XacroLoader', () => {
                             <included/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
     });
 
     describe('expressions', () => {
-        it('should evaluate basic expressions.', done => {
+        it('should evaluate basic expressions.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -557,7 +569,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -566,12 +578,13 @@ describe('XacroLoader', () => {
                             <result g="false" h="false" i="1e-2" j="true"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should correctly interpret negative numbers as numbers', done => {
+        it('should correctly interpret negative numbers as numbers', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -585,7 +598,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -593,13 +606,13 @@ describe('XacroLoader', () => {
                             <result a="0" b="0" c="-1"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
-
+                reject,
+            ));
         });
 
-        it('should escape dollar signs correctly', done => {
+        it('should escape dollar signs correctly', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -612,7 +625,7 @@ describe('XacroLoader', () => {
                 </robot>
             `;
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -620,12 +633,13 @@ describe('XacroLoader', () => {
                             <result a="\${1 + 1}" b="$\${1 + 1}" c="$$\${1 + 1}"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should not allow evaluation of unsafe expressions.', done => {
+        it('should not allow evaluation of unsafe expressions.', async () => {
 
             let called = 0;
             global.testFunc = () => called++;
@@ -657,28 +671,20 @@ describe('XacroLoader', () => {
                     loader.parse(content, () => reject(new Error()), () => resolve());
                 }));
 
-            Promise
-                .all(promises)
-                .then(() => {
-                    delete global.e;
-                    delete global.e123;
-                    delete global.E;
-                    delete global.testFunc;
-                    expect(called).toEqual(0);
-                    done();
-                })
-                .catch(() => {
-                    delete global.e;
-                    delete global.e123;
-                    delete global.E;
-                    delete global.testFunc;
-                    done(new Error());
-                });
+            try {
+                await Promise.all(promises);
+                expect(called).toEqual(0);
+            } finally {
+                delete global.e;
+                delete global.e123;
+                delete global.E;
+                delete global.testFunc;
+            }
         });
     });
 
     describe('rospack commands', () => {
-        it('should call rospack commnds.', done => {
+        it('should call rospack commnds.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -687,6 +693,7 @@ describe('XacroLoader', () => {
             `;
 
             let called = 0;
+
             const loader = new XacroLoader();
 
             loader.rospackCommands = {
@@ -700,7 +707,7 @@ describe('XacroLoader', () => {
                 },
             };
 
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -709,12 +716,13 @@ describe('XacroLoader', () => {
                         </robot>`,
                     ));
                     expect(called).toEqual(2);
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should call rospack with a function as an argument.', done => {
+        it('should call rospack with a function as an argument.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -729,7 +737,7 @@ describe('XacroLoader', () => {
                 return 'package';
             };
 
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -737,16 +745,17 @@ describe('XacroLoader', () => {
                             <result a="package"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
         it.todo('shoulds support rospack substitution args with default values.');
     });
 
     describe('include', () => {
-        it('should import properties and macros from xacro:include tags.', done => {
+        it('should import properties and macros from xacro:include tags.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -757,7 +766,7 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -768,13 +777,13 @@ describe('XacroLoader', () => {
                             <child b="b-val"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
-
+                reject,
+            ));
         });
 
-        it('should example include blocks recursively.', done => {
+        it('should example include blocks recursively.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -783,7 +792,7 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -792,12 +801,13 @@ describe('XacroLoader', () => {
                             <inlined-b/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
 
-        it('should load relative paths.', done => {
+        it('should load relative paths.', () => {
             const files = {
                 'http://website.com/path/./folder/a.xacro':
                     `<?xml version="1.0"?>
@@ -830,19 +840,19 @@ describe('XacroLoader', () => {
 
             const loader = new XacroLoader();
             loader.workingPath = 'http://website.com/path/';
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, () => {
                     expect(res).toEqual([
                         'http://website.com/path/./folder/a.xacro',
                         'http://website.com/path/./folder/./b.xacro',
                     ]);
-                    done();
+                    resolve();
                 },
-            );
-
+                reject,
+            ));
         });
 
-        it('should have filename attributes evaluated before including them.', done => {
+        it('should have filename attributes evaluated before including them.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -852,7 +862,7 @@ describe('XacroLoader', () => {
             `;
 
             const loader = new XacroLoader();
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -861,16 +871,17 @@ describe('XacroLoader', () => {
                             <inlined-b/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
+                reject,
+            ));
         });
         it.todo('should support absolute paths.');
         it.todo('should respect namespaces for macros and properties.');
     });
 
     describe('substitution args', () => {
-        it('should support arg substitution of different types', done => {
+        it('should support arg substitution of different types', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -885,7 +896,7 @@ describe('XacroLoader', () => {
 
             const loader = new XacroLoader();
             loader.arguments = {a: 0.5, b: false, c: 'c-val'};
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -893,12 +904,12 @@ describe('XacroLoader', () => {
                             <child a="1" c="c-val"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
-
+                reject,
+            ));
         });
-        it('should delegate to provided rospackCommands function, falling back to arguments', done => {
+        it('should delegate to provided rospackCommands function, falling back to arguments', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -915,7 +926,7 @@ describe('XacroLoader', () => {
                 return null;
             };
 
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -923,12 +934,12 @@ describe('XacroLoader', () => {
                             <child a="rospack-a" b="b-val"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
-
+                reject,
+            ));
         });
-        it('should delegate to provided rospackCommands object, falling back to arguments', done => {
+        it('should delegate to provided rospackCommands object, falling back to arguments', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -947,7 +958,7 @@ describe('XacroLoader', () => {
                 },
             };
 
-            loader.parse(
+            return new Promise((resolve, reject) => loader.parse(
                 content, res => {
                     const str = new XMLSerializer().serializeToString(res);
                     expect(unformat(str)).toEqual(unformat(
@@ -955,12 +966,12 @@ describe('XacroLoader', () => {
                             <child a="rospack-a" b="b-val"/>
                         </robot>`,
                     ));
-                    done();
+                    resolve();
                 },
-            );
-
+                reject,
+            ));
         });
-        it('should make provided args accessible to imported files.', done => {
+        it('should make provided args accessible to imported files.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -968,22 +979,24 @@ describe('XacroLoader', () => {
                 </robot>
             `;
 
-            const loader = new XacroLoader();
-            loader.arguments = {d: 'd-val'};
-            loader.parse(
-                content, res => {
-                    const str = new XMLSerializer().serializeToString(res);
-                    expect(unformat(str)).toEqual(unformat(
-                        `<robot>
-                            <child d="d-val"/>
-                        </robot>`,
-                    ));
-                    done();
-                },
-            );
-
+            return new Promise((resolve, reject) => {
+                const loader = new XacroLoader();
+                loader.arguments = {d: 'd-val'};
+                loader.parse(
+                    content, res => {
+                        const str = new XMLSerializer().serializeToString(res);
+                        expect(unformat(str)).toEqual(unformat(
+                            `<robot>
+                                <child d="d-val"/>
+                            </robot>`,
+                        ));
+                        resolve();
+                    },
+                    reject,
+                );
+            });
         });
-        it('should make xacro:arg defaults accessible to imported files.', done => {
+        it('should make xacro:arg defaults accessible to imported files.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -992,24 +1005,26 @@ describe('XacroLoader', () => {
                 </robot>
             `;
 
-            const loader = new XacroLoader();
-            loader.parse(
-                content, res => {
-                    const str = new XMLSerializer().serializeToString(res);
-                    expect(unformat(str)).toEqual(unformat(
-                        `<robot>
-                            <child d="d-val"/>
-                        </robot>`,
-                    ));
-                    done();
-                },
-            );
-
+            return new Promise((resolve, reject) => {
+                const loader = new XacroLoader();
+                loader.parse(
+                    content, res => {
+                        const str = new XMLSerializer().serializeToString(res);
+                        expect(unformat(str)).toEqual(unformat(
+                            `<robot>
+                                <child d="d-val"/>
+                            </robot>`,
+                        ));
+                        resolve();
+                    },
+                    reject,
+                );
+            });
         });
     });
 
     describe('options.inOrder', () => {
-        it('should process properties and macros in order if true', done => {
+        it('should process properties and macros in order if true', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -1032,25 +1047,28 @@ describe('XacroLoader', () => {
                 </robot>
             `;
 
-            const loader = new XacroLoader();
-            loader.localProperties = false;
-            loader.inOrder = true;
-            loader.parse(
-                content, res => {
-                    const str = new XMLSerializer().serializeToString(res);
-                    expect(unformat(str)).toEqual(unformat(
-                        `<robot>
-                            <result x="100" y="200" z="500"/>
-                            <a/>
-                            <b/>
-                        </robot>`,
-                    ));
-                    done();
-                },
-            );
+            return new Promise((resolve, reject) => {
+                const loader = new XacroLoader();
+                loader.localProperties = false;
+                loader.inOrder = true;
+                loader.parse(
+                    content, res => {
+                        const str = new XMLSerializer().serializeToString(res);
+                        expect(unformat(str)).toEqual(unformat(
+                            `<robot>
+                                <result x="100" y="200" z="500"/>
+                                <a/>
+                                <b/>
+                            </robot>`,
+                        ));
+                        resolve();
+                    },
+                    reject,
+                );
+            });
         });
 
-        it('should throw an error if true but a property is out of order', done => {
+        it('should throw an error if true but a property is out of order', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -1065,15 +1083,17 @@ describe('XacroLoader', () => {
                 </robot>
             `;
 
-            const loader = new XacroLoader();
-            loader.localProperties = false;
-            loader.inOrder = true;
-            loader.parse(
-                content, () => done(new Error()), () => done(),
-            );
+            return new Promise((resolve, reject) => {
+                const loader = new XacroLoader();
+                loader.localProperties = false;
+                loader.inOrder = true;
+                loader.parse(
+                    content, () => reject(new Error('Should have thrown')), () => resolve(),
+                );
+            });
         });
 
-        it('should process properties and macros first if false', done => {
+        it('should process properties and macros first if false', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -1094,26 +1114,29 @@ describe('XacroLoader', () => {
                 </robot>
             `;
 
-            const loader = new XacroLoader();
-            loader.localProperties = false;
-            loader.inOrder = false;
-            loader.parse(
-                content, res => {
-                    const str = new XMLSerializer().serializeToString(res);
-                    expect(unformat(str)).toEqual(unformat(
-                        `<robot>
-                            <result x="100" y="200" z="300"/>
-                            <result x="100" y="200" z="300"/>
-                            <b/>
-                            <b/>
-                        </robot>`,
-                    ));
-                    done();
-                },
-            );
+            return new Promise((resolve, reject) => {
+                const loader = new XacroLoader();
+                loader.localProperties = false;
+                loader.inOrder = false;
+                loader.parse(
+                    content, res => {
+                        const str = new XMLSerializer().serializeToString(res);
+                        expect(unformat(str)).toEqual(unformat(
+                            `<robot>
+                                <result x="100" y="200" z="300"/>
+                                <result x="100" y="200" z="300"/>
+                                <b/>
+                                <b/>
+                            </robot>`,
+                        ));
+                        resolve();
+                    },
+                    reject,
+                );
+            });
         });
 
-        it('should process the properties and macros in included files in order.', done => {
+        it('should process the properties and macros in included files in order.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -1131,31 +1154,34 @@ describe('XacroLoader', () => {
                 </robot>
             `;
 
-            const loader = new XacroLoader();
-            loader.inOrder = true;
-            loader.parse(
-                content, res => {
-                    const str = new XMLSerializer().serializeToString(res);
-                    expect(unformat(str)).toEqual(unformat(
-                        `<robot>
-                            <test a="aa"/>
-                            <child/>
+            return new Promise((resolve, reject) => {
+                const loader = new XacroLoader();
+                loader.inOrder = true;
+                loader.parse(
+                    content, res => {
+                        const str = new XMLSerializer().serializeToString(res);
+                        expect(unformat(str)).toEqual(unformat(
+                            `<robot>
+                                <test a="aa"/>
+                                <child/>
 
-                            <inlined/>
-                            <test a="a-val"/>
-                            <child b="b-val"/>
-                            <child b="b-val"/>
-                        </robot>`,
-                    ));
-                    done();
-                },
-            );
+                                <inlined/>
+                                <test a="a-val"/>
+                                <child b="b-val"/>
+                                <child b="b-val"/>
+                            </robot>`,
+                        ));
+                        resolve();
+                    },
+                    reject,
+                );
+            });
         });
 
     });
 
     describe('options.localProperties', () => {
-        it('should scope properties to macros if true.', done => {
+        it('should scope properties to macros if true.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -1170,15 +1196,17 @@ describe('XacroLoader', () => {
                 </robot>
             `;
 
-            const loader = new XacroLoader();
-            loader.localProperties = true;
-            loader.inOrder = true;
-            loader.parse(
-                content, () => done(new Error()), () => done(),
-            );
+            return new Promise((resolve, reject) => {
+                const loader = new XacroLoader();
+                loader.localProperties = true;
+                loader.inOrder = true;
+                loader.parse(
+                    content, () => reject(new Error('Should have thrown')), () => resolve(),
+                );
+            });
         });
 
-        it('should not scope properties to macros if false.', done => {
+        it('should not scope properties to macros if false.', () => {
             const content =
                 `<?xml version="1.0"?>
                 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -1191,26 +1219,29 @@ describe('XacroLoader', () => {
                 </robot>
             `;
 
-            const loader = new XacroLoader();
-            loader.localProperties = false;
-            loader.inOrder = true;
-            loader.parse(
-                content, res => {
-                    const str = new XMLSerializer().serializeToString(res);
-                    expect(unformat(str)).toEqual(unformat(
-                        `<robot>
-                            <result value="100"/>
-                            <after value="100"/>
-                        </robot>`,
-                    ));
-                    done();
-                },
-            );
+            return new Promise((resolve, reject) => {
+                const loader = new XacroLoader();
+                loader.localProperties = false;
+                loader.inOrder = true;
+                loader.parse(
+                    content, res => {
+                        const str = new XMLSerializer().serializeToString(res);
+                        expect(unformat(str)).toEqual(unformat(
+                            `<robot>
+                                <result value="100"/>
+                                <after value="100"/>
+                            </robot>`,
+                        ));
+                        resolve();
+                    },
+                    reject,
+                );
+            });
         });
     });
 
     describe('options.requirePrefix', () => {
-        it('should require the prefix if true', done => {
+        it('should require the prefix if true', () => {
             const content = `
                     <robot xmlns:xacro="http://ros.org/wiki/xacro">
                         <include filename="./a.xacro"/>
@@ -1231,14 +1262,16 @@ describe('XacroLoader', () => {
                 `;
 
             // this should throw an error because a property is not defined.
-            const loader = new XacroLoader();
-            loader.requirePrefix = true;
-            loader.parse(
-                content, () => done(new Error()), () => done(),
-            );
+            return new Promise((resolve, reject) => {
+                const loader = new XacroLoader();
+                loader.requirePrefix = true;
+                loader.parse(
+                    content, () => reject(new Error('Should have thrown')), () => resolve(),
+                );
+            });
         });
 
-        it('should not require the prefix if false', done => {
+        it('should not require the prefix if false', () => {
             const content = `
                     <robot xmlns:xacro="http://ros.org/wiki/xacro">
                         <include filename="./a.xacro"/>
@@ -1258,23 +1291,26 @@ describe('XacroLoader', () => {
                     </robot>
                 `;
 
-            const loader = new XacroLoader();
-            loader.requirePrefix = false;
-            loader.parse(
-                content, res => {
-                    const str = new XMLSerializer().serializeToString(res);
-                    expect(unformat(str)).toEqual(unformat(`
-                        <robot>
-                            <inlined/>
-                            <a>100</a>
-                            <result value="100"/>
-                            <a/>
-                            <after/>
-                        </robot>
-                    `));
-                    done();
-                },
-            );
+            return new Promise((resolve, reject) => {
+                const loader = new XacroLoader();
+                loader.requirePrefix = false;
+                loader.parse(
+                    content, res => {
+                        const str = new XMLSerializer().serializeToString(res);
+                        expect(unformat(str)).toEqual(unformat(`
+                            <robot>
+                                <inlined/>
+                                <a>100</a>
+                                <result value="100"/>
+                                <a/>
+                                <after/>
+                            </robot>
+                        `));
+                        resolve();
+                    },
+                    reject,
+                );
+            });
         });
     });
 

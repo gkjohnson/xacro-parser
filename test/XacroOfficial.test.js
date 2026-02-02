@@ -48,10 +48,7 @@ beforeEach(() => {
 });
 
 function runXacro(content, done, options, onError) {
-    onError = onError || (err => {
-        throw err;
-    });
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         const loader = new XacroLoader();
         Object.assign(loader, options);
         loader.parse(
@@ -61,11 +58,15 @@ function runXacro(content, done, options, onError) {
                 resolve();
             },
             err => {
-                onError(err);
+                if (onError) {
+                    onError(err);
+                    resolve();
+                } else {
+                    reject(err);
+                }
             },
         );
     });
-
 }
 
 describe('Basic Xacro Tests', () => {
@@ -621,19 +622,20 @@ describe('Basic Xacro Tests', () => {
         ),
     );
 
-    it('test_recursive_definition', done => {
-        runXacro(
+    it('test_recursive_definition', async () => {
+        let errorOccurred = false;
+        await runXacro(
             `<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
                 <xacro:property name="a" value="\${a2}"/>
                 <xacro:property name="a2" value="\${2*a}"/>
                 <a doubled="\${a2}"/>
             </robot>`,
-            () => done(new Error()),
+            () => { throw new Error('Should have thrown'); },
             null,
-            () => done(),
+            () => { errorOccurred = true; },
         );
-    },
-    );
+        expect(errorOccurred).toBe(true);
+    });
 
     it('test_multiple_recursive_evaluation', async() =>
         runXacro(
@@ -835,13 +837,17 @@ describe('Basic Xacro Tests', () => {
         ),
     );
 
-    it('test_default_arg_missing', (done) => {
-        runXacro(`<a xmlns:xacro="http://www.ros.org/wiki/xacro">
-                    <a arg="$(arg foo)"/>
-                </a>`,
-        () => done(new Error()),
-        null,
-        () => done());
+    it('test_default_arg_missing', async () => {
+        let errorOccurred = false;
+        await runXacro(
+            `<a xmlns:xacro="http://www.ros.org/wiki/xacro">
+                <a arg="$(arg foo)"/>
+            </a>`,
+            () => { throw new Error('Should have thrown'); },
+            null,
+            () => { errorOccurred = true; },
+        );
+        expect(errorOccurred).toBe(true);
     });
 
     it('test_default_arg_empty', async() =>
