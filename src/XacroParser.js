@@ -14,26 +14,160 @@ import {
 } from './utils.js';
 import { ExpressionParser } from './ExpressionParser.js';
 
+/**
+ * @callback RospackCommandCallback
+ * @param {string} command
+ * @param {...string} args
+ * @returns {string}
+ */
+
+/**
+ * Parser for processing the [ROS Xacro file format](http://wiki.ros.org/xacro). Xacro files from
+ * different versions of ROS require different options to be set. The differences are documented
+ * in the [spec](http://wiki.ros.org/xacro).
+ *
+ * Options required for xacros created with a ROS version <= release 8 (ROS Indigo):
+ *
+ * ```js
+ * parser.inOrder = false;
+ * parser.requirePrefix = false;
+ * parser.localProperties = false;
+ * ```
+ *
+ * Options required for xacros created with a ROS version >= release 9 (ROS Jade):
+ *
+ * ```js
+ * parser.inOrder = true;
+ * parser.requirePrefix = true;
+ * parser.localProperties = true;
+ * ```
+ *
+ * @note XacroParser depends on the browser xml parser. When running in Node a `DOMParser`
+ * implementation such as the one provided by `jsdom` must be assigned to `global.DOMParser`.
+ */
 export class XacroParser {
 
 	constructor() {
 
+		/**
+		 * Since `ROS Jade` xacro allows for [in order](http://wiki.ros.org/xacro#Processing_Order)
+		 * processing, which allows variables to be used to define include paths and order-dependent
+		 * property definitions. The equivalent of the `--inorder` xacro command line flag.
+		 * @type {boolean}
+		 * @default true
+		 */
 		this.inOrder = true;
+
+		/**
+		 * Since `ROS Jade` xacro [requires all tags be prefixed with "xacro:"](http://wiki.ros.org/xacro#Deprecated_Syntax).
+		 * Setting `requirePrefix` to false disables this requirement.
+		 * @type {boolean}
+		 * @default true
+		 */
 		this.requirePrefix = true;
+
+		/**
+		 * Since `ROS Jade` xacro [scopes property definitions to the containing macro](http://wiki.ros.org/xacro#Local_properties).
+		 * Setting `localProperties` to false disables this behavior.
+		 * @type {boolean}
+		 * @default true
+		 */
 		this.localProperties = true;
+
+		/**
+		 * A map of rospack command stem to handling function that take all arguments as function
+		 * parameters. An example implementation of the `rospack find` command:
+		 *
+		 * ```js
+		 * parser.rospackCommands =
+		 *   {
+		 *
+		 *     find: function( pkg ) {
+		 *
+		 *       switch( pkg ) {
+		 *
+		 *         case 'valkyrie_description':
+		 *           return '/absolute/path/to/valkyrie_description/';
+		 *         case 'r2_description':
+		 *           return '/absolute/path/to/r2_description/'
+		 *
+		 *       }
+		 *
+		 *     }
+		 *
+		 *   };
+		 * ```
+		 *
+		 * Alternatively a function can be provided to evaluate the command:
+		 *
+		 * ```js
+		 * parser.rospackCommands = ( command, ...args ) => {
+		 *
+		 *     if ( command === 'find' ) {
+		 *
+		 *         const [ pkg ] = args;
+		 *         switch( pkg ) {
+		 *             case 'valkyrie_description':
+		 *                 return '/absolute/path/to/valkyrie_description/';
+		 *             case 'r2_description':
+		 *                 return '/absolute/path/to/r2_description/'
+		 *         }
+		 *
+		 *     }
+		 *
+		 * };
+		 * ```
+		 * @type {Object<string, function(...string): string>|RospackCommandCallback}
+		 * @default {}
+		 */
 		this.rospackCommands = {};
+
+		/**
+		 * A map of argument names to values that will be substituted for `$(arg name)` tags.
+		 *
+		 * ```js
+		 * parser.arguments =
+		 *   {
+		 *     transmission_hw_interface: "hardware_interface/PositionJointInterface",
+		 *     arm_x_separation: -0.4,
+		 *     laser_visual: true,
+		 *   };
+		 * ```
+		 * @note These take precedence over any `<xacro:arg>` defaults.
+		 * @type {Object<string, string|number|boolean>}
+		 * @default {}
+		 */
 		this.arguments = {};
 		this.expressionParser = new ExpressionParser();
+
+		/**
+		 * The working directory to search for dependent files in when parsing `include` tags.
+		 * @note The path is required to end with '/'.
+		 * @type {string}
+		 * @default ''
+		 */
 		this.workingPath = '';
 
 	}
 
+	/**
+	 * An overrideable function that takes a file path and returns the contents of that file as a
+	 * string. Used for loading a documents referenced in `include` tags.
+	 * @param {string} path
+	 * @returns {Promise<string>}
+	 */
 	async getFileContents( path ) {
 
 		throw new Error( 'XacroParser: getFileContents() not implemented.' );
 
 	}
 
+	/**
+	 * Parses the passed xacro contents using the options specified on the object and returns an
+	 * xml document of the processed xacro file.
+	 * @param {string} data
+	 * @returns {Promise<XMLDocument>}
+	 */
 	async parse( data ) {
 
 		/* Evaluation */
