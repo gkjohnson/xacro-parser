@@ -3,6 +3,7 @@
 
 [![npm version](https://img.shields.io/npm/v/xacro-parser.svg?style=flat-square)](https://www.npmjs.com/package/xacro-parser)
 [![build](https://img.shields.io/github/actions/workflow/status/gkjohnson/xacro-parser/node.js.yml?style=flat-square&label=build&branch=master)](https://github.com/gkjohnson/xacro-parser/actions)
+[![docs](https://img.shields.io/badge/docs-API-blue?style=flat-square)](https://gkjohnson.github.io/tools/docs/xacro-parser/)
 [![github](https://flat.badgen.net/badge/icon/github?icon=github&label)](https://github.com/gkjohnson/xacro-parser/)
 [![twitter](https://flat.badgen.net/badge/twitter/@garrettkjohnson/?icon&label)](https://twitter.com/garrettkjohnson)
 [![sponsors](https://img.shields.io/github/sponsors/gkjohnson?style=flat-square&color=1da1f2)](https://github.com/sponsors/gkjohnson/)
